@@ -1,0 +1,11 @@
+# Royal B intraday alerts also watch these tickers (one per line).
+# Canadian stocks: add .TO (TSX) or .V (TSXV), e.g. SHOP.TO
+# Edit this file on GitHub when your watchlist changes. Today's scan setups are checked automatically.
+SBUX
+NVDA
+SHOP.TO
+AAPL
+MEDP
+KMTS
+RIGL
+ONC
