@@ -1,0 +1,54 @@
+name: Intraday entry alerts
+
+on:
+  schedule:
+    # UTC times that cover New York summer and winter time; the script only acts inside its
+    # windows (10:00am, 1:00pm, 3:15pm New York time) and once per window.
+    - cron: "5 14,15,17,18 * * 1-5"
+    - cron: "20 19,20 * * 1-5"
+  workflow_dispatch:           # "Run workflow" button: a test check that pings your phone
+
+permissions:
+  contents: write
+
+concurrency:
+  group: intraday
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the latest scan and today's alert state
+        run: |
+          mkdir -p site
+          git fetch -q origin results
+          git show origin/results:scan.json > site/scan.json
+          git show origin/results:intraday.json > site/intraday.json 2>/dev/null || rm -f site/intraday.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install packages
+        run: pip install -q -r requirements.txt
+
+      - name: Check for new entry signals
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python intraday.py ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
+
+      - name: Save today's alert state
+        run: |
+          [ -f site/intraday.json ] || exit 0
+          git fetch -q origin results
+          git worktree add -q --detach /tmp/res origin/results
+          cp site/intraday.json /tmp/res/intraday.json
+          cd /tmp/res
+          git add intraday.json
+          git diff --cached --quiet && exit 0
+          git -c user.name="royal-b-bot" -c user.email="royal-b-bot@users.noreply.github.com" commit -q -m "Intraday check $(date -u +%FT%H%M)"
+          git push -q origin HEAD:results
