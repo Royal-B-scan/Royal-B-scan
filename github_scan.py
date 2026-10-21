@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-ENGINE = (BASE, "engine")
+ENGINE = BASE
 sys.path.insert(0, ENGINE)
 os.chdir(ENGINE)
 SITE = os.path.join(ENGINE, "site")
