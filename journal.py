@@ -8,6 +8,14 @@ For each signal (day t, signal-day close = reference price):
   max20            best close within the next 20 days
   stopped          the low touched 8% below the reference within 20 days
 HEADS-UP is recorded on its first day only (not again for the same stock within 10 days).
+
+Trade result (Taylor, Oct 22): each signal is followed as a trade bought at the signal-day close and
+exited by the rules, recording the price at that moment:
+  stop     the day's low reaches 8% below the buy price -> sold at the stop price
+           (or at that day's open if the stock gapped below the stop)
+  50-day   a close below the 50-day average -> sold at that close
+  open     still held -> marked at the latest close
+  exit_date / exit_px / exit_why / ret (% gain or loss) / held (trading days)
 """
 from __future__ import annotations
 
@@ -43,7 +51,8 @@ def build(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
         trig, heads = _signals(df)
         n = len(df)
         start = max(60, n - LOOKBACK)
-        c, lo = df["Close"].values, df["Low"].values
+        c, lo, op = df["Close"].values, df["Low"].values, df["Open"].values
+        s50v = df["Close"].rolling(50).mean().values
         idx = df.index
         last_heads = -99
         for i in range(start, n):
@@ -64,6 +73,16 @@ def build(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
             if i + 1 < n:
                 ev["max20"] = round(float(np.max(c[win]) / ref - 1) * 100, 2)
                 ev["stopped"] = bool(np.min(lo[win]) <= ref * (1 - STOP))
+            stop_px, j_exit, px, why = ref * (1 - STOP), n - 1, float(c[n - 1]), "open"
+            for j in range(i + 1, n):
+                if lo[j] <= stop_px:
+                    px, why, j_exit = float(min(op[j], stop_px)), "stop", j
+                    break
+                if not np.isnan(s50v[j]) and c[j] < s50v[j]:
+                    px, why, j_exit = float(c[j]), "50-day", j
+                    break
+            ev.update(exit_date=idx[j_exit].strftime("%Y-%m-%d"), exit_px=round(px, 2), exit_why=why,
+                      ret=round((px / ref - 1) * 100, 2), held=int(j_exit - i))
             events.append(ev)
     events.sort(key=lambda e: (e["date"], e["status"] != "TRIGGER"), reverse=True)
 
@@ -78,6 +97,16 @@ def build(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
         done = [e for e in evs if e.get("days", 0) >= 20]
         out["stop_pct"] = round(sum(e.get("stopped", False) for e in done) / len(done) * 100, 1) if done else None
         out["max20_avg"] = round(float(np.mean([e["max20"] for e in done])), 2) if done else None
+        closed = [e for e in evs if e.get("exit_why") in ("stop", "50-day")]
+        still = [e for e in evs if e.get("exit_why") == "open"]
+        out["trades"] = {
+            "closed": len(closed), "wins": sum(e["ret"] > 0 for e in closed),
+            "stops": sum(e["exit_why"] == "stop" for e in closed),
+            "ret_sum": round(float(sum(e["ret"] for e in closed)), 2),
+            "ret_avg": round(float(np.mean([e["ret"] for e in closed])), 2) if closed else None,
+            "open": len(still), "open_ret_sum": round(float(sum(e["ret"] for e in still)), 2),
+            "held_avg": round(float(np.mean([e["held"] for e in closed])), 1) if closed else None,
+        }
         return out
 
     summary = {s: stats([e for e in events if e["status"] == s]) for s in ("TRIGGER", "HEADS-UP")}
