@@ -97,7 +97,7 @@ def main() -> None:
         return
 
     scan = load_json(SCAN, {})
-    cands = {s["ticker"]: s for s in scan.get("stocks", [])}
+    cands = {s["ticker"]: s for s in scan.get("stocks", []) if s.get("kind") != "ETF"}
     watch = watchlist()
     tickers = list(dict.fromkeys(list(cands) + watch))
     if not tickers:
