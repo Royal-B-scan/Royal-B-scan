@@ -111,5 +111,131 @@ def build(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
 
     summary = {s: stats([e for e in events if e["status"] == s]) for s in ("TRIGGER", "HEADS-UP")}
     dates = [e["date"] for e in events]
-    return {"from": min(dates) if dates else None, "to": max(dates) if dates else None,
-            "summary": summary, "events": events[:1500]}
+    res = {"from": min(dates) if dates else None, "to": max(dates) if dates else None,
+           "summary": summary, "events": events[:1500]}
+    try:
+        res["portfolio"] = portfolio(hist, meta)
+    except Exception as e:  # noqa: BLE001  (never break the screen over the paper portfolio)
+        res["portfolio_error"] = str(e)
+    return res
+
+
+# ---------------------------------------------------------------- paper portfolio (Taylor, Oct 22)
+"""
+Screener Trials as a real account. Replays the last ~10 months, then carries on every day:
+  cash      USD 100,000 for US stocks, CAD 50,000 for Canadian stocks (never converted)
+  buys      every Crossed (TRIGGER) stock, no ETFs, at the signal-day close. Several on one day:
+            strongest 3-month gain first (same day + same currency, so it ranks like relative strength).
+  size      1% of the account's value at risk with an 8% stop -> value = equity x 1% / 8%,
+            capped at 25% of equity, whole shares. Not enough cash -> skipped (counted).
+  sells     day's low reaches the stop -> sold at the stop (or the open if it gapped below);
+            close below the 50-day -> sold at that close. Cash goes back in for the next buys.
+No commissions or currency conversion. Settings below; change them here.
+"""
+START_CASH = {"USD": 100_000.0, "CAD": 50_000.0}
+RISK, MAXPOS, START_BARS = 0.01, 0.25, 210
+
+
+def _cur(t, m):
+    return m.get("currency") or ("CAD" if t.endswith((".TO", ".V")) else "USD")
+
+
+def portfolio(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
+    data = {}
+    for t, df in hist.items():
+        m = meta.get(t, {})
+        if m.get("kind") == "ETF" or len(df) < 80:
+            continue
+        trig, _ = _signals(df)
+        c = df["Close"]
+        data[t] = {"cur": _cur(t, m), "name": m.get("name") or t, "idx": df.index,
+                   "o": df["Open"].values, "l": df["Low"].values, "c": c.values,
+                   "s50": c.rolling(50).mean().values, "trig": trig.values,
+                   "r3m": (c / c.shift(63) - 1).values}
+    out = {"settings": {"start": START_CASH, "risk_pct": RISK * 100, "stop_pct": STOP * 100, "maxpos_pct": MAXPOS * 100,
+                        "buy": "signal-day close", "signal": "Crossed (TRIGGER), stocks only"},
+           "accounts": {}, "activity": []}
+    for cur, cash0 in START_CASH.items():
+        tk = [t for t, d in data.items() if d["cur"] == cur]
+        if not tk:
+            continue
+        cal = sorted(set().union(*[set(data[t]["idx"]) for t in tk]))[-START_BARS:]
+        pos_of = {t: dict(zip(data[t]["idx"], range(len(data[t]["idx"])))) for t in tk}
+        cash, held, last_px, hist_eq, skipped, acts = cash0, {}, {}, [], 0, []
+        for d in cal:
+            # 1) sells
+            sold = set()
+            for t in list(held):
+                i = pos_of[t].get(d)
+                if i is None:
+                    continue
+                D, p = data[t], held[t]
+                px = why = None
+                if D["l"][i] <= p["stop"]:
+                    px, why = float(min(D["o"][i], p["stop"])), "stop"
+                elif not np.isnan(D["s50"][i]) and D["c"][i] < D["s50"][i]:
+                    px, why = float(D["c"][i]), "50-day"
+                last_px[t] = float(D["c"][i])
+                if px is not None:
+                    amt = p["shares"] * px
+                    cash += amt
+                    acts.append({"date": d.strftime("%Y-%m-%d"), "type": "SELL", "ticker": t, "name": D["name"], "cur": cur,
+                                 "shares": p["shares"], "px": round(px, 2), "amount": round(amt, 2), "why": why,
+                                 "buy_px": round(p["px"], 2), "buy_date": p["date"],
+                                 "pl": round(amt - p["shares"] * p["px"], 2), "pl_pct": round((px / p["px"] - 1) * 100, 2),
+                                 "held": int(i - pos_of[t][pd.Timestamp(p["date"])])})
+                    del held[t]
+                    sold.add(t)
+            # 2) buys, strongest first
+            equity = cash + sum(p["shares"] * last_px.get(t, p["px"]) for t, p in held.items())
+            cands = []
+            for t in tk:
+                i = pos_of[t].get(d)
+                if i is None or i < 60 or t in held or not data[t]["trig"][i]:
+                    continue
+                if t in sold:
+                    continue
+                r = data[t]["r3m"][i]
+                cands.append((-(r if np.isfinite(r) else -9), t, i))
+            for _, t, i in sorted(cands):
+                px = float(data[t]["c"][i])
+                value = min(equity * RISK / STOP, equity * MAXPOS)
+                sh = int(value // px)
+                if sh < 1 or sh * px > cash:
+                    skipped += 1
+                    continue
+                cash -= sh * px
+                held[t] = {"shares": sh, "px": px, "stop": px * (1 - STOP), "date": d.strftime("%Y-%m-%d")}
+                last_px[t] = px
+                acts.append({"date": d.strftime("%Y-%m-%d"), "type": "BUY", "ticker": t, "name": data[t]["name"], "cur": cur,
+                             "shares": sh, "px": round(px, 2), "amount": round(sh * px, 2),
+                             "stop": round(px * (1 - STOP), 2)})
+            hist_eq.append([d.strftime("%Y-%m-%d"), round(cash + sum(p["shares"] * last_px.get(t, p["px"]) for t, p in held.items()), 2)])
+        # holdings, marked at the latest close
+        H = []
+        for t, p in held.items():
+            D = data[t]
+            c_now = last_px.get(t, p["px"])
+            i = pos_of[t].get(pd.Timestamp(D["idx"][-1]))
+            prev = float(D["c"][i - 1]) if i else c_now
+            H.append({"ticker": t, "name": D["name"], "shares": p["shares"], "buy_date": p["date"], "buy_px": round(p["px"], 2),
+                      "stop": round(p["stop"], 2), "close": round(c_now, 2), "value": round(p["shares"] * c_now, 2),
+                      "gain": round(p["shares"] * (c_now - p["px"]), 2), "gain_pct": round((c_now / p["px"] - 1) * 100, 2),
+                      "day": round(p["shares"] * (c_now - prev), 2), "day_pct": round((c_now / prev - 1) * 100, 2) if prev else 0})
+        H.sort(key=lambda h: -h["value"])
+        eq = [e for _, e in hist_eq]
+        chg = lambda k: (round(eq[-1] - eq[-1 - k], 2), round((eq[-1] / eq[-1 - k] - 1) * 100, 2)) if len(eq) > k else (None, None)  # noqa: E731
+        sells = [a for a in acts if a["type"] == "SELL"]
+        out["accounts"][cur] = {
+            "start_cash": cash0, "start_date": cal[0].strftime("%Y-%m-%d"), "as_of": cal[-1].strftime("%Y-%m-%d"),
+            "cash": round(cash, 2), "invested": round(sum(h["value"] for h in H), 2), "equity": round(eq[-1], 2),
+            "perf": {"day": chg(1), "week": chg(5), "month": chg(21), "start": (round(eq[-1] - cash0, 2), round((eq[-1] / cash0 - 1) * 100, 2))},
+            "holdings": H, "history": hist_eq,
+            "stats": {"buys": len(acts) - len(sells), "sells": len(sells), "wins": sum(a["pl"] > 0 for a in sells),
+                      "stops": sum(a["why"] == "stop" for a in sells), "realized": round(sum(a["pl"] for a in sells), 2),
+                      "skipped_no_cash": skipped},
+        }
+        out["activity"] += acts
+    out["activity"].sort(key=lambda a: (a["date"], a["type"] == "BUY"), reverse=True)
+    out["activity"] = out["activity"][:800]
+    return out
