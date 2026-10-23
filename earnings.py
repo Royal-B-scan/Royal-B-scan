@@ -100,3 +100,80 @@ def attach(entries: list[dict], max_fetch: int = 150) -> None:
     for e in entries:
         if e["ticker"] in info:
             e["earnings"] = {**info[e["ticker"]], "soon": info[e["ticker"]]["days"] <= WARN_DAYS}
+    try:
+        attach_company(entries)
+    except Exception as ex:  # noqa: BLE001  (never break the screen over company facts)
+        print(f"  company facts failed: {ex}", file=sys.stderr)
+
+
+# ---------------------------------------------------------------- company facts (Taylor, Oct 22)
+"""
+Key stats + financial summary + company profile for the screen's Crossed / Approaching stocks
+(not the 100 'On the radar' names, to keep the run quick). Yahoo quoteSummary via yfinance .info,
+cached 24 hours in cache/company.json. Shown under the chart on the page.
+"""
+CO_CACHE = os.path.join(BASE, "cache", "company.json")
+CO_FIELDS = {
+    # key stats
+    "marketCap": "mcap", "trailingPE": "pe", "forwardPE": "fpe", "trailingEps": "eps", "beta": "beta",
+    "fiftyTwoWeekHigh": "hi52", "fiftyTwoWeekLow": "lo52", "averageVolume": "avgvol",
+    "sharesOutstanding": "shares", "dividendYield": "divy", "dividendRate": "divr", "exDividendDate": "exdiv",
+    "floatShares": "float", "shortPercentOfFloat": "short", "heldPercentInstitutions": "inst",
+    # financials (trailing 12 months unless noted)
+    "totalRevenue": "rev", "revenueGrowth": "revg", "earningsGrowth": "epsg", "grossMargins": "gm",
+    "operatingMargins": "om", "profitMargins": "pm", "ebitda": "ebitda", "netIncomeToCommon": "ni",
+    "freeCashflow": "fcf", "totalCash": "cash", "totalDebt": "debt", "debtToEquity": "de",
+    "returnOnEquity": "roe", "currentRatio": "cr",
+    # analysts
+    "recommendationKey": "rec", "targetMeanPrice": "target", "numberOfAnalystOpinions": "analysts",
+    # profile
+    "longName": "name", "sector": "sector", "industry": "industry", "fullTimeEmployees": "employees",
+    "city": "city", "state": "state", "country": "country", "website": "web", "longBusinessSummary": "about",
+    "financialCurrency": "fincur",
+}
+
+
+def _co_fetch(t: str) -> dict:
+    import yfinance as yf
+
+    info = yf.Ticker(t).info or {}
+    out = {}
+    for k, short in CO_FIELDS.items():
+        v = info.get(k)
+        if v is None or v == "" or (isinstance(v, float) and v != v):
+            continue
+        if short == "about":
+            v = str(v)[:1500]
+        out[short] = round(v, 4) if isinstance(v, float) else v
+    return out
+
+
+def attach_company(entries: list[dict], max_fetch: int = 80) -> None:
+    want = [e["ticker"] for e in entries
+            if e.get("kind", "Stock") != "ETF" and e.get("status") not in (None, "SETTING UP")]
+    if not want:
+        return
+    try:
+        with open(CO_CACHE) as fh:
+            cache = json.load(fh)
+    except Exception:  # noqa: BLE001
+        cache = {}
+    now, fails = time.time(), 0
+    for t in [t for t in dict.fromkeys(want) if now - (cache.get(t) or {}).get("at", 0) > MAX_AGE][:max_fetch]:
+        try:
+            cache[t] = {"at": now, "d": _co_fetch(t)}
+            fails = 0
+        except Exception as e:  # noqa: BLE001
+            fails += 1
+            print(f"  company {t}: {str(e)[:80]}", file=sys.stderr)
+            if fails >= 5:
+                break
+        time.sleep(0.2)
+    os.makedirs(os.path.dirname(CO_CACHE), exist_ok=True)
+    with open(CO_CACHE + ".tmp", "w") as fh:
+        json.dump(cache, fh)
+    os.replace(CO_CACHE + ".tmp", CO_CACHE)
+    for e in entries:
+        d = (cache.get(e["ticker"]) or {}).get("d")
+        if d and e["ticker"] in want:
+            e["company"] = d
