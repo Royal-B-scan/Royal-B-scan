@@ -58,6 +58,15 @@ def load_json(path: str, default):
 
 
 def watchlist() -> list[str]:
+    """Taylor's Watching + Portfolio tickers from lists.json (Oct 23); falls back to watchlist.txt."""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lists.json")) as fh:
+            L = json.load(fh)
+        out = [str(t).strip().upper() for t in (L.get("watch") or []) + list((L.get("holdings") or {}).keys()) if str(t).strip()]
+        if out:
+            return list(dict.fromkeys(out))
+    except Exception:  # noqa: BLE001
+        pass
     try:
         with open(WATCH) as fh:
             return [ln.strip().upper() for ln in fh if ln.strip() and not ln.strip().startswith("#")]
