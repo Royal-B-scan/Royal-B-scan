@@ -48,7 +48,7 @@ def build(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
         m = meta.get(t, {})
         if m.get("kind") == "ETF" or len(df) < 120:
             continue
-        trig, heads = _signals(df)
+        trig, heads = _signals(df, rvol_min=1.2 if (m.get("market_cap") or 0) >= 1e10 else 1.5)
         n = len(df)
         start = max(60, n - LOOKBACK)
         c, lo, op = df["Close"].values, df["Low"].values, df["Open"].values
@@ -146,7 +146,7 @@ def portfolio(hist: dict[str, pd.DataFrame], meta: dict) -> dict:
         m = meta.get(t, {})
         if m.get("kind") == "ETF" or len(df) < 80:
             continue
-        trig, _ = _signals(df)
+        trig, _ = _signals(df, rvol_min=1.2 if (m.get("market_cap") or 0) >= 1e10 else 1.5)
         c = df["Close"]
         data[t] = {"cur": _cur(t, m), "name": m.get("name") or t, "idx": df.index,
                    "o": df["Open"].values, "l": df["Low"].values, "c": c.values,

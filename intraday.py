@@ -39,6 +39,7 @@ OPEN_MIN, CLOSE_MIN = 9 * 60 + 30, 16 * 60          # regular session, New York 
 # check windows (New York time): a run counts for the first window it falls in; one alert pass per window per day
 SLOTS = [("open", 10 * 60, 11 * 60 + 40), ("midday", 13 * 60, 14 * 60 + 40), ("late", 15 * 60 + 15, 16 * 60)]
 ALERT_ON = ("TRIGGER", "HEADS-UP")
+NAME = {"TRIGGER": "CROWNED", "HEADS-UP": "NEXT IN LINE"}   # names shown in the alerts (Oct 22)
 
 
 def slot_for(minute: int) -> str | None:
@@ -104,7 +105,7 @@ def main() -> None:
         print("No candidates (scan.json missing and watchlist.txt empty).")
         return
 
-    from screener import analyze, get_history
+    from screener import analyze, rvol_for, get_history
 
     hist = get_history(tickers)
     pace = min(max((minute - OPEN_MIN) / (CLOSE_MIN - OPEN_MIN), 0.04), 1.0)
@@ -118,10 +119,11 @@ def main() -> None:
         vcol = adj.columns.get_loc("Volume")
         adj.iloc[-1, vcol] = float(adj.iloc[-1, vcol]) / pace
         try:
-            sig = analyze(adj)
+            rv = rvol_for((cands.get(t) or {}).get("market_cap", 0))
+            sig = analyze(adj, rv)
             before = state["status"].get(t)
             if before is None:                      # first look today: yesterday's close is the baseline
-                prev_sig = analyze(df.iloc[:-1])
+                prev_sig = analyze(df.iloc[:-1], rv)
                 before = prev_sig["status"] if prev_sig else "NONE"
         except Exception as e:  # noqa: BLE001
             print(f"  {t}: {e}", file=sys.stderr)
@@ -143,20 +145,20 @@ def main() -> None:
     if len(new) <= 4:
         for a in new:
             what = "10-day crossed above the 20-day" if a["status"] == "TRIGGER" else "10-day within 1% of the 20-day and closing in"
-            notify(f"{a['ticker']}: {a['status']}" + (" (watchlist)" if a["watch"] else ""),
+            notify(f"{a['ticker']}: {NAME.get(a['status'], a['status'])}" + (" (watchlist)" if a["watch"] else ""),
                    f"{a['name']} at ${a['price']} {a['currency']} ({a['chg']:+.1f}% today). {what}; "
                    f"volume on pace for {a['rvol']:.1f}x average. As of {when} PT; not final until the close. Not financial advice.",
                    high=a["status"] == "TRIGGER")
     elif new:
         trig = [a["ticker"] for a in new if a["status"] == "TRIGGER"]
         heads = [a["ticker"] for a in new if a["status"] == "HEADS-UP"]
-        notify(f"Royal B: {len(trig)} trigger, {len(heads)} heads-up",
-               (f"TRIGGER: {', '.join(trig)}. " if trig else "") + (f"HEADS-UP: {', '.join(heads)}. " if heads else "")
+        notify(f"Royal B: {len(heads)} next in line, {len(trig)} crowned",
+               (f"NEXT IN LINE: {', '.join(heads)}. " if heads else "") + (f"CROWNED: {', '.join(trig)}. " if trig else "")
                + f"As of {when} PT; not final until the close. Tap to open Royal B. Not financial advice.",
                high=bool(trig))
     elif force:
         notify("Royal B alerts are connected",
-               f"Test check at {when} PT: {checked} stocks checked, nothing new. You'll get alerts like this when a stock turns TRIGGER or HEADS-UP.")
+               f"Test check at {when} PT: {checked} stocks checked, nothing new. You'll get alerts like this when a stock is NEXT IN LINE for its cross or gets CROWNED.")
 
     state["slots"].append(slot)
     state["alerts"] = (state.get("alerts") or []) + new
