@@ -1,0 +1,28 @@
+{
+ "ok": true,
+ "counts": {
+  "universe": 3832,
+  "stocks": 3155,
+  "etfs": 677,
+  "liquid": 3511,
+  "hits": 12,
+  "trigger": 0,
+  "triggered": 3,
+  "headsup": 9,
+  "setting_up": 100
+ },
+ "last_bar": "2026-10-23",
+ "comeback": {
+  "large": 0,
+  "beaten": 0,
+  "quality": 0,
+  "still_falling": 0,
+  "basing": 0,
+  "turning_up": 0,
+  "recovered": 0
+ },
+ "comeback_moved_up": [],
+ "updated": "2026-10-24T19:43+00:00",
+ "date": "2026-10-24",
+ "seconds": 427
+}
