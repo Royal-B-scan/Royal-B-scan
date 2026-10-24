@@ -37,6 +37,7 @@ jobs:
           mkdir -p /tmp/out
           cp site/scan.json site/status.json /tmp/out/
           [ -f site/comeback.json ] && cp site/comeback.json /tmp/out/ || true
+          [ -f site/data.json ] && cp site/data.json /tmp/out/ || true
           cd /tmp/out
           git init -q -b results
           git add .
