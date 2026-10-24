@@ -22,7 +22,7 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
-from screener import CONFIG, analyze, get_hype
+from screener import CONFIG, analyze, get_hype, rvol_for
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.join(BASE, "site")
@@ -248,7 +248,7 @@ def run_scan(progress=_noop) -> dict:
         liquid += 1
         try:
             pr = profile(df, bench.get(m.get("currency", "USD")) if bench.get(m.get("currency", "USD")) is not None else bench["USD"])
-            sig = analyze(df)
+            sig = analyze(df, rvol_for(m.get("market_cap", 0)))
         except Exception:  # noqa: BLE001
             continue
         rows.append({"ticker": t, "sector": m.get("sector", "Other"), **pr})
@@ -300,6 +300,21 @@ def run_scan(progress=_noop) -> dict:
                             "median_rs3m": round(float(g["rs3m"].median() * 100), 2)})
         sectors.sort(key=lambda x: -x["median_rs3m"])
 
+    # Early Entry screener (Oct 24): large caps before Crown Cross sees them (earlyentry.py)
+    early = []
+    try:
+        import earlyentry
+        progress("Early Entry screen", None, None, None)
+        srank = {x["sector"]: i + 1 for i, x in enumerate(sectors)}
+        early = earlyentry.screen(hist, meta, bench, srank)
+        try:
+            import earnings
+            earnings.attach(early)
+        except Exception as e:  # noqa: BLE001
+            print("early earnings failed:", e, file=sys.stderr)
+    except Exception as e:  # noqa: BLE001
+        print("early entry failed:", e, file=sys.stderr)
+
     counts = {
         "universe": len(uni),
         "stocks": int((uni["kind"] == "Stock").sum()),
@@ -310,6 +325,9 @@ def run_scan(progress=_noop) -> dict:
         "triggered": sum(1 for h in hits if h["status"].startswith("TRIGGERED")),
         "headsup": sum(1 for h in hits if h["status"] == "HEADS-UP"),
         "setting_up": len(setting_up),
+        "early_breakout": sum(1 for e in early if e["status"] == "BREAKOUT"),
+        "early_pullback": sum(1 for e in early if e["status"] == "PULLBACK"),
+        "early_squeeze": sum(1 for e in early if e["status"] == "SQUEEZE"),
     }
     out = {
         "updated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
@@ -319,6 +337,7 @@ def run_scan(progress=_noop) -> dict:
         "counts": counts,
         "sectors": sectors,
         "stocks": hits + setting_up,
+        "early": early,
     }
     try:
         import journal
