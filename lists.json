@@ -1,0 +1,43 @@
+{
+ "_note": "Royal B lists for GitHub. Copy from the page (Watching \u2192 Copy for GitHub) and paste over this file.",
+ "watch": [
+  "MEDP",
+  "RIGL",
+  "ILMN",
+  "CRSR",
+  "TMO",
+  "LOGI",
+  "RNG",
+  "KMTS",
+  "KIDS",
+  "EGBN",
+  "RCEL",
+  "HTFL",
+  "GOOG",
+  "NVDA",
+  "AAPL"
+ ],
+ "holdings": {
+  "ARQT": {
+   "currency": "USD",
+   "date": "2026-10-21",
+   "entry": 31.82,
+   "shares": 390,
+   "stop": 29.27
+  },
+  "MCD": {
+   "currency": "USD",
+   "date": "2026-10-20",
+   "entry": 244.45,
+   "shares": 20,
+   "stop": 226.8
+  }
+ },
+ "longterm": {},
+ "pins": [
+  "MCD",
+  "NKE",
+  "LULU",
+  "INFY"
+ ]
+}
