@@ -315,6 +315,15 @@ def run_scan(progress=_noop) -> dict:
     except Exception as e:  # noqa: BLE001
         print("early entry failed:", e, file=sys.stderr)
 
+    # Market breadth meter (Oct 26): % of liquid stocks above their 50-day (breadth.py)
+    breadth = None
+    try:
+        import breadth as breadth_mod
+        progress("Market breadth", None, None, None)
+        breadth = breadth_mod.compute(hist, meta)
+    except Exception as e:  # noqa: BLE001
+        print("breadth failed:", e, file=sys.stderr)
+
     counts = {
         "universe": len(uni),
         "stocks": int((uni["kind"] == "Stock").sum()),
@@ -338,6 +347,7 @@ def run_scan(progress=_noop) -> dict:
         "sectors": sectors,
         "stocks": hits + setting_up,
         "early": early,
+        "breadth": breadth,
     }
     try:
         import journal
