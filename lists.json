@@ -1,5 +1,5 @@
 {
- "_note": "Royal B lists for GitHub. Copy from the page (Watching \u2192 Copy for GitHub) and paste over this file.",
+ "_note": "Royal B lists for GitHub. Copy from the page (Watching → Copy for GitHub) and paste over this file.",
  "watch": [
   "MEDP",
   "RIGL",
@@ -15,25 +15,24 @@
   "HTFL",
   "GOOG",
   "NVDA",
-  "AAPL"
+  "AAPL",
+  "LGND",
+  "ISRG",
+  "PLTR",
+  "SHOP.TO",
+  "ROP"
  ],
- "holdings": {
-  "ARQT": {
-   "currency": "USD",
-   "date": "2026-10-21",
-   "entry": 31.82,
-   "shares": 390,
-   "stop": 29.27
-  },
+ "holdings": {},
+ "longterm": {
   "MCD": {
+   "cost": 244.45,
    "currency": "USD",
    "date": "2026-10-20",
-   "entry": 244.45,
+   "note": "Comeback King, dividend. Moved from swing holdings Oct 25. Line in the sand: weekly close below 229.20 (stop 226.80).",
    "shares": 20,
    "stop": 226.8
   }
  },
- "longterm": {},
  "pins": [
   "MCD",
   "NKE",
