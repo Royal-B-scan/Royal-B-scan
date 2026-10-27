@@ -22,8 +22,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-MIN_CAP = 10_000_000_000
-LIMITS = {"BREAKOUT": 12, "PULLBACK": 12, "SQUEEZE": 15}
+   MIN_CAP = 2_000_000_000
+LIMITS = {"BREAKOUT": 25, "PULLBACK": 25, "SQUEEZE": 25}
 
 
 def signals(df: pd.DataFrame) -> dict | None:
