@@ -1,5 +1,5 @@
 """
-Comeback watch + long-term holdings (Oct 21, 2026).
+Comeback watch + long-term holdings (Oct 21, 2026; Oct 27: saved company numbers when Yahoo refuses lookups).
 
 Comeback = large caps that got beaten down but are still good businesses. Taylor watches them
 and waits for them to start coming around (for his long-term portfolio, not swing trades).
@@ -110,32 +110,95 @@ def download(tickers: list[str], period: str = "2y") -> dict[str, pd.DataFrame]:
     return out
 
 
+FUND_CACHE_URL = "https://raw.githubusercontent.com/Royal-B-scan/Royal-B-scan/results/fund_cache.json"
+FUND_MAX_AGE = 45   # days: company numbers only change each quarter
+
+
+def _load_fund_cache() -> dict:
+    """Last good company numbers per ticker (Oct 27 fix): yesterday's copy on the results branch,
+    else the seed file in the repo. Used whenever Yahoo refuses a lookup, so one bad day can't empty Comebacks."""
+    import json
+    import os
+    cache: dict = {}
+    seed = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fund_cache.json")
+    try:
+        with open(seed) as fh:
+            cache.update(json.load(fh))
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        import requests
+        r = requests.get(FUND_CACHE_URL, params={"x": int(time.time())}, timeout=20)
+        if r.ok:
+            cache.update(r.json())
+    except Exception as e:  # noqa: BLE001
+        print("  fund cache download failed:", e, file=sys.stderr)
+    return cache
+
+
+def _save_fund_cache(cache: dict) -> None:
+    import json
+    import os
+    os.makedirs("site", exist_ok=True)
+    with open(os.path.join("site", "fund_cache.json"), "w") as fh:
+        json.dump(cache, fh, separators=(",", ":"))
+
+
 def fundamentals(tickers: list[str]) -> dict[str, dict]:
     import yfinance as yf
 
-    out: dict[str, dict] = {}
-    fails = 0
-    for t in tickers:
+    cache = _load_fund_cache()
+    today = datetime.now(timezone.utc).date()
+
+    def fresh(t):
+        c = cache.get(t)
+        if not c or not c.get("_date"):
+            return False
         try:
-            i = yf.Ticker(t).info or {}
-            fails = 0
-        except Exception as e:  # noqa: BLE001
-            fails += 1
-            print(f"  fundamentals {t}: {str(e)[:80]}", file=sys.stderr)
-            if fails >= 8:
-                break
-            time.sleep(1)
-            continue
-        out[t] = {
-            "pe": _r(i.get("trailingPE"), 1), "fpe": _r(i.get("forwardPE"), 1),
-            "margin": _r(_pct(i.get("profitMargins")), 0), "rev": _r(_pct(i.get("revenueGrowth")), 0),
-            "fcf_pos": (i.get("freeCashflow") or 0) > 0 if i.get("freeCashflow") is not None else None,
-            "div": _r(i.get("dividendYield"), 2), "target": _r(i.get("targetMeanPrice"), 2),
-            "sector": i.get("sector"), "industry": i.get("industry"),
-            "name": i.get("shortName") or i.get("longName"),
-            "market_cap": i.get("marketCap"),
-        }
-        time.sleep(0.08)
+            return (today - datetime.strptime(c["_date"], "%Y-%m-%d").date()).days <= FUND_MAX_AGE
+        except ValueError:
+            return False
+
+    out: dict[str, dict] = {}
+    fails, live, used_cache, blocked = 0, 0, 0, False
+    for t in tickers:
+        i = None
+        if not blocked:
+            for attempt in range(2):
+                try:
+                    i = yf.Ticker(t).info or {}
+                    break
+                except Exception as e:  # noqa: BLE001
+                    print(f"  fundamentals {t}: {str(e)[:80]}", file=sys.stderr)
+                    time.sleep(5 + attempt * 10)   # Yahoo rate limit: back off, then try once more
+            if i is None:
+                fails += 1
+                if fails >= 8:
+                    blocked = True   # Yahoo is refusing us today: use the saved numbers for the rest
+                    print("  fundamentals: Yahoo refusing lookups, using saved numbers", file=sys.stderr)
+            else:
+                fails = 0
+        if i and (i.get("profitMargins") is not None or i.get("forwardPE") is not None):
+            out[t] = {
+                "pe": _r(i.get("trailingPE"), 1), "fpe": _r(i.get("forwardPE"), 1),
+                "margin": _r(_pct(i.get("profitMargins")), 0), "rev": _r(_pct(i.get("revenueGrowth")), 0),
+                "fcf_pos": (i.get("freeCashflow") or 0) > 0 if i.get("freeCashflow") is not None else None,
+                "div": _r(i.get("dividendYield"), 2), "target": _r(i.get("targetMeanPrice"), 2),
+                "sector": i.get("sector"), "industry": i.get("industry"),
+                "name": i.get("shortName") or i.get("longName"),
+                "market_cap": i.get("marketCap"),
+            }
+            cache[t] = dict(out[t], _date=today.isoformat())
+            live += 1
+            time.sleep(0.15)
+        elif fresh(t):
+            out[t] = {k: v for k, v in cache[t].items() if k != "_date"}
+            used_cache += 1
+    print(f"  fundamentals: {live} from Yahoo, {used_cache} from saved numbers, {len(tickers) - live - used_cache} missing", file=sys.stderr)
+    try:
+        _save_fund_cache(cache)
+    except Exception as e:  # noqa: BLE001
+        print("  fund cache save failed:", e, file=sys.stderr)
     return out
 
 
