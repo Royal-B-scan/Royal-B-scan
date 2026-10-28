@@ -29,6 +29,9 @@ jobs:
       - name: Install packages
         run: pip install -q -r requirements.txt
 
+      - name: Get the latest lists from the page
+        run: python sync_lists.py
+
       - name: Scan the market
         run: python github_scan.py || (echo "retrying in 3 minutes" && sleep 180 && python github_scan.py)
 
@@ -37,6 +40,7 @@ jobs:
           mkdir -p /tmp/out
           cp site/scan.json site/status.json /tmp/out/
           [ -f site/comeback.json ] && cp site/comeback.json /tmp/out/ || true
+          [ -f site/data.json ] && cp site/data.json /tmp/out/ || true
           cd /tmp/out
           git init -q -b results
           git add .

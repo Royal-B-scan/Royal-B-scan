@@ -36,6 +36,9 @@ jobs:
       - name: Install packages
         run: pip install -q -r requirements.txt
 
+      - name: Get the latest lists from the page
+        run: python sync_lists.py
+
       - name: Check for new entry signals
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
