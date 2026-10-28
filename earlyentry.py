@@ -21,8 +21,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-
-   MIN_CAP = 2_000_000_000
+MIN_CAP = 2_000_000_000
 LIMITS = {"BREAKOUT": 25, "PULLBACK": 25, "SQUEEZE": 25}
 
 
