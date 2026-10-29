@@ -51,6 +51,28 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print("lists failed:", e, file=sys.stderr)
         status["lists_error"] = str(e)[:200]
+    # Oct 28: collect every failure in one place (status.json and scan.json), so the page can show it in red
+    problems = dict(out.get("problems") or {})
+    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists")):
+        if status.get(key):
+            problems[label] = status[key]
+    if isinstance(status.get("lists"), dict) and status["lists"].get("longterm_error"):
+        problems["long-term"] = status["lists"].pop("longterm_error")
+    sync_err = os.path.join(BASE, "sync_lists_error.txt")
+    if os.path.exists(sync_err):
+        problems["lists sync"] = open(sync_err).read().strip()[:200]
+    status["problems"] = problems
+    if problems:
+        print("PROBLEMS", json.dumps(problems), file=sys.stderr)
+    scan_path = os.path.join(SITE, "scan.json")
+    try:
+        with open(scan_path) as fh:
+            sj = json.load(fh)
+        sj["problems"] = problems
+        with open(scan_path, "w") as fh:
+            json.dump(sj, fh, separators=(",", ":"))
+    except Exception as e:  # noqa: BLE001
+        print("could not add problems to scan.json:", e, file=sys.stderr)
     now = datetime.now(timezone.utc)
     status.update(updated=now.isoformat(timespec="minutes"),
                   date=now.astimezone(ZoneInfo("America/Vancouver")).strftime("%Y-%m-%d"),
@@ -81,13 +103,19 @@ def build_lists() -> dict:
     except Exception as e:  # noqa: BLE001
         print("long-term failed:", e, file=sys.stderr)
         data["longterm"] = []
+        lt_error = str(e)[:200]
+    else:
+        lt_error = None
     data["source"] = "github"
     data["lists"] = {"watch": watch, "holdings": sorted(holdings), "longterm": sorted(longterm), "pins": pins}
     with open(os.path.join(SITE, "data.json"), "w") as fh:
         json.dump(data, fh, separators=(",", ":"))
     got = {s["ticker"] for s in data.get("stocks", []) + data.get("holdings", []) + data.get("longterm", [])}
-    return {"watch": len(watch), "holdings": len(holdings), "longterm": len(longterm), "pins": len(pins),
-            "missing": sorted((set(watch) | set(holdings) | set(longterm) | set(pins)) - got)}
+    res = {"watch": len(watch), "holdings": len(holdings), "longterm": len(longterm), "pins": len(pins),
+           "missing": sorted((set(watch) | set(holdings) | set(longterm) | set(pins)) - got)}
+    if lt_error:
+        res["longterm_error"] = lt_error
+    return res
 
 
 if __name__ == "__main__":

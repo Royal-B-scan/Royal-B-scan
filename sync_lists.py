@@ -18,6 +18,7 @@ import urllib.request
 SHEET = os.environ.get("LISTS_SHEET_ID") or "1nzSSAlhkvmhGT7vDi4t-xbi-xcomW5EjcJQerxF7yMw"
 URL = f"https://docs.google.com/spreadsheets/d/{SHEET}/export?format=csv&gid=0&range=A1"
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lists.json")
+ERR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sync_lists_error.txt")  # read by github_scan.py
 
 try:
     raw = urllib.request.urlopen(URL, timeout=30).read().decode("utf-8")
@@ -27,7 +28,12 @@ try:
         raise ValueError("no watch list in the sheet")
 except Exception as e:  # noqa: BLE001
     print(f"Lists sync skipped, using the repo's lists.json ({e}). Is the sheet shared as 'Anyone with the link'?")
+    with open(ERR, "w") as fh:
+        fh.write(f"Couldn't read the lists sheet, so the older lists.json was used ({e})")
     sys.exit(0)
+
+if os.path.exists(ERR):
+    os.remove(ERR)
 
 with open(OUT, "w") as fh:
     json.dump(data, fh, indent=1)

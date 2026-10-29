@@ -266,6 +266,8 @@ def run_scan(progress=_noop) -> dict:
     setting_up.sort(key=lambda s: -s["rs3m"])
     setting_up = setting_up[:MAX_SETTING_UP]
     hits = hits[:MAX_RESULTS]
+    # Oct 28: every screen that fails is recorded here and shown in red on the page, instead of a silent zero
+    problems = {}
     try:
         from export_site import timeframes
         progress("Loading hourly/weekly/monthly charts", None, None, None)
@@ -274,6 +276,7 @@ def run_scan(progress=_noop) -> dict:
             h["tf"] = extra.get(h["ticker"], {})
     except Exception as e:  # noqa: BLE001
         print("timeframes failed:", e, file=sys.stderr)
+        problems["charts"] = str(e)[:200]
 
     progress("Checking earnings dates and buzz", None, None, None)
     try:
@@ -281,11 +284,13 @@ def run_scan(progress=_noop) -> dict:
         earnings.attach(hits + setting_up)
     except Exception as e:  # noqa: BLE001
         print("earnings failed:", e, file=sys.stderr)
+        problems["earnings"] = str(e)[:200]
     try:
         import hype as hype_mod
         hype_mod.attach(hits + setting_up, hype_mod.get_hype())
     except Exception as e:  # noqa: BLE001
         print("hype failed:", e, file=sys.stderr)
+        problems["buzz"] = str(e)[:200]
 
     # sector strength across every liquid stock (ETFs kept separate)
     prof = pd.DataFrame(rows)
@@ -312,8 +317,10 @@ def run_scan(progress=_noop) -> dict:
             earnings.attach(early)
         except Exception as e:  # noqa: BLE001
             print("early earnings failed:", e, file=sys.stderr)
+            problems["early entry earnings"] = str(e)[:200]
     except Exception as e:  # noqa: BLE001
         print("early entry failed:", e, file=sys.stderr)
+        problems["early entry"] = str(e)[:200]
 
     # Market breadth meter (Oct 26): % of liquid stocks above their 50-day (breadth.py)
     breadth = None
@@ -323,6 +330,7 @@ def run_scan(progress=_noop) -> dict:
         breadth = breadth_mod.compute(hist, meta)
     except Exception as e:  # noqa: BLE001
         print("breadth failed:", e, file=sys.stderr)
+        problems["breadth"] = str(e)[:200]
 
     counts = {
         "universe": len(uni),
@@ -348,6 +356,7 @@ def run_scan(progress=_noop) -> dict:
         "stocks": hits + setting_up,
         "early": early,
         "breadth": breadth,
+        "problems": problems,
     }
     try:
         import journal
@@ -355,6 +364,7 @@ def run_scan(progress=_noop) -> dict:
         out["journal"] = journal.build(hist, meta)
     except Exception as e:  # noqa: BLE001
         print("journal failed:", e, file=sys.stderr)
+        problems["journal"] = str(e)[:200]
     if out["last_bar"] is not None:
         out["last_bar"] = out["last_bar"].strftime("%Y-%m-%d")
     os.makedirs(SITE, exist_ok=True)
