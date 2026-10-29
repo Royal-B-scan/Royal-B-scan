@@ -39,6 +39,9 @@ jobs:
       - name: Get the latest lists from the page
         run: python sync_lists.py
 
+      - name: Get the latest lists from the page
+        run: python sync_lists.py
+
       - name: Check for new entry signals
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
