@@ -223,7 +223,7 @@ def main() -> None:
         notify(f"Royal B: {len(breaks)} stocks broke below your channels",
                f"{', '.join(b['ticker'] for b in breaks)} dropped under the bottom line you drew. As of {when} PT; "
                f"not final until the close. Tap to open Royal B. Not financial advice.", high=True)
-    if len(new) <= 4:
+    if new and len(new) <= 4:
         for a in new:
             what = "10-day crossed above the 20-day" if a["status"] == "TRIGGER" else "10-day within 1% of the 20-day and closing in"
             notify(f"{a['ticker']}: {NAME.get(a['status'], a['status'])}" + (" (watchlist)" if a["watch"] else ""),
