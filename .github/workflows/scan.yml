@@ -28,7 +28,10 @@ jobs:
 
       - name: Install packages
         run: pip install -q -r requirements.txt
-
+        
+      - name: Get the latest lists from the page
+        run: python sync_lists.py
+        
       - name: Scan the market
         run: python github_scan.py || (echo "retrying in 3 minutes" && sleep 180 && python github_scan.py)
 
