@@ -7,6 +7,8 @@ today's prices so far:
   - every stock in the latest daily scan (TRIGGER / HEADS-UP setups + the "setting up" leaders)
   - plus every ticker in watchlist.txt (one per line; edit it on GitHub)
 and sends a phone notification (ntfy) only when a stock NEWLY turns TRIGGER or HEADS-UP.
+Oct 28: it also pings when a stock drops below the BOTTOM line of a channel Taylor drew on the page
+(lists.json "channels", synced from the page). Breaks above the top line are left alone: let winners run.
 Exits are not checked: Taylor's stop / limit orders at InvestorLine handle those.
 
 Today's volume is incomplete during the day, so it is scaled to a full-day pace
@@ -74,6 +76,52 @@ def watchlist() -> list[str]:
         return []
 
 
+def ch_idx(dates: list[str], t: str) -> int:
+    """Same rule as the page's chIdx: the bar on that date, else the first bar after it, else the last bar."""
+    t = str(t)
+    for i, d in enumerate(dates):
+        if d >= t:
+            return i
+    return len(dates) - 1
+
+
+def bottom_line(dates: list[str], ch: dict, i: int) -> float | None:
+    """The channel's bottom line at bar i, matching the page's chAt (straight line through a and b, by bar count)."""
+    try:
+        ia, ib = ch_idx(dates, ch["a"]["t"]), ch_idx(dates, ch["b"]["t"])
+        pa, pb = float(ch["a"]["p"]), float(ch["b"]["p"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    if ia == ib:
+        return pa
+    return pa + (pb - pa) * (i - ia) / (ib - ia)
+
+
+def channel_breaks(hist: dict, channels: dict, state: dict, today: str, now) -> list[dict]:
+    """Stocks that have NEWLY dropped below a channel's bottom line today (once per channel per day)."""
+    out = []
+    seen = state.setdefault("chan", {})
+    for t, chans in channels.items():
+        df = hist.get(t)
+        if df is None or len(df) < 3 or df.index[-1].strftime("%Y-%m-%d") != today:
+            continue
+        dates = [d.strftime("%Y-%m-%d") for d in df.index]
+        price, prev = float(df["Close"].iloc[-1]), float(df["Close"].iloc[-2])
+        for k, ch in enumerate(chans if isinstance(chans, list) else []):
+            line, line_prev = bottom_line(dates, ch, len(dates) - 1), bottom_line(dates, ch, len(dates) - 2)
+            if not line or line <= 0 or not line_prev:
+                continue
+            key = f"{t}#{k}"
+            status = "below" if price < line else "ok"
+            before = seen.get(key) or ("below" if prev < line_prev else "ok")   # yesterday's close is the baseline
+            seen[key] = status
+            if status == "below" and before != "below":
+                out.append({"ticker": t, "kind": "channel", "price": round(price, 2), "line": round(line, 2),
+                            "under": round((1 - price / line) * 100, 1), "time": now.strftime("%H:%M"),
+                            "currency": "CAD" if t.endswith((".TO", ".V")) else "USD"})
+    return out
+
+
 def notify(title: str, body: str, high: bool = False) -> None:
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     print(f"ALERT {title}: {body}")
@@ -117,6 +165,14 @@ def main() -> None:
     from screener import analyze, rvol_for, get_history
 
     hist = get_history(tickers)
+    channels = (load_json(os.path.join(BASE, "lists.json"), {}).get("channels") or {})
+    channels = {str(t).strip().upper(): v for t, v in channels.items() if v}
+    extra = [t for t in channels if t not in hist]
+    if extra:
+        try:
+            hist.update(get_history(extra))
+        except Exception as e:  # noqa: BLE001
+            print("channel history failed:", e, file=sys.stderr)
     pace = min(max((minute - OPEN_MIN) / (CLOSE_MIN - OPEN_MIN), 0.04), 1.0)
     new, checked = [], 0
     for t in tickers:
@@ -151,6 +207,22 @@ def main() -> None:
 
     new.sort(key=lambda a: (a["status"] != "TRIGGER", not a["watch"], -a["rvol"]))
     when = now.astimezone(PT).strftime("%-I:%M%p").lower()
+
+    breaks = []
+    try:
+        breaks = channel_breaks(hist, channels, state, today, now)
+    except Exception as e:  # noqa: BLE001
+        print("channel check failed:", e, file=sys.stderr)
+    if len(breaks) <= 4:
+        for b in breaks:
+            notify(f"{b['ticker']}: broke below your channel",
+                   f"{b['ticker']} at ${b['price']} {b['currency']}, {b['under']}% under the bottom line you drew "
+                   f"(about ${b['line']}). The pullback may be starting. As of {when} PT; not final until the close. "
+                   f"Not financial advice.", high=True)
+    else:
+        notify(f"Royal B: {len(breaks)} stocks broke below your channels",
+               f"{', '.join(b['ticker'] for b in breaks)} dropped under the bottom line you drew. As of {when} PT; "
+               f"not final until the close. Tap to open Royal B. Not financial advice.", high=True)
     if len(new) <= 4:
         for a in new:
             what = "10-day crossed above the 20-day" if a["status"] == "TRIGGER" else "10-day within 1% of the 20-day and closing in"
@@ -165,17 +237,18 @@ def main() -> None:
                (f"NEXT IN LINE: {', '.join(heads)}. " if heads else "") + (f"CROWNED: {', '.join(trig)}. " if trig else "")
                + f"As of {when} PT; not final until the close. Tap to open Royal B. Not financial advice.",
                high=bool(trig))
-    elif force:
+    elif force and not breaks:
         notify("Royal B alerts are connected",
-               f"Test check at {when} PT: {checked} stocks checked, nothing new. You'll get alerts like this when a stock is NEXT IN LINE for its cross or gets CROWNED.")
+               f"Test check at {when} PT: {checked} stocks and {len(channels)} channels checked, nothing new. You'll get alerts "
+               f"like this when a stock is NEXT IN LINE for its cross, gets CROWNED, or drops below a channel you drew.")
 
     state["slots"].append(slot)
-    state["alerts"] = (state.get("alerts") or []) + new
+    state["alerts"] = (state.get("alerts") or []) + new + breaks
     state["checked_at"] = now.isoformat(timespec="minutes")
     os.makedirs(os.path.dirname(STATE), exist_ok=True)
     with open(STATE, "w") as fh:
         json.dump(state, fh, separators=(",", ":"))
-    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} pace={pace:.2f}")
+    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} pace={pace:.2f}")
 
 
 if __name__ == "__main__":
