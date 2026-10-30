@@ -1,0 +1,43 @@
+{
+ "ok": true,
+ "counts": {
+  "universe": 3789,
+  "stocks": 3115,
+  "etfs": 674,
+  "liquid": 3492,
+  "hits": 11,
+  "trigger": 2,
+  "triggered": 2,
+  "headsup": 7,
+  "setting_up": 100,
+  "early_breakout": 25,
+  "early_pullback": 25,
+  "early_squeeze": 25
+ },
+ "last_bar": "2026-10-30",
+ "comeback": {
+  "large": 1165,
+  "beaten": 199,
+  "quality": 113,
+  "still_falling": 51,
+  "basing": 32,
+  "turning_up": 5,
+  "recovered": 25
+ },
+ "comeback_moved_up": [
+  "OTIS",
+  "ULS"
+ ],
+ "lists": {
+  "watch": 33,
+  "holdings": 0,
+  "longterm": 1,
+  "pins": 5,
+  "missing": []
+ },
+ "judgement": 33,
+ "problems": {},
+ "updated": "2026-10-30T22:18+00:00",
+ "date": "2026-10-30",
+ "seconds": 592
+}
