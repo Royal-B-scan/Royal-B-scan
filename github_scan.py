@@ -93,7 +93,8 @@ def main() -> None:
 
 
 def run_judgement() -> dict:
-    """Judgement Day for every stock on the page, Watching first. Uses that day's closes and earnings dates."""
+    """Judgement Day for Taylor's Watching list + holdings only (Oct 30: the page shows it on green and yellow
+    crowns, which live on Watching). Uses that day's closes and earnings dates."""
     def load(name):
         try:
             with open(os.path.join(SITE, name)) as fh:
@@ -103,14 +104,10 @@ def run_judgement() -> dict:
     sj, dj = load("scan.json"), load("data.json")
     lists = dj.get("lists") or {}
     order, closes, earn = [], {}, {}
-    for t in (lists.get("watch") or []) + (lists.get("holdings") or []) + (lists.get("longterm") or []) + (lists.get("pins") or []):
+    for t in (lists.get("watch") or []) + (lists.get("holdings") or []):
         order.append(t)
     early = sj.get("early") or []
     stocks = sj.get("stocks") or []
-    rank = lambda s: 0 if s.get("status") in ("BREAKOUT", "PULLBACK") else 1 if s.get("status", "").startswith("TRIGGER") \
-        or s.get("status") == "HEADS-UP" else 2  # noqa: E731
-    for s in sorted(early + stocks, key=rank):
-        order.append(s["ticker"])
     for s in (dj.get("stocks") or []) + (dj.get("holdings") or []) + (dj.get("longterm") or []) + early + stocks:
         t = s.get("ticker")
         if t and s.get("close"):
