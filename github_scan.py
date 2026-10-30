@@ -51,9 +51,17 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print("lists failed:", e, file=sys.stderr)
         status["lists_error"] = str(e)[:200]
+    # Oct 30: Judgement Day (info only) on every stock the page shows; goes into scan.json "judgement"
+    judgement = None
+    try:
+        judgement = run_judgement()
+        status["judgement"] = len(judgement["by"])
+    except Exception as e:  # noqa: BLE001
+        print("judgement failed:", e, file=sys.stderr)
+        status["judgement_error"] = str(e)[:200]
     # Oct 28: collect every failure in one place (status.json and scan.json), so the page can show it in red
     problems = dict(out.get("problems") or {})
-    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists")):
+    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists"), ("judgement_error", "judgement day")):
         if status.get(key):
             problems[label] = status[key]
     if isinstance(status.get("lists"), dict) and status["lists"].get("longterm_error"):
@@ -69,6 +77,8 @@ def main() -> None:
         with open(scan_path) as fh:
             sj = json.load(fh)
         sj["problems"] = problems
+        if judgement:
+            sj["judgement"] = judgement
         with open(scan_path, "w") as fh:
             json.dump(sj, fh, separators=(",", ":"))
     except Exception as e:  # noqa: BLE001
@@ -80,6 +90,36 @@ def main() -> None:
     with open(os.path.join(SITE, "status.json"), "w") as fh:
         json.dump(status, fh, indent=1)
     print("SUMMARY", json.dumps(status))
+
+
+def run_judgement() -> dict:
+    """Judgement Day for every stock on the page, Watching first. Uses that day's closes and earnings dates."""
+    def load(name):
+        try:
+            with open(os.path.join(SITE, name)) as fh:
+                return json.load(fh)
+        except Exception:  # noqa: BLE001
+            return {}
+    sj, dj = load("scan.json"), load("data.json")
+    lists = dj.get("lists") or {}
+    order, closes, earn = [], {}, {}
+    for t in (lists.get("watch") or []) + (lists.get("holdings") or []) + (lists.get("longterm") or []) + (lists.get("pins") or []):
+        order.append(t)
+    early = sj.get("early") or []
+    stocks = sj.get("stocks") or []
+    rank = lambda s: 0 if s.get("status") in ("BREAKOUT", "PULLBACK") else 1 if s.get("status", "").startswith("TRIGGER") \
+        or s.get("status") == "HEADS-UP" else 2  # noqa: E731
+    for s in sorted(early + stocks, key=rank):
+        order.append(s["ticker"])
+    for s in (dj.get("stocks") or []) + (dj.get("holdings") or []) + (dj.get("longterm") or []) + early + stocks:
+        t = s.get("ticker")
+        if t and s.get("close"):
+            closes.setdefault(t, s["close"])
+        e = s.get("earnings") or {}
+        if t and isinstance(e, dict) and isinstance(e.get("days"), int):
+            earn.setdefault(t, e["days"])
+    import judgement
+    return judgement.run(order, closes, earn)
 
 
 def build_lists() -> dict:
