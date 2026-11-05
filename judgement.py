@@ -119,6 +119,12 @@ def fetch(t: str) -> dict:
     raw["eps"] = _row(q, "Diluted EPS", "Basic EPS", n=5)
     raw["int"] = _row(q, "Interest Expense", "Interest Expense Non Operating", n=5)
     raw["shares"] = _row(q, "Diluted Average Shares", "Basic Average Shares", n=5)
+    raw["tax"] = _row(q, "Tax Provision", n=5)
+    raw["pretax"] = _row(q, "Pretax Income", n=5)
+    try:
+        raw["q_dates"] = [str(c)[:10] for c in list(q.columns)[:5]] if q is not None and not getattr(q, "empty", True) else []
+    except Exception:  # noqa: BLE001
+        raw["q_dates"] = []
     a = _filled(safe(lambda: tk.income_stmt, "annual"))
     raw["rev_fy"] = _row(a, "Total Revenue", "Operating Revenue", n=4)
     raw["shares_fy"] = _row(a, "Diluted Average Shares", "Basic Average Shares", n=4)
@@ -177,6 +183,23 @@ def fetch(t: str) -> dict:
     return raw
 
 
+def _one_time(q4):
+    """(index, typical EPS) of a quarter far out of line with the other three, else None.
+    Out of line = more than 3x the typical quarter's size and at least $0.50 a share away from it."""
+    v = [x for x in q4 if x is not None]
+    if len(q4) < 4 or len(v) < 4:
+        return None
+    best = None
+    for i, x in enumerate(q4):
+        others = sorted(q4[:i] + q4[i + 1:])
+        typ = others[1]                                  # median of the other three
+        scale = max(abs(typ), 0.05)
+        if abs(x - typ) >= 0.5 and abs(x - typ) > 3 * scale:
+            if best is None or abs(x - typ) > abs(q4[best[0]] - best[1]):
+                best = (i, typ)
+    return best
+
+
 # ------------------------------------------------------------------ judge (fast part)
 def judge(raw: dict, close: float | None = None, earnings_days: int | None = None) -> dict:
     close = _num(close) or _num(raw.get("close"))
@@ -195,6 +218,29 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
         S[sec].append({"label": label, "r": res, "d": detail, **({} if scored else {"info": True})})
 
     rev, gp, op, ni, eps = raw.get("rev") or [], raw.get("gp") or [], raw.get("op") or [], raw.get("ni") or [], raw.get("eps") or []
+    flags: list[str] = []
+
+    # Oct 31 (Taylor, after RNG): one quarter far out of line with the others is usually a one-time item
+    # (a tax-benefit release, a gain on a sale, a big write-down). Flag it so Taylor can look into it, and
+    # leave it out of the 12-month numbers (P/E, profit, ROE) by using the typical quarter instead.
+    eps_raw, ni_raw = eps, ni
+    odd = _one_time(eps[:4])
+    if odd is not None:
+        i, typical = odd
+        qd = (raw.get("q_dates") or [])
+        when = f"the quarter ending {qd[i]}" if i < len(qd) else "one recent quarter"
+        tx, pt = (raw.get("tax") or []), (raw.get("pretax") or [])
+        taxy = i < len(tx) and i < len(pt) and tx[i] is not None and tx[i] < 0 and pt[i] and abs(tx[i]) > abs(pt[i]) * 0.5
+        kind = "gain" if eps[i] > typical else "loss"
+        why = " It looks like a tax benefit (a big negative tax bill)." if taxy else ""
+        flags.append(f"One-time {kind}? EPS was {eps[i]:.2f} in {when} vs about {typical:.2f} in a typical quarter.{why} "
+                     f"Judgement Day left that quarter out of the P/E and profit checks. Check the earnings report for "
+                     f"words like \"one-time\", \"tax benefit\", \"valuation allowance\", \"gain on sale\" or \"impairment\".")
+        eps = [typical if j == i else v for j, v in enumerate(eps)]
+        if i < len(ni) and ni[i] is not None:
+            others = [v for j, v in enumerate(ni[:4]) if j != i and v is not None]
+            if others:
+                ni = [sorted(others)[len(others) // 2] if j == i else v for j, v in enumerate(ni)]
     m = lambda x: f"${x/1e9:.2f}B" if x is not None and abs(x) >= 1e9 else (f"${x/1e6:.0f}M" if x is not None else "?")  # noqa: E731
 
     # 1A growth
@@ -427,7 +473,7 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
     else:
         verdict = "PASS"
         why.append(f"business scored {score}%, risk-to-reward {plan['rr']}:1" if plan and plan.get("rr") else f"business scored {score}%")
-    return {"verdict": verdict, "score": score, "sp_score": sp_score, "why": why, "plan": plan, "sector": sector or None,
+    return {"verdict": verdict, "score": score, "sp_score": sp_score, "why": why, "plan": plan, "sector": sector or None, "flags": flags,
             "industry": raw.get("industry"), "sections": S, "checked": len(scored),
             "asof": datetime.fromtimestamp(raw.get("at", time.time()), timezone.utc).strftime("%Y-%m-%d")}
 
