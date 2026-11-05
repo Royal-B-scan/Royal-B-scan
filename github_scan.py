@@ -146,6 +146,23 @@ def build_lists() -> dict:
         lt_error = str(e)[:200]
     else:
         lt_error = None
+    # Nov 5: RSI-14 + OBV tags on Watching / Portfolio too (context.py, info only)
+    try:
+        import context
+        import yfinance as yf
+        rows = data.get("stocks", []) + data.get("holdings", [])
+        T = sorted({s["ticker"] for s in rows})
+        if T:
+            raw = yf.download(T, period="1y", interval="1d", group_by="ticker", auto_adjust=True, progress=False)
+            hist = {}
+            for t in T:
+                try:
+                    hist[t] = raw[t].dropna(subset=["Close"])
+                except KeyError:
+                    pass
+            context.attach(rows, hist)
+    except Exception as e:  # noqa: BLE001
+        print("context (lists) failed:", e, file=sys.stderr)
     data["source"] = "github"
     data["lists"] = {"watch": watch, "holdings": sorted(holdings), "longterm": sorted(longterm), "pins": pins}
     with open(os.path.join(SITE, "data.json"), "w") as fh:
