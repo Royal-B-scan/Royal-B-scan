@@ -93,8 +93,9 @@ def main() -> None:
 
 
 def run_judgement() -> dict:
-    """Judgement Day for Taylor's Watching list + holdings only (Oct 30: the page shows it on green and yellow
-    crowns, which live on Watching). Uses that day's closes and earnings dates."""
+    """Judgement Day for Taylor's Watching list + holdings (Oct 30), and since Nov 5 every Early Turn Buy signal
+    (breakout / pullback), so the page can show it on the Buy stocks too. Watching goes first, so if Yahoo is slow
+    the stocks he's watching still get checked. Uses that day's closes and earnings dates."""
     def load(name):
         try:
             with open(os.path.join(SITE, name)) as fh:
@@ -107,6 +108,8 @@ def run_judgement() -> dict:
     for t in (lists.get("watch") or []) + (lists.get("holdings") or []):
         order.append(t)
     early = sj.get("early") or []
+    order += [s["ticker"] for s in early
+              if s.get("ticker") and s.get("kind") != "ETF" and s.get("status") in ("BREAKOUT", "PULLBACK")]
     stocks = sj.get("stocks") or []
     for s in (dj.get("stocks") or []) + (dj.get("holdings") or []) + (dj.get("longterm") or []) + early + stocks:
         t = s.get("ticker")
