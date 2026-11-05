@@ -9,6 +9,8 @@ today's prices so far:
 and sends a phone notification (ntfy) only when a stock NEWLY turns TRIGGER or HEADS-UP.
 Oct 28: it also pings when a stock drops below the BOTTOM line of a channel Taylor drew on the page
 (lists.json "channels", synced from the page). Breaks above the top line are left alone: let winners run.
+Nov 4: it also pings when a stock with a saved trade plan (lists.json "plans", synced from the page) moves INTO
+its buy zone, or drops below its skip line (skip_below price, or the 20/50-day the plan names). Once per stock per day.
 Exits are not checked: Taylor's stop / limit orders at InvestorLine handle those.
 
 Today's volume is incomplete during the day, so it is scaled to a full-day pace
@@ -122,6 +124,47 @@ def channel_breaks(hist: dict, channels: dict, state: dict, today: str, now) -> 
     return out
 
 
+def plan_status(df, plan: dict) -> tuple[str, str]:
+    """'zone' (inside a buy zone), 'skip' (below the plan's skip price or moving average) or 'out', and a short why."""
+    c = df["Close"]
+    price = float(c.iloc[-1])
+    if plan.get("skip_below") is not None and price < float(plan["skip_below"]):
+        return "skip", f"below {float(plan['skip_below']):g}"
+    ma = str(plan.get("skip_ma") or "")
+    if ma.startswith("sma") and ma[3:].isdigit():
+        n = int(ma[3:])
+        if len(c) >= n:
+            sma = float(c.iloc[-n:].mean())
+            if price < sma:
+                return "skip", f"below the {n}-day (~{sma:.2f})"
+    for z in plan.get("zones") or []:
+        try:
+            if float(z["lo"]) <= price <= float(z["hi"]):
+                return "zone", str(z.get("label") or f"{z['lo']}-{z['hi']}")
+        except (KeyError, TypeError, ValueError):
+            continue
+    return "out", ""
+
+
+def plan_alerts(hist: dict, plans: dict, held: set, earn: dict, state: dict, today: str, now) -> list[dict]:
+    """Saved trade plans that NEWLY moved into a buy zone or below their skip line today (yesterday's close = baseline)."""
+    out, seen = [], state.setdefault("plan", {})
+    for t, plan in plans.items():
+        if t in held or not isinstance(plan, dict) or (plan.get("until") and str(plan["until"]) < today):
+            continue
+        df = hist.get(t)
+        if df is None or len(df) < 3 or df.index[-1].strftime("%Y-%m-%d") != today:
+            continue
+        status, why = plan_status(df, plan)
+        before = seen.get(t) or plan_status(df.iloc[:-1], plan)[0]
+        seen[t] = status
+        if status != before and status in ("zone", "skip"):
+            out.append({"ticker": t, "kind": "plan", "status": status, "why": why, "earn": earn.get(t),
+                        "price": round(float(df["Close"].iloc[-1]), 2), "time": now.strftime("%H:%M"),
+                        "currency": "CAD" if t.endswith((".TO", ".V")) else "USD"})
+    return out
+
+
 def notify(title: str, body: str, high: bool = False) -> None:
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     print(f"ALERT {title}: {body}")
@@ -167,7 +210,10 @@ def main() -> None:
     hist = get_history(tickers)
     channels = (load_json(os.path.join(BASE, "lists.json"), {}).get("channels") or {})
     channels = {str(t).strip().upper(): v for t, v in channels.items() if v}
-    extra = [t for t in channels if t not in hist]
+    lists = load_json(os.path.join(BASE, "lists.json"), {})
+    plans = {str(t).strip().upper(): v for t, v in (lists.get("plans") or {}).items() if v}
+    held = {str(t).strip().upper() for t in (lists.get("holdings") or {})}
+    extra = [t for t in list(channels) + list(plans) if t not in hist]
     if extra:
         try:
             hist.update(get_history(extra))
@@ -213,6 +259,29 @@ def main() -> None:
         breaks = channel_breaks(hist, channels, state, today, now)
     except Exception as e:  # noqa: BLE001
         print("channel check failed:", e, file=sys.stderr)
+    plan_hits = []
+    try:
+        earn = {}
+        for s in scan.get("stocks", []) + scan.get("early", []):
+            e = s.get("earnings") or {}
+            if isinstance(e.get("days"), int):
+                earn.setdefault(s["ticker"], e["days"])
+        plan_hits = plan_alerts(hist, plans, held, earn, state, today, now)
+    except Exception as e:  # noqa: BLE001
+        print("plan check failed:", e, file=sys.stderr)
+    for a in plan_hits:
+        er = a["earn"]
+        er_txt = f" Earnings in {er} days: a gap could jump your stop." if isinstance(er, int) and 0 <= er <= 7 else ""
+        if a["status"] == "zone":
+            notify(f"{a['ticker']}: in your buy zone",
+                   f"{a['ticker']} at ${a['price']} {a['currency']}: inside your plan's zone ({a['why']}).{er_txt} "
+                   f"Let it settle 15-30 min, then size it with Trade on the page. As of {when} PT. Not financial advice.",
+                   high=not er_txt)
+        else:
+            notify(f"{a['ticker']}: below your skip line",
+                   f"{a['ticker']} at ${a['price']} {a['currency']}: {a['why']}. Your plan says skip if it closes there. "
+                   f"As of {when} PT; not final until the close. Not financial advice.")
+
     if len(breaks) <= 4:
         for b in breaks:
             notify(f"{b['ticker']}: broke below your channel",
@@ -237,18 +306,19 @@ def main() -> None:
                (f"NEXT IN LINE: {', '.join(heads)}. " if heads else "") + (f"CROWNED: {', '.join(trig)}. " if trig else "")
                + f"As of {when} PT; not final until the close. Tap to open Royal B. Not financial advice.",
                high=bool(trig))
-    elif force and not breaks:
+    elif force and not breaks and not plan_hits:
         notify("Royal B alerts are connected",
-               f"Test check at {when} PT: {checked} stocks and {len(channels)} channels checked, nothing new. You'll get alerts "
-               f"like this when a stock is NEXT IN LINE for its cross, gets CROWNED, or drops below a channel you drew.")
+               f"Test check at {when} PT: {checked} stocks, {len(channels)} channels and {len(plans)} trade plans checked, nothing new. You'll get alerts "
+               f"like this when a stock is NEXT IN LINE for its cross, gets CROWNED, drops below a channel you drew, "
+               f"or moves into a trade plan's buy zone.")
 
     state["slots"].append(slot)
-    state["alerts"] = (state.get("alerts") or []) + new + breaks
+    state["alerts"] = (state.get("alerts") or []) + new + breaks + plan_hits
     state["checked_at"] = now.isoformat(timespec="minutes")
     os.makedirs(os.path.dirname(STATE), exist_ok=True)
     with open(STATE, "w") as fh:
         json.dump(state, fh, separators=(",", ":"))
-    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} pace={pace:.2f}")
+    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} plans={len(plan_hits)} pace={pace:.2f}")
 
 
 if __name__ == "__main__":
