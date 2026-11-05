@@ -226,6 +226,18 @@ def profile(df: pd.DataFrame, bench: pd.Series | None) -> dict:
     return {"channel": channel, "r1d": r1d, "r1m": r1m, "r3m": r3m, "rs3m": rs3m, "rs_high": rs_high}
 
 
+def near_52wh(df: pd.DataFrame) -> tuple[bool, float | None]:
+    """52WH badge (decided Nov 4, badge only): the close is within 3% of a 52-week closing high that was made in the
+    last 5 trading days. Gene's 52-week-high list as a Trend Cross filter passed both test periods
+    (backtest-gene-rules.md: PF 2.13 vs 1.22 in 2023-25, 1.11 vs 0.83 in 2026). Returns (badge, % below that high)."""
+    c = df["Close"].iloc[-252:]
+    if len(c) < 120:
+        return False, None
+    hi = float(c.max())
+    off = float(c.iloc[-1] / hi - 1) * 100
+    return bool(float(c.iloc[-5:].max()) >= hi and off >= -3.0), round(off, 1)
+
+
 def run_scan(progress=_noop) -> dict:
     from export_site import make_entry
 
@@ -237,7 +249,7 @@ def run_scan(progress=_noop) -> dict:
     bench = {"USD": _bench_close(hist, "SPY"), "CAD": _bench_close(hist, "XIU.TO")}
 
     progress("Checking rules", None, None, None)
-    liquid, hits, setting_up, rows = 0, [], [], []
+    liquid, hits, setting_up, rows, liquid_t = 0, [], [], [], []
     for t, df in hist.items():
         if len(df) < 80:
             continue
@@ -246,6 +258,7 @@ def run_scan(progress=_noop) -> dict:
         if dollar_vol < _floor(m.get("kind"), m.get("currency")) or df["Close"].iloc[-1] <= CONFIG["min_price"]:
             continue
         liquid += 1
+        liquid_t.append(t)
         try:
             pr = profile(df, bench.get(m.get("currency", "USD")) if bench.get(m.get("currency", "USD")) is not None else bench["USD"])
             sig = analyze(df, rvol_for(m.get("market_cap", 0)))
@@ -259,6 +272,8 @@ def run_scan(progress=_noop) -> dict:
             entry.update(kind=m.get("kind", "Stock"), sector=m.get("sector", "Other"), market_cap=m.get("market_cap", 0),
                          dollar_vol=round(dollar_vol), rs3m=round(pr["rs3m"] * 100, 1), r1m=round(pr["r1m"] * 100, 1),
                          rs_high=pr["rs_high"])
+            wh, off_hi = near_52wh(df)
+            entry.update(wh52=wh, off_hi52=off_hi)
             (hits if sig else setting_up).append(entry)
 
     order = lambda s: 0 if s["status"] == "TRIGGER" else 1 if s["status"].startswith("TRIGGERED") else 2  # noqa: E731
@@ -332,6 +347,17 @@ def run_scan(progress=_noop) -> dict:
         print("breadth failed:", e, file=sys.stderr)
         problems["breadth"] = str(e)[:200]
 
+    # Weekly Trend (Nov 4): weekly 8-EMA crosses above the weekly 21-SMA, close above a rising 40-week (weekly.py).
+    # Info only: its own Screener tab; it never feeds Today, Watch Alerts or the crowns.
+    weekly = None
+    try:
+        import weekly as weekly_mod
+        progress("Weekly Trend screen", None, None, None)
+        weekly = weekly_mod.screen(hist, meta, liquid_t)
+    except Exception as e:  # noqa: BLE001
+        print("weekly trend failed:", e, file=sys.stderr)
+        problems["weekly trend"] = str(e)[:200]
+
     counts = {
         "universe": len(uni),
         "stocks": int((uni["kind"] == "Stock").sum()),
@@ -345,6 +371,9 @@ def run_scan(progress=_noop) -> dict:
         "early_breakout": sum(1 for e in early if e["status"] == "BREAKOUT"),
         "early_pullback": sum(1 for e in early if e["status"] == "PULLBACK"),
         "early_squeeze": sum(1 for e in early if e["status"] == "SQUEEZE"),
+        "wh52": sum(1 for h in hits + setting_up if h.get("wh52")),
+        "weekly_new": (weekly or {}).get("counts", {}).get("new", 0),
+        "weekly": (weekly or {}).get("counts", {}).get("total", 0),
     }
     out = {
         "updated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
@@ -356,6 +385,7 @@ def run_scan(progress=_noop) -> dict:
         "stocks": hits + setting_up,
         "early": early,
         "breadth": breadth,
+        "weekly": weekly,
         "problems": problems,
     }
     try:
