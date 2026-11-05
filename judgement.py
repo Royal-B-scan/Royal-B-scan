@@ -14,7 +14,9 @@ No chart section: the screeners already check the trend, the 50/200-day lines an
 Verdict
   SKIP  free cash flow negative, or the balance sheet fails (interest coverage < 2x or debt/equity > 2),
         or the business score is under 50%            ("fail 1C or 1D: skip it, even if the chart looks great")
-  WAIT  business score under 70%, or risk-to-reward under 2:1   ("wait for the next pitch")
+  WAIT  business score under 70%, earnings in the next week, or earnings falling + estimates cut + missing estimates
+        ("wait for the next pitch"). Nov 5: reward-to-risk is shown but no longer decides it; utilities judged on
+        cash from operations; a high debt-to-equity only skips when the debt is hard to carry
   PASS  everything else
   NODATA Yahoo gave us too little to judge
 
@@ -131,6 +133,7 @@ def fetch(t: str) -> dict:
 
     cf = safe(lambda: tk.quarterly_cashflow, "cashflow")
     raw["fcf"] = _row(cf, "Free Cash Flow", n=5)
+    raw["ocf"] = _row(cf, "Operating Cash Flow", "Cash Flow From Continuing Operating Activities", n=5)   # Nov 5: utilities
     raw["buyback"] = _row(cf, "Repurchase Of Capital Stock", n=4)
     bs = safe(lambda: tk.quarterly_balance_sheet, "balance")
     raw["cash"] = _row(bs, "Cash Cash Equivalents And Short Term Investments", "Cash And Cash Equivalents", n=1)
@@ -302,7 +305,15 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
     if fttm is None and raw.get("freeCashflow") is not None:
         fttm = raw["freeCashflow"]
     if fttm is not None:
-        add("cash", "Free cash flow positive", "pass" if fttm > 0 else "fail", f"{m(fttm)} over the last 12 months")
+        ottm_cf = _ttm(raw.get("ocf") or [])
+        if fttm <= 0 and fin and (ottm_cf is None or ottm_cf > 0) and (nttm is None or nttm > 0):
+            # Nov 5 (Taylor): utilities and pipelines spend more building plants and lines than they take in, by design.
+            # Judge them on cash from operations (before that building) instead of skipping them.
+            add("cash", "Free cash flow positive", "warn",
+                f"{m(fttm)} over the last 12 months, from building (normal in this sector)"
+                + (f" · cash from operations {m(ottm_cf)}" if ottm_cf is not None else ""))
+        else:
+            add("cash", "Free cash flow positive", "pass" if fttm > 0 else "fail", f"{m(fttm)} over the last 12 months")
         if nttm and nttm > 0:
             r = fttm / nttm
             add("cash", "Profit backed by cash (FCF vs net income)", "pass" if r >= 0.7 else "warn" if r >= 0.4 else "fail",
@@ -353,6 +364,24 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
             else:
                 add("balance", "Interest easily covered (above 5x)", "pass" if cov >= 5 else "warn" if cov >= 2 else "fail",
                     f"operating profit covers interest {cov:.1f}x", scored=not fin)
+
+    # Nov 5 (Taylor): big buybacks shrink equity, so debt-to-equity can look huge for a healthy company (CVLT, ZTS, CDW).
+    # A high ratio only fails (and skips) when the debt is hard to carry: interest covered under 5x, or net debt more
+    # than 4 years of operating profit. Otherwise it's a warning.
+    de_c = next((c for c in S["balance"] if c["label"].startswith("Debt-to-equity") and c["r"] == "fail"), None)
+    if de_c is not None:
+        cov_c = next((c for c in S["balance"] if c["label"].startswith("Interest")), None)
+        cov_ok = cov_c is None or cov_c["r"] == "pass"
+        nd = (debt or 0) - (cash or 0)
+        yrs = nd / ottm if ottm and ottm > 0 else None
+        if cov_ok and yrs is not None and yrs <= 4:
+            de_c["r"] = "warn"
+            de_c["d"] += (f" · high, but easy to carry: net debt is {max(yrs, 0):.1f} years of operating profit"
+                          + (" and interest is well covered" if cov_c is not None else "")
+                          + (" (buybacks shrank the equity)" if any(x for x in (raw.get("buyback") or []) if x and x < 0) else ""))
+        else:
+            de_c["d"] += (f" · and hard to carry: net debt is {yrs:.1f} years of operating profit" if yrs is not None and yrs > 4
+                          else " · and interest isn't well covered" if not cov_ok else "")
 
     # 1E valuation
     epsttm = _ttm(eps) or raw.get("trailingEps")
@@ -435,12 +464,12 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
             good_entry = target / (1 + MIN_RR * STOP_PCT)       # price where the 8% stop gives 2:1
             plan = {"entry": _r(close, 2), "stop": _r(stop, 2), "target": _r(target, 2), "target_is": tsrc,
                     "rr": _r(rr, 1), "rr_entry": _r(good_entry, 2)}
-            add("plan", f"Risk-to-reward at least {MIN_RR:.0f}:1", "pass" if rr >= MIN_RR else "warn" if rr >= 1.5 else "fail",
+            add("plan", f"Risk-to-reward at least {MIN_RR:.0f}:1 (info only)", "pass" if rr >= MIN_RR else "warn" if rr >= 1.5 else "fail",
                 f"{rr:.1f}:1 buying at ${close:.2f}, stop ${stop:.2f} (8%), target ${target:.2f} ({tsrc})"
                 + ("" if rr >= MIN_RR else f" · reaches 2:1 at ${good_entry:.2f} or lower"))
         else:
             plan = {"entry": _r(close, 2), "stop": _r(stop, 2), "target": None, "rr": None}
-            add("plan", f"Risk-to-reward at least {MIN_RR:.0f}:1", "warn", "no target: it's at its high and analysts are below the price")
+            add("plan", f"Risk-to-reward at least {MIN_RR:.0f}:1 (info only)", "warn", "no target: it's at its high and analysts are below the price")
 
     # score + verdict
     scored = [c for k in ("growth", "profit", "cash", "balance", "value", "holders") for c in S[k] if not c.get("info") and c["r"] != "na"]
@@ -454,6 +483,11 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
             and (c["label"].startswith("Free cash flow positive") or c["label"].startswith("Interest") or c["label"].startswith("Debt"))]
     rr_c = next((c for c in S["plan"]), None)
     story_fail = [c for c in S["story"] if c["r"] == "fail"]
+    # Nov 5 (Taylor, after MEOH): earnings falling, next year expected lower, AND missing estimates = the business is
+    # getting worse, so WAIT however high the score. (Falling on one-time items alone, like GOOG's, still beats estimates.)
+    g_fail = {c["label"]: c for c in S["growth"] if c["r"] == "fail"}
+    worse = [g_fail[k] for k in ("Earnings per share growing", "Next year's EPS estimate above this year's", "Beat earnings estimates lately") if k in g_fail]
+    worse = worse if len(worse) == 3 else []
     if len(scored) < 6:
         verdict = "NODATA"
         why.append("Yahoo didn't return enough financials to judge it")
@@ -463,16 +497,21 @@ def judge(raw: dict, close: float | None = None, earnings_days: int | None = Non
     elif score < 50:
         verdict = "SKIP"
         why.append(f"business scored {score}%")
-    elif score < 70 or (rr_c and rr_c["r"] != "pass") or story_fail:
+    elif score < 70 or story_fail or worse:
         verdict = "WAIT"
         if score < 70:
             why.append(f"business scored {score}% (want 70%+)")
-        if rr_c and rr_c["r"] != "pass":
-            why.append(rr_c["d"])
+        if worse:
+            why.append("earnings getting worse: " + " · ".join(f"{c['label'].lower()}: {c['d']}" for c in worse))
         why += [f"{c['label']}: {c['d']}" for c in story_fail]
     else:
         verdict = "PASS"
-        why.append(f"business scored {score}%, risk-to-reward {plan['rr']}:1" if plan and plan.get("rr") else f"business scored {score}%")
+        why.append(f"business scored {score}%")
+    # Nov 5 (Taylor): reward-to-risk is shown but no longer decides the verdict. Our trades exit at the 8% stop or a close
+    # below the 50-day, not at the analyst target, and Buy signals sit near their highs where the target is close.
+    if verdict in ("PASS", "WAIT") and rr_c is not None and plan:
+        why.append(f"reward-to-risk {plan['rr']}:1 to the {plan.get('target_is')} (info only)" if plan.get("rr") is not None
+                   else "no price target above today's price (info only)")
     return {"verdict": verdict, "score": score, "sp_score": sp_score, "why": why, "plan": plan, "sector": sector or None, "flags": flags,
             "industry": raw.get("industry"), "sections": S, "checked": len(scored),
             "asof": datetime.fromtimestamp(raw.get("at", time.time()), timezone.utc).strftime("%Y-%m-%d")}
