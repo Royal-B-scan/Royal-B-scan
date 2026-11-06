@@ -1,0 +1,45 @@
+{
+ "ok": true,
+ "counts": {
+  "universe": 3783,
+  "stocks": 3103,
+  "etfs": 680,
+  "liquid": 3522,
+  "hits": 17,
+  "trigger": 2,
+  "triggered": 7,
+  "headsup": 8,
+  "setting_up": 100,
+  "early_breakout": 10,
+  "early_pullback": 25,
+  "early_squeeze": 25,
+  "wh52": 52,
+  "weekly_new": 62,
+  "weekly": 181
+ },
+ "last_bar": "2026-11-06",
+ "comeback": {
+  "large": 1163,
+  "beaten": 167,
+  "quality": 87,
+  "still_falling": 44,
+  "basing": 18,
+  "turning_up": 8,
+  "recovered": 17
+ },
+ "comeback_moved_up": [
+  "TME"
+ ],
+ "lists": {
+  "watch": 41,
+  "holdings": 0,
+  "longterm": 1,
+  "pins": 6,
+  "missing": []
+ },
+ "judgement": 76,
+ "problems": {},
+ "updated": "2026-11-06T22:25+00:00",
+ "date": "2026-11-06",
+ "seconds": 670
+}
