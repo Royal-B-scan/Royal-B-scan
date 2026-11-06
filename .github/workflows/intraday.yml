@@ -5,7 +5,8 @@ on:
     # UTC times that cover New York summer and winter time; the script only acts inside its
     # windows (10:00am, 1:00pm, 3:15pm New York time) and once per window.
     - cron: "5 14,15,17,18 * * 1-5"
-    - cron: "20 19,20 * * 1-5"
+    - cron: "20 19 * * 1-5"
+    - cron: "5,25,45 20 * * 1-5"
   workflow_dispatch:           # "Run workflow" button: a test check that pings your phone
 
 permissions:
