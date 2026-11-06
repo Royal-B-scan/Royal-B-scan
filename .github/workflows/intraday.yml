@@ -17,10 +17,10 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Get the latest scan and today's alert state
         run: |
@@ -29,7 +29,7 @@ jobs:
           git show origin/results:scan.json > site/scan.json
           git show origin/results:intraday.json > site/intraday.json 2>/dev/null || rm -f site/intraday.json
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
