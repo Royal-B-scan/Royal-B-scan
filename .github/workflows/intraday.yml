@@ -29,6 +29,7 @@ jobs:
           git fetch -q origin results
           git show origin/results:scan.json > site/scan.json
           git show origin/results:intraday.json > site/intraday.json 2>/dev/null || rm -f site/intraday.json
+          git show origin/results:data.json > site/data.json 2>/dev/null || rm -f site/data.json
 
       - uses: actions/setup-python@v6
         with:
