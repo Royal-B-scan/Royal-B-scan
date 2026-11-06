@@ -1,5 +1,5 @@
-yfinance>=0.2.54
-pandas
-numpy
-requests
-tabulate
+yfinance==1.7.0
+pandas==3.1.0
+numpy==2.5.4
+requests==2.34.2
+tabulate==0.10.0
