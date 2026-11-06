@@ -14,7 +14,7 @@ its buy zone, or drops below its skip line (skip_below price, or the 20/50-day t
 Exits are not checked: Taylor's stop / limit orders at InvestorLine handle those.
 
 Today's volume is incomplete during the day, so it is scaled to a full-day pace
-(volume so far / fraction of the 9:30am-4:00pm ET session elapsed). A morning signal can fade by
+(volume so far / share of a normal day's volume that has usually traded by now: VOLUME_CURVE, Nov 6). A morning signal can fade by
 the close; the daily 3:20pm summary has the final status.
 
   python intraday.py           normal scheduled run (only inside the check windows)
@@ -44,6 +44,25 @@ OPEN_MIN, CLOSE_MIN = 9 * 60 + 30, 16 * 60          # regular session, New York 
 SLOTS = [("open", 10 * 60, 11 * 60 + 40), ("midday", 13 * 60, 14 * 60 + 40), ("late", 15 * 60 + 15, 16 * 60)]
 ALERT_ON = ("TRIGGER", "HEADS-UP")
 NAME = {"TRIGGER": "CROWNED", "HEADS-UP": "NEXT IN LINE"}   # names shown in the alerts (Oct 22)
+
+
+# Nov 6: share of a normal day's volume that has traded by each time (New York), measured from 5-minute bars
+# (70 US stocks, last 60 trading days, median). The old straight-line pace overstated volume early and
+# understated it in the afternoon (at 3:15pm 72% of the day has traded, not 88%), so afternoon signals were missed.
+VOLUME_CURVE = [(0, 0.0), (30, 0.098), (60, 0.172), (90, 0.236), (120, 0.298), (150, 0.354), (180, 0.411),
+                (210, 0.462), (240, 0.514), (270, 0.570), (300, 0.626), (330, 0.685), (345, 0.721), (360, 0.761),
+                (375, 0.820), (385, 0.870), (390, 1.0)]
+
+
+def day_fraction(minute: int) -> float:
+    """Fraction of a normal day's volume done by this minute (New York time), for scaling today's volume so far."""
+    m = minute - OPEN_MIN
+    if m >= 390:
+        return 1.0
+    for (m0, f0), (m1, f1) in zip(VOLUME_CURVE, VOLUME_CURVE[1:]):
+        if m <= m1:
+            return max(f0 + (f1 - f0) * (max(m, m0) - m0) / (m1 - m0), 0.04)
+    return 1.0
 
 
 def slot_for(minute: int) -> str | None:
@@ -199,6 +218,10 @@ def main() -> None:
 
     scan = load_json(SCAN, {})
     cands = {s["ticker"]: s for s in scan.get("stocks", []) if s.get("kind") != "ETF"}
+    # Nov 6: market caps for Watching / Portfolio stocks that aren't in today's screen (data.json), so big companies
+    # use the 1.2x volume rule here too instead of 1.5x
+    caps = {s["ticker"]: s.get("market_cap") for s in (lambda d: d.get("stocks", []) + d.get("holdings", []))(
+        load_json(os.path.join(BASE, "site", "data.json"), {})) if s.get("market_cap")}
     watch = watchlist()
     tickers = list(dict.fromkeys(list(cands) + watch))
     if not tickers:
@@ -219,7 +242,7 @@ def main() -> None:
             hist.update(get_history(extra))
         except Exception as e:  # noqa: BLE001
             print("channel history failed:", e, file=sys.stderr)
-    pace = min(max((minute - OPEN_MIN) / (CLOSE_MIN - OPEN_MIN), 0.04), 1.0)
+    pace = day_fraction(minute)
     new, checked = [], 0
     for t in tickers:
         df = hist.get(t)
@@ -230,7 +253,7 @@ def main() -> None:
         vcol = adj.columns.get_loc("Volume")
         adj.iloc[-1, vcol] = float(adj.iloc[-1, vcol]) / pace
         try:
-            rv = rvol_for((cands.get(t) or {}).get("market_cap", 0))
+            rv = rvol_for((cands.get(t) or {}).get("market_cap") or caps.get(t) or 0)
             sig = analyze(adj, rv)
             before = state["status"].get(t)
             if before is None:                      # first look today: yesterday's close is the baseline

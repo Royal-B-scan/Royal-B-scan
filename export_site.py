@@ -12,13 +12,15 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-from screener import CONFIG, analyze, get_history
+from screener import CONFIG, analyze, get_history, rvol_for
 
 SITE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "site")
 
 
-def rule_checks(df: pd.DataFrame) -> list[dict]:
-    """Plain-language pass/fail breakdown of every Rules v1 condition."""
+def rule_checks(df: pd.DataFrame, rvol_min: float | None = None) -> list[dict]:
+    """Plain-language pass/fail breakdown of every Rules v1 condition.
+    rvol_min: the volume this stock needs (1.2x for $10B+ companies, else 1.5x; Nov 6: was always shown as 1.5x)."""
+    rvol_min = rvol_min or CONFIG["rvol_trigger"]
     c, h, l, v = df["Close"], df["High"], df["Low"], df["Volume"]
     f, m, s = (c.rolling(CONFIG[k]).mean() for k in ("fast_ma", "mid_ma", "slow_ma"))
     v50, v5 = v.rolling(50).mean(), v.rolling(5).mean()
@@ -44,8 +46,8 @@ def rule_checks(df: pd.DataFrame) -> list[dict]:
         {"group": "MA cross", "label": "10-day moving toward / away from 20-day",
          "pass": bool(gap > gap_prev),
          "detail": "converging up" if gap > gap_prev else "moving down"},
-        {"group": "Volume", "label": f"Volume ≥ {CONFIG['rvol_trigger']}× 50-day average",
-         "pass": bool(rvol >= CONFIG["rvol_trigger"]), "detail": f"{rvol:.2f}×"},
+        {"group": "Volume", "label": f"Volume ≥ {rvol_min:g}× 50-day average (today)",
+         "pass": bool(rvol >= rvol_min), "detail": f"{rvol:.2f}×"},
         {"group": "Volume", "label": "5-day average volume rising",
          "pass": bool(v5.iloc[-1] > v5.iloc[-6]),
          "detail": f"{v5.iloc[-1] / 1e6:.1f}M vs {v5.iloc[-6] / 1e6:.1f}M"},
@@ -81,7 +83,7 @@ def timeframes(tickers: list[str]) -> dict[str, dict]:
                 continue
             for t in chunk:
                 try:
-                    df = (data[t] if len(chunk) > 1 else data).dropna(subset=["Close"])
+                    df = (data[t] if isinstance(data.columns, pd.MultiIndex) else data).dropna(subset=["Close"])
                 except (KeyError, TypeError):
                     continue
                 if len(df) >= 5:
@@ -116,7 +118,7 @@ def make_entry(t, df, name, currency, exchange, sig) -> dict:
         "status": sig["status"] if sig else "NO SIGNAL",
         "exit_level": sig["exit_level"] if sig else None,
         "rvol": sig["rvol"] if sig else round(float(df["Volume"].iloc[-1] / df["Volume"].iloc[-50:].mean()), 2),
-        "checks": rule_checks(df),
+        "checks": rule_checks(df, (sig or {}).get("rvol_min")),
         "series": series(df),
     }
 
@@ -143,7 +145,7 @@ def build(tickers: list[str], holdings: dict | None = None) -> dict:
         if df is None:
             continue
         currency = "CAD" if t.endswith((".TO", ".V")) else "USD"
-        name, exchange = t, ""
+        name, exchange, mcap = t, "", 0
         try:
             tk = yf.Ticker(t)
             tk.history(period="5d")
@@ -153,7 +155,15 @@ def build(tickers: list[str], holdings: dict | None = None) -> dict:
             exchange = meta.get("fullExchangeName", "")
         except Exception:  # noqa: BLE001
             pass
-        stocks.append(make_entry(t, df, name, currency, exchange, analyze(df)))
+        try:   # Nov 6: big companies need 1.2x volume, same as the screener (Watching used 1.5x for everyone)
+            mcap = float(tk.fast_info["marketCap"] or 0)
+        except Exception:  # noqa: BLE001
+            mcap = 0
+        entry = make_entry(t, df, name, currency, exchange, analyze(df, rvol_for(mcap)))
+        entry["checks"] = rule_checks(df, rvol_for(mcap))
+        if mcap:
+            entry["market_cap"] = round(mcap)
+        stocks.append(entry)
     extra = timeframes([s["ticker"] for s in stocks])
     for s in stocks:
         s["tf"] = extra.get(s["ticker"], {})

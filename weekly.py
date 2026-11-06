@@ -111,7 +111,7 @@ def _yahoo_weekly(tickers: list[str]) -> dict[str, pd.DataFrame]:
             continue
         for t in chunk:
             try:
-                df = (data[t] if len(chunk) > 1 else data).dropna(subset=["Close"])
+                df = (data[t] if isinstance(data.columns, pd.MultiIndex) else data).dropna(subset=["Close"])
             except (KeyError, TypeError):
                 continue
             if len(df) >= 30:

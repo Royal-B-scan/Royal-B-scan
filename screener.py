@@ -93,7 +93,7 @@ def get_history(tickers: list[str], batch: int = 200) -> dict[str, pd.DataFrame]
                            auto_adjust=True, threads=True, progress=False)
         for t in chunk:
             try:
-                df = data[t] if len(chunk) > 1 else data
+                df = data[t] if isinstance(data.columns, pd.MultiIndex) else data
                 df = df.dropna(subset=["Close"])
                 if len(df) >= 80:
                     out[t] = df

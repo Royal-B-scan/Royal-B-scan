@@ -167,27 +167,55 @@ def update_history(tickers: list[str], progress=_noop, batch: int = 250) -> dict
     new = [t for t in tickers if t not in cache]
     jobs = [(new[i:i + batch], "1y") for i in range(0, len(new), batch)] + \
            [(fresh[i:i + batch * 2], "1mo") for i in range(0, len(fresh), batch * 2)]
-    done = 0
+    done, redo = 0, []
     for chunk, period in jobs:
         data = _download(chunk, period)
         if data is not None:
             for t in chunk:
                 try:
-                    df = data[t] if len(chunk) > 1 else data
+                    df = data[t] if isinstance(data.columns, pd.MultiIndex) else data
                     df = df.dropna(subset=["Close"])[["Open", "High", "Low", "Close", "Volume"]]
                 except (KeyError, TypeError):
                     continue
                 if df.empty:
                     continue
                 if t in cache and period != "1y":
+                    if _rescaled(cache[t], df):
+                        redo.append(t)       # split / special dividend: Yahoo re-adjusted the past, so reload the year
+                        continue
                     df = pd.concat([cache[t], df])
                     df = df[~df.index.duplicated(keep="last")].sort_index()
                 cache[t] = df.iloc[-300:]
         done += len(chunk)
         progress("Downloading prices", done, len(tickers), None)
         time.sleep(0.3)
+    # Nov 6: stocks whose saved prices no longer match Yahoo's (a split or special dividend) get a fresh year
+    if redo:
+        print(f"  re-downloading a full year for {len(redo)} re-adjusted stocks: {', '.join(redo[:20])}", file=sys.stderr)
+        for i in range(0, len(redo), batch):
+            chunk = redo[i:i + batch]
+            data = _download(chunk, "1y")
+            if data is None:
+                continue
+            for t in chunk:
+                try:
+                    df = (data[t] if isinstance(data.columns, pd.MultiIndex) else data).dropna(subset=["Close"])[["Open", "High", "Low", "Close", "Volume"]]
+                except (KeyError, TypeError):
+                    continue
+                if not df.empty:
+                    cache[t] = df.iloc[-300:]
     _save_cache(cache)
     return {t: cache[t] for t in tickers if t in cache}
+
+
+def _rescaled(old: pd.DataFrame, new: pd.DataFrame, tol: float = 0.02) -> bool:
+    """True when Yahoo's fresh closes differ from the saved ones on the same past days by more than 2%
+    (it re-adjusts the whole history after a split or a special dividend). Today's bar is left out (still moving)."""
+    both = old["Close"].align(new["Close"], join="inner")
+    a, b = both[0].iloc[:-1], both[1].iloc[:-1]
+    if len(a) < 3:
+        return False
+    return bool(((b / a - 1).abs() > tol).any())
 
 
 # ---------------------------------------------------------------- scan
@@ -266,7 +294,8 @@ def run_scan(progress=_noop) -> dict:
             continue
         rows.append({"ticker": t, "sector": m.get("sector", "Other"), **pr})
         if sig or (pr["channel"] and pr["rs_high"] and pr["rs3m"] > 0):
-            status_sig = sig or {"status": "SETTING UP", "exit_level": round(float(df["Close"].rolling(50).mean().iloc[-1]), 2),
+            status_sig = sig or {"status": "SETTING UP", "rvol_min": rvol_for(m.get("market_cap", 0)),
+                                 "exit_level": round(float(df["Close"].rolling(50).mean().iloc[-1]), 2),
                                  "rvol": round(float(df["Volume"].iloc[-1] / df["Volume"].iloc[-50:].mean()), 2)}
             entry = make_entry(t, df, m.get("name", t), m.get("currency", "USD"), m.get("exchange", ""), status_sig)
             entry.update(kind=m.get("kind", "Stock"), sector=m.get("sector", "Other"), market_cap=m.get("market_cap", 0),

@@ -100,7 +100,7 @@ def download(tickers: list[str], period: str = "2y") -> dict[str, pd.DataFrame]:
             continue
         for t in chunk:
             try:
-                df = (data[t] if len(chunk) > 1 else data).dropna(subset=["Close"])
+                df = (data[t] if isinstance(data.columns, pd.MultiIndex) else data).dropna(subset=["Close"])
                 df = df[["Open", "High", "Low", "Close", "Volume"]]
             except (KeyError, TypeError):
                 continue
