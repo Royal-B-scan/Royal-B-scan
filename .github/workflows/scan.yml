@@ -28,6 +28,9 @@ jobs:
 
       - name: Install packages
         run: pip install -q -r requirements.txt
+
+      - name: Don't scan while the market is open
+        run: python -c "import sys; from scan import market_open_now; sys.exit('The market is still open, so this would save a half-finished day. Run the test after 1pm Pacific.' if market_open_now() else 0)"
         
       - name: Get the latest lists from the page
         run: python sync_lists.py
@@ -41,6 +44,7 @@ jobs:
           cp site/scan.json site/status.json /tmp/out/
           [ -f site/comeback.json ] && cp site/comeback.json /tmp/out/ || true
           [ -f site/data.json ] && cp site/data.json /tmp/out/ || true
+          git fetch -q origin results && git show origin/results:intraday.json > /tmp/out/intraday.json 2>/dev/null || rm -f /tmp/out/intraday.json
           cd /tmp/out
           git init -q -b results
           git add .
