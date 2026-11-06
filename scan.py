@@ -358,6 +358,18 @@ def run_scan(progress=_noop) -> dict:
         print("weekly trend failed:", e, file=sys.stderr)
         problems["weekly trend"] = str(e)[:200]
 
+    # Nov 6: RSI-14 + OBV tags on every screener row and the credit light (context.py, info only, Nov 5).
+    # Nothing here changes Buy / Almost / Skip, crowns, Today or alerts.
+    credit = None
+    try:
+        import context
+        progress("RSI, OBV and credit light", None, None, None)
+        context.attach(hits + setting_up + early + list((weekly or {}).get("rows") or []), hist)
+        credit = context.credit(hist, fetch=lambda t: _bench_close(hist, t))
+    except Exception as e:  # noqa: BLE001
+        print("context failed:", e, file=sys.stderr)
+        problems["rsi / obv / credit"] = str(e)[:200]
+
     counts = {
         "universe": len(uni),
         "stocks": int((uni["kind"] == "Stock").sum()),
@@ -386,6 +398,7 @@ def run_scan(progress=_noop) -> dict:
         "early": early,
         "breadth": breadth,
         "weekly": weekly,
+        "credit": credit,
         "problems": problems,
     }
     try:
