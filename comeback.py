@@ -361,7 +361,40 @@ def build(progress=_noop) -> dict:
     except Exception as e:  # noqa: BLE001
         print("comeback earnings failed:", e, file=sys.stderr)
     rows.sort(key=lambda r: (-r["cb"]["stage"], -(r["market_cap"] or 0)))
-    counts = {"large": len(uni), "beaten": len(beaten), "quality": len(rows),
+    # Nov 9 (Taylor): Comeback Turn = first close back above the 20-day after an oversold low (turn.py). Checked on every
+    # large cap that was beaten down in the last 60 days, so it can fire before the stock shows up on Comebacks.
+    turns = []
+    try:
+        import turn as turn_mod
+        by = {r["ticker"]: r for r in rows}
+        for t, df in hist.items():
+            try:
+                tu = turn_mod.turn(df, spy)
+            except Exception:  # noqa: BLE001
+                continue
+            if not tu:
+                continue
+            if t in by:
+                by[t]["turn"] = tu
+                turns.append(by[t])
+                continue
+            cb = comeback_info(df, spy)
+            if not cb:
+                continue
+            f = fund.get(t)
+            row = make_row(t, df, uni.get(t, {}), cb, f)
+            row["turn"] = tu
+            row["quality"] = quality_ok(f) if f else None    # None = company numbers not checked (wasn't beaten today)
+            turns.append(row)
+        try:
+            import earnings
+            earnings.attach([r for r in turns if r["ticker"] not in by])
+        except Exception as e:  # noqa: BLE001
+            print("turn earnings failed:", e, file=sys.stderr)
+        turns.sort(key=lambda r: -(r["market_cap"] or 0))
+    except Exception as e:  # noqa: BLE001
+        print("comeback turn failed:", e, file=sys.stderr)
+    counts = {"large": len(uni), "beaten": len(beaten), "quality": len(rows), "turn": len(turns),
               **{STAGES[s].lower().replace(" ", "_"): sum(1 for r in rows if r["cb"]["stage"] == s) for s in STAGES}}
     return {
         "updated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
@@ -370,7 +403,9 @@ def build(progress=_noop) -> dict:
                      "margin_min": 5, "fpe_max": 30, "rev_min": -10, "fcf_positive": True},
         "counts": counts,
         "moved_up": [r["ticker"] for r in rows if r["cb"]["moved_up"]],
+        "turn_signals": [r["ticker"] for r in turns],
         "rows": rows,
+        "turn": turns,
     }
 
 

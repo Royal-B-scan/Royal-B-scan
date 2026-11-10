@@ -43,6 +43,10 @@ def main() -> None:
             json.dump(cb, fh, separators=(",", ":"))
         status["comeback"] = cb["counts"]
         status["comeback_moved_up"] = cb["moved_up"]
+        # Nov 9 (Taylor): a Comeback Turn (the ROP move) is the number-one alert: the Apps Script sends it as its own urgent push
+        status["comeback_turn"] = [{"ticker": r["ticker"], "name": r.get("name"), "close": r["turn"]["close"],
+                                    "stop": r["turn"]["stop"], "sma20": r["turn"]["sma20"], "quality": r.get("quality", True),
+                                    "currency": r.get("currency")} for r in cb.get("turn") or []]
     except Exception as e:  # noqa: BLE001
         print("comeback failed:", e, file=sys.stderr)
         status["comeback_error"] = str(e)[:200]
@@ -59,9 +63,35 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print("judgement failed:", e, file=sys.stderr)
         status["judgement_error"] = str(e)[:200]
+    # Nov 9: Top 5 front page from every screener, calmest first (top5.py). "new" = not in yesterday's Top 5.
+    top5 = None
+    try:
+        import top5 as top5_mod
+        def _load(name):
+            with open(os.path.join(SITE, name)) as fh:
+                return json.load(fh)
+        prev = []
+        try:
+            import requests
+            r = requests.get("https://raw.githubusercontent.com/Royal-B-scan/Royal-B-scan/results/status.json",
+                             params={"x": int(time.time())}, timeout=20)
+            if r.ok and r.json().get("date") != datetime.now(ZoneInfo("America/Vancouver")).strftime("%Y-%m-%d"):
+                prev = r.json().get("top5") or []
+            elif r.ok:
+                prev = r.json().get("top5_prev") or []
+        except Exception as e:  # noqa: BLE001
+            print("previous top5 failed:", e, file=sys.stderr)
+        cbj = _load("comeback.json") if os.path.exists(os.path.join(SITE, "comeback.json")) else {}
+        dj = _load("data.json") if os.path.exists(os.path.join(SITE, "data.json")) else {}
+        top5 = top5_mod.build(_load("scan.json"), cbj, dj.get("lists"), prev)
+        status["top5"] = [x["ticker"] for x in top5["rows"]]
+        status["top5_prev"] = prev
+    except Exception as e:  # noqa: BLE001
+        print("top5 failed:", e, file=sys.stderr)
+        status["top5_error"] = str(e)[:200]
     # Oct 28: collect every failure in one place (status.json and scan.json), so the page can show it in red
     problems = dict(out.get("problems") or {})
-    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists"), ("judgement_error", "judgement day")):
+    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists"), ("judgement_error", "judgement day"), ("top5_error", "top 5")):
         if status.get(key):
             problems[label] = status[key]
     if isinstance(status.get("lists"), dict) and status["lists"].get("longterm_error"):
@@ -79,6 +109,8 @@ def main() -> None:
         sj["problems"] = problems
         if judgement:
             sj["judgement"] = judgement
+        if top5:
+            sj["top5"] = top5
         with open(scan_path, "w") as fh:
             json.dump(sj, fh, separators=(",", ":"))
     except Exception as e:  # noqa: BLE001

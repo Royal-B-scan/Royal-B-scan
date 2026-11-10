@@ -395,6 +395,11 @@ def run_scan(progress=_noop) -> dict:
         progress("RSI, OBV and credit light", None, None, None)
         context.attach(hits + setting_up + early + list((weekly or {}).get("rows") or []), hist)
         credit = context.credit(hist, fetch=lambda t: _bench_close(hist, t))
+        # Nov 9 (Taylor): a Trend Cross with flat OBV is a Skip. Skipping them made Trend Cross better in every year
+        # 2023-2026 (backtest-obv-filter.md: PF 1.49 -> 1.65, 2026 0.87 -> 0.96). OBV up or down keeps the cross.
+        for h in hits:
+            if (h["status"] == "TRIGGER" or h["status"].startswith("TRIGGERED")) and (h.get("ctx") or {}).get("obv_trend") == "flat":
+                h["obv_skip"] = True
     except Exception as e:  # noqa: BLE001
         print("context failed:", e, file=sys.stderr)
         problems["rsi / obv / credit"] = str(e)[:200]
@@ -415,6 +420,7 @@ def run_scan(progress=_noop) -> dict:
         "wh52": sum(1 for h in hits + setting_up if h.get("wh52")),
         "weekly_new": (weekly or {}).get("counts", {}).get("new", 0),
         "weekly": (weekly or {}).get("counts", {}).get("total", 0),
+        "obv_skip": sum(1 for h in hits if h.get("obv_skip")),
     }
     out = {
         "updated": datetime.now(timezone.utc).isoformat(timespec="minutes"),
