@@ -17,6 +17,11 @@ the 50-day exit (once armed) and the stop. Lines are worked out from the complet
   - open / midday: the price NEWLY drops below a line -> high-priority push
   - late (3:15pm New York): still below -> urgent push, 45 minutes to decide before the close
   - first check of the day: yesterday CLOSED below a line -> urgent push (the plan says get out)
+Nov 10: ADD alerts on what Taylor owns: the page's "Add on a breakout" line (the 10-day high, or the 200-day when it sits
+above that and within 6% of the price). The plan's rule is a daily close above it on 1.5x normal volume.
+  - open / midday: price NEWLY above the line with volume on pace for 1.5x+ -> high-priority push
+  - late: still above on 1.5x+ pace -> high-priority push "add signal likely at the close"
+  - first check of the day: yesterday CLOSED above it on 1.5x+ volume -> high-priority push
 
 Today's volume is incomplete during the day, so it is scaled to a full-day pace
 (volume so far / share of a normal day's volume that has usually traded by now: VOLUME_CURVE, Nov 6). A morning signal can fade by
@@ -249,6 +254,57 @@ def exit_lines(df, kind: str, pos: dict, support_df=None) -> list[tuple[float, s
     return out
 
 
+def add_line(df) -> float | None:
+    """The page's breakout line (levelsOf brk) from completed bars: the 10-day high, or the 200-day when it sits above
+    that and within 6% of the last close."""
+    if len(df) < 60:
+        return None
+    close = float(df["Close"].iloc[-1])
+    hi10 = float(df["High"].iloc[-10:].max())
+    s200 = float(df["Close"].iloc[-200:].mean()) if len(df) >= 200 else None
+    return round(s200 if s200 and hi10 < s200 < close * 1.06 else hi10, 2)
+
+
+def vol_ratio(df, pace: float = 1.0) -> float | None:
+    """Last bar's volume (scaled to a full day by pace) vs the average of the 50 days before it."""
+    v = df["Volume"]
+    avg = float(v.iloc[-51:-1].mean()) if len(v) > 51 else 0
+    return round(float(v.iloc[-1]) / max(pace, 0.04) / avg, 2) if avg else None
+
+
+def add_alerts(hist: dict, lists: dict, state: dict, today: str, now, slot: str, pace: float) -> list[dict]:
+    """Nov 10: 'add on a breakout' alerts for stocks Taylor owns (see the module notes)."""
+    owned = list(dict.fromkeys([str(t).upper() for t in list((lists.get("holdings") or {})) + list((lists.get("longterm") or {}))]))
+    out, seen = [], state.setdefault("add", {})
+    for t in owned:
+        df = hist.get(t)
+        if df is None or len(df) < 62 or df.index[-1].strftime("%Y-%m-%d") != today:
+            continue
+        done = df.iloc[:-1]
+        me = seen.setdefault(t, {})
+        cur = "CAD" if t.endswith((".TO", ".V")) else "USD"
+        if not me.get("closed_checked"):
+            me["closed_checked"] = True
+            line_y, vr_y = add_line(done.iloc[:-1]), vol_ratio(done)
+            yc = float(done["Close"].iloc[-1])
+            if line_y and yc > line_y and vr_y and vr_y >= 1.5:
+                out.append({"ticker": t, "kind": "add", "level": "closed", "price": round(yc, 2), "line": line_y,
+                            "vr": vr_y, "currency": cur, "time": now.strftime("%H:%M")})
+        line = add_line(done)
+        if not line:
+            continue
+        price, vr = float(df["Close"].iloc[-1]), vol_ratio(df, pace)
+        st = "above" if price > line and vr and vr >= 1.5 else "no"
+        prev = me.get("st", "no")
+        me["st"] = st
+        if st == "above" and (prev != "above" or (slot == "late" and not me.get("late"))):
+            if slot == "late":
+                me["late"] = True
+            out.append({"ticker": t, "kind": "add", "level": "late" if slot == "late" else "now", "price": round(price, 2),
+                        "line": line, "vr": vr, "currency": cur, "time": now.strftime("%H:%M")})
+    return out
+
+
 def owned_alerts(hist: dict, lists: dict, state: dict, today: str, now, slot: str) -> list[dict]:
     """Nov 10: get-out alerts for stocks Taylor owns. See the module notes for when each one fires."""
     owned = [(str(t).upper(), "swing", v if isinstance(v, dict) else {}) for t, v in (lists.get("holdings") or {}).items()]
@@ -419,6 +475,25 @@ def main() -> None:
             notify(f"{a['ticker']}: below your get-out line",
                    f"{a['ticker']} at ${a['price']} {a['currency']}, under its {a['what']} (${a['line']}).{also} "
                    f"Not final until the close: watch it into the last hour. As of {when} PT. Not financial advice.", high=True)
+    add_hits = []
+    try:
+        add_hits = add_alerts(hist, lists, state, today, now, slot, pace)
+    except Exception as e:  # noqa: BLE001
+        print("add check failed:", e, file=sys.stderr)
+    for a in add_hits:
+        if a["level"] == "closed":
+            notify(f"ADD? {a['ticker']} closed above your add line",
+                   f"{a['ticker']} closed at ${a['price']} {a['currency']} yesterday, above its add line (${a['line']}) on {a['vr']:.1f}x normal volume. "
+                   f"Your plan's add-on-a-breakout signal. Size it with Trade (1% risk, whole position under 25%). Check the chart first. Not financial advice.",
+                   high=True)
+        elif a["level"] == "late":
+            notify(f"{a['ticker']}: add signal likely at the close",
+                   f"{a['ticker']} at ${a['price']} {a['currency']}, still above its add line (${a['line']}), volume on pace for {a['vr']:.1f}x. "
+                   f"If it closes here, that's your add-on-a-breakout signal. As of {when} PT. Not financial advice.", high=True)
+        else:
+            notify(f"{a['ticker']}: above your add line",
+                   f"{a['ticker']} at ${a['price']} {a['currency']}, above its add line (${a['line']}), volume on pace for {a['vr']:.1f}x. "
+                   f"Not final until the close: the add signal is a close above it on 1.5x volume. As of {when} PT. Not financial advice.", high=True)
     for a in plan_hits:
         er = a["earn"]
         er_txt = f" Earnings in {er} days: a gap could jump your stop." if isinstance(er, int) and 0 <= er <= 7 else ""
@@ -456,19 +531,19 @@ def main() -> None:
                (f"NEXT IN LINE: {', '.join(heads)}. " if heads else "") + (f"CROWNED: {', '.join(trig)}. " if trig else "")
                + f"As of {when} PT; not final until the close. Tap to open Royal B. Not financial advice.",
                high=bool(trig))
-    elif force and not breaks and not plan_hits and not own_hits:
+    elif force and not breaks and not plan_hits and not own_hits and not add_hits:
         notify("Royal B alerts are connected",
                f"Test check at {when} PT: {checked} stocks, {len(channels)} channels and {len(plans)} trade plans checked, nothing new. You'll get alerts "
                f"like this when a stock is NEXT IN LINE for its cross, gets CROWNED, drops below a channel you drew, "
                f"or moves into a trade plan's buy zone.")
 
     state["slots"].append(slot)
-    state["alerts"] = (state.get("alerts") or []) + new + breaks + plan_hits + own_hits
+    state["alerts"] = (state.get("alerts") or []) + new + breaks + plan_hits + own_hits + add_hits
     state["checked_at"] = now.isoformat(timespec="minutes")
     os.makedirs(os.path.dirname(STATE), exist_ok=True)
     with open(STATE, "w") as fh:
         json.dump(state, fh, separators=(",", ":"))
-    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} plans={len(plan_hits)} owned={len(own_hits)} pace={pace:.2f}")
+    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} plans={len(plan_hits)} owned={len(own_hits)} add={len(add_hits)} pace={pace:.2f}")
 
 
 if __name__ == "__main__":

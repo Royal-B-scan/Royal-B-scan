@@ -133,6 +133,11 @@ def _load_fund_cache() -> dict:
             cache.update(r.json())
     except Exception as e:  # noqa: BLE001
         print("  fund cache download failed:", e, file=sys.stderr)
+    try:   # Nov 10: numbers already fetched earlier in this same run (fundamentals() can run twice a day now)
+        with open(os.path.join("site", "fund_cache.json")) as fh:
+            cache.update(json.load(fh))
+    except Exception:  # noqa: BLE001
+        pass
     return cache
 
 
@@ -367,13 +372,23 @@ def build(progress=_noop) -> dict:
     try:
         import turn as turn_mod
         by = {r["ticker"]: r for r in rows}
+        found = {}
         for t, df in hist.items():
             try:
                 tu = turn_mod.turn(df, spy)
             except Exception:  # noqa: BLE001
                 continue
-            if not tu:
-                continue
+            if tu:
+                found[t] = tu
+        # Nov 10: look up the company numbers for signals that weren't beaten down today, so the business check always runs
+        need = [t for t in found if t not in by and t not in fund]
+        if need:
+            try:
+                fund.update(fundamentals(need))
+            except Exception as e:  # noqa: BLE001
+                print("turn fundamentals failed:", e, file=sys.stderr)
+        for t, tu in found.items():
+            df = hist[t]
             if t in by:
                 by[t]["turn"] = tu
                 turns.append(by[t])
@@ -384,7 +399,9 @@ def build(progress=_noop) -> dict:
             f = fund.get(t)
             row = make_row(t, df, uni.get(t, {}), cb, f)
             row["turn"] = tu
-            row["quality"] = quality_ok(f) if f else None    # None = company numbers not checked (wasn't beaten today)
+            # None = Yahoo had no company numbers for it. Banks and brokers (e.g. LPLA) often have no free-cash-flow figure:
+            # judge them on the other checks instead of failing them for a missing number.
+            row["quality"] = (quality_ok(dict(f, fcf_pos=True)) if f.get("fcf_pos") is None else quality_ok(f)) if f else None
             turns.append(row)
         try:
             import earnings
