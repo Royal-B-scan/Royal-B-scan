@@ -95,7 +95,10 @@ def watchlist() -> list[str]:
     try:
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lists.json")) as fh:
             L = json.load(fh)
-        out = [str(t).strip().upper() for t in (L.get("watch") or []) + list((L.get("holdings") or {}).keys()) if str(t).strip()]
+        # Nov 10: stocks only on "My calls" lists (e.g. Parked) stay out of the phone alerts, like they stay out of Watch Alerts
+        quiet = {str(t).strip().upper() for t in (L.get("my_calls") or [])}
+        out = [str(t).strip().upper() for t in (L.get("watch") or []) if str(t).strip() and str(t).strip().upper() not in quiet]
+        out += [str(t).strip().upper() for t in (L.get("holdings") or {}).keys() if str(t).strip()]
         if out:
             return list(dict.fromkeys(out))
     except Exception:  # noqa: BLE001

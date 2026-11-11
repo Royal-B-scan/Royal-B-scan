@@ -75,7 +75,15 @@ def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | No
         if r.get("status") == "WK NEW" and fresh:
             cand.append((r, "weekly", "Weekly Trend: new weekly 8/21 cross"))
 
-    # earnings dates: weekly rows don't carry them, so borrow from any other row for the same ticker
+    # Nov 10: Weekly Trend rows carry no earnings date; look them up for the big ones that made the pool
+    try:
+        wk = [r for r, src, _ in cand if src == "weekly" and not r.get("earnings") and (r.get("market_cap") or 0) >= MIN_CAP]
+        if wk:
+            import earnings
+            earnings.attach(wk, max_fetch=60)
+    except Exception as e:  # noqa: BLE001
+        print("top5 weekly earnings failed:", e)
+    # earnings dates: borrow from any other row for the same ticker when a row still has none
     earn = {}
     for r, _, _ in cand:
         if isinstance(r.get("earnings"), dict) and r["earnings"].get("days") is not None:
