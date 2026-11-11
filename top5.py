@@ -71,7 +71,7 @@ def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | No
     last = scan.get("last_bar")
     for r in ((scan.get("weekly") or {}).get("rows")) or []:
         cd = (r.get("wk") or {}).get("cross_date")
-        fresh = bool(last and cd and 0 < (date.fromisoformat(last) - date.fromisoformat(cd)).days <= 4)
+        fresh = bool(last and cd and 0 < (date.fromisoformat(last) - date.fromisoformat(cd)).days <= 3)
         if r.get("status") == "WK NEW" and fresh:
             cand.append((r, "weekly", "Weekly Trend: new weekly 8/21 cross"))
 
