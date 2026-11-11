@@ -89,6 +89,29 @@ def main() -> None:
     except Exception as e:  # noqa: BLE001
         print("top5 failed:", e, file=sys.stderr)
         status["top5_error"] = str(e)[:200]
+    # Nov 10: earnings history for the chart's E markers, refreshed here instead of by hand (earnings_hist.py).
+    # Every stock the page can chart: your lists, the screen, Early Turn, Weekly Trend, Comebacks and Comeback Turn.
+    eh = None
+    try:
+        import earnings_hist
+        def _ld(name):
+            try:
+                with open(os.path.join(SITE, name)) as fh:
+                    return json.load(fh)
+            except Exception:  # noqa: BLE001
+                return {}
+        _s, _c, _d = _ld("scan.json"), _ld("comeback.json"), _ld("data.json")
+        T = []
+        for k in ("stocks", "holdings", "longterm"):
+            T += [r.get("ticker") for r in (_d.get(k) or [])]
+        T += [r.get("ticker") for r in (_s.get("stocks") or []) + (_s.get("early") or []) + ((_s.get("weekly") or {}).get("rows") or [])
+              if r.get("kind") != "ETF"]
+        T += [r.get("ticker") for r in (_c.get("rows") or []) + (_c.get("turn") or [])]
+        eh = earnings_hist.refresh([t for t in T if t])
+        status["earnings_hist"] = len(eh["by"])
+    except Exception as e:  # noqa: BLE001
+        print("earnings history failed:", e, file=sys.stderr)
+        status["earnings_hist_error"] = str(e)[:200]
     # Oct 28: collect every failure in one place (status.json and scan.json), so the page can show it in red
     problems = dict(out.get("problems") or {})
     for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists"), ("judgement_error", "judgement day"), ("top5_error", "top 5")):
@@ -111,6 +134,8 @@ def main() -> None:
             sj["judgement"] = judgement
         if top5:
             sj["top5"] = top5
+        if eh:
+            sj["eh"] = eh
         with open(scan_path, "w") as fh:
             json.dump(sj, fh, separators=(",", ":"))
     except Exception as e:  # noqa: BLE001
