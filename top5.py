@@ -3,10 +3,15 @@ Top 5 front page (Taylor, decided Nov 9, 2026): one short list pulled from every
 Test: backtest-top5-front-page.md (daily Top 5, calmest first: 2023-25 PF 2.06, 2026 out-of-sample 1.14 deduped,
 6-7% hit the stop; random picks 0.72). Calmest first is the only ranking that beat random in both periods.
 
-Pool (large caps, $10B+, no ETFs), any screener that fired today:
-  Early Turn   BREAKOUT / PULLBACK that are green (close above the 50-day, under 15% above the 20-day and the 50-day)
+Nov 11 (Taylor: "funnel them to a final screener"): this is the Entry Ready list. Early Turn pullbacks and Comebacks
+"moved up a stage" are out of the pool (backtest-entry-point.md: 2026 PF 1.26 with pullbacks, 1.47 without; Comeback
+moved-up was 0.75 with 41% stopped in the Nov 8 test). Entry: buy the next morning after the first 15-30 minutes near the
+close (waiting for a breakout above the signal day's high or a dip to the 10/20-day did no better). 8% stop, 50-day exit.
+
+Pool (large caps, $10B+, no ETFs), any tested screener that fired today:
+  Early Turn   BREAKOUT that is green (close above the 50-day, under 15% above the 20-day and the 50-day)
   Trend Cross  crossed today (TRIGGER), not an OBV-flat Skip
-  Comebacks    moved up to Turning up / Recovered today, or a Comeback Turn signal
+  Comebacks    a Comeback Turn signal
   Weekly Trend new weekly cross (WK NEW)
 Then: one row per company (US listing over .TO), not owned, no earnings within 7 days, calmest first
 (average daily high-to-low swing over 20 days, % of the close). "new" = not in yesterday's Top 5.
@@ -55,15 +60,11 @@ def _earn_soon(r: dict) -> bool:
 def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | None = None) -> dict:
     cand = []
     for r in scan.get("early") or []:
-        if r.get("status") in ("BREAKOUT", "PULLBACK") and _green(r):
+        if r.get("status") == "BREAKOUT" and _green(r):
             cand.append((r, "early", f"Early Turn {r['status'].lower()}"))
     for r in scan.get("stocks") or []:
         if r.get("status") == "TRIGGER" and not r.get("obv_skip"):
             cand.append((r, "cross", "Trend Cross: 10-day crossed the 20-day on volume"))
-    for r in (comeback or {}).get("rows") or []:
-        cb = r.get("cb") or {}
-        if cb.get("moved_up") and cb.get("stage") in (3, 4):
-            cand.append((r, "comeback", f"Comebacks: moved up to {cb.get('stage_name', '').title()}"))
     for r in (comeback or {}).get("turn") or []:
         cand.append((r, "turn", "Comeback Turn: first close back above the 20-day after an oversold low"))
     # A weekly cross stays "WK NEW" all week; it counts as a signal only on the first trading day after the cross week
