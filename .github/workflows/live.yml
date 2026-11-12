@@ -1,0 +1,52 @@
+name: Live screen (trial)
+
+# Stage 1 trial, Nov 12, 2026: re-runs Trend Cross and Early Turn on the whole US market every 10 minutes from a
+# 15-minute-delayed Massive snapshot. LOG ONLY: no alerts, nothing pushed to the results branch, nothing the page reads.
+# Started by hand only (Actions > Live screen (trial) > Run workflow). Start it after 9:45am New York time; it stops by
+# itself once the close has been checked, or after 5h45m (GitHub's limit is 6 hours).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-screen
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Get the daily screen's saved price history (read only)
+        uses: actions/cache/restore@v5
+        with:
+          path: cache
+          key: yahoo-live-never-saved
+          restore-keys: yahoo-
+
+      - name: Install packages
+        run: pip install -q -r requirements.txt
+
+      - name: Live screen
+        env:
+          MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+        run: python live_screen.py --loop
+
+      - name: Keep the log (download it from this run's page)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-screen-log
+          path: |
+            site/live_log.jsonl
+            site/live.json
+          if-no-files-found: ignore
