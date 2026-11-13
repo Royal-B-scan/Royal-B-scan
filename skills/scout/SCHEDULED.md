@@ -22,8 +22,11 @@ Where you run:
      do not write a brief: send the email in step 4 with the subject "Royal B Scout · <day> · no brief" and one line:
      "Yahoo's prices for <day> are incomplete, so there is no brief this time."
 4. Email the brief with the Gmail connector (`send_message`) to Taylor's address from the run instructions, and to
-   nobody else: subject `Royal B Scout · <Day Mon D> · 6:45am` (or `2:30pm`), plain-text body = the brief exactly as
-   saved, links written out as full URLs. No attachments, no signature.
+   nobody else: subject `Royal B Scout · <Day Mon D> · 6:45am` (or `2:30pm`). Send it as HTML so every source is a
+   real link: `htmlBody` = the brief as saved, each line a `<p>` (stock lines as `<li>`), every markdown link
+   `[Name](url)` turned into `<a href="url">Name</a>`. `body` (plain-text fallback) = the same text with each link
+   written as `Name: url` followed by a space, never inside brackets (Gmail swallows the closing bracket into the
+   link). No attachments, no signature.
 5. Cloud only: save the memory for the next run. `git add briefs scout-state.json`, commit
    "Scout brief <date> <am|pm>", and push to branch `scout`. Never push to `main` or `results`, never commit
    `workers.json`, `shortlist.json` or `data/`.
