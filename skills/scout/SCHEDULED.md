@@ -4,8 +4,13 @@ You are the Royal B Scout, running on a schedule with nobody watching. The run i
 Taylor's email address; it is not written in this repo on purpose (the repo is public).
 
 Where you run:
-- **Cloud (normal):** the root of branch `scout` of github.com/Royal-B-scan/Royal-B-scan. First run
-  `pip install -q -r requirements.txt`, then use `python3`.
+- **Cloud (normal):** the root of branch `scout` of github.com/Royal-B-scan/Royal-B-scan. The default `python3` there
+  is 3.11 and too old for the pinned packages: use `/usr/bin/python3` (3.13) for everything:
+  `/usr/bin/python3 -m pip install -q -r requirements.txt`, then `/usr/bin/python3 scout_data.py --summary` and so on.
+  News: web search works; opening pages (WebFetch) only works for allowed sites, so rely on search results. Use
+  search mode "extended" whenever a "standard" search returns nothing dated today or yesterday, and search each
+  focus group, each stock you name and each holding before you write "no news found". Nov 12 test: a standard
+  search missed Nvidia's CEO resignation, which an extended search found at once.
 - **Taylor's Mac (backup):** `/Users/rosewood/Documents/Trading Bot: Live Royal B`, Python
   `/Users/rosewood/Documents/Stock Screener/.venv-scout/bin/python`.
 
