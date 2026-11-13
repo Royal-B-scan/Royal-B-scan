@@ -13,8 +13,12 @@ Pool (large caps, $10B+, no ETFs), any tested screener that fired today:
   Trend Cross  crossed today (TRIGGER), not an OBV-flat Skip
   Comebacks    a Comeback Turn signal
   Weekly Trend new weekly cross (WK NEW)
-Then: one row per company (US listing over .TO), not owned, no earnings within 7 days, calmest first
+Then: one row per company, not owned, no earnings within 7 days, calmest first
 (average daily high-to-low swing over 20 days, % of the close). "new" = not in yesterday's Top 5.
+One row per company (clean-up change 5, Nov 12): a US and a Toronto listing are the same company when the names match,
+or when the ticker without .TO matches and the names start with the same word (COST + COST.TO "COSTCO CDR"; but not
+T AT&T + T.TO Telus). Keep the listing in the currency with more cash when lists["cash"] = {"USD": x, "CAD": y} is
+given, otherwise the US listing.
 
     build(scan, comeback, lists, prev=None) -> {"rows": [...], "pool": n, "skipped": {...}}
 """
@@ -41,6 +45,15 @@ def _name_key(name: str) -> str:
     n = re.sub(r"[^a-z0-9 ]", " ", (name or "").lower())
     n = re.sub(r"\b(inc|corp|corporation|co|ltd|limited|plc|sa|ag|nv|the|class [a-z]|holdings?|group)\b", " ", n)
     return " ".join(n.split())[:24]
+
+
+def _first_word(name: str) -> str:
+    n = re.sub(r"[^a-z0-9 ]", " ", (name or "").lower()).split()
+    return n[0] if n else ""
+
+
+def _is_ca(t: str) -> bool:
+    return t.upper().endswith((".TO", ".V", ".NE"))
 
 
 def _green(r: dict) -> bool:
@@ -93,6 +106,9 @@ def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | No
     owned_base = {_base(t) for t in owned}
     skipped = {"small": 0, "etf": 0, "owned": 0, "earnings": 0, "no_data": 0}
     best: dict[str, dict] = {}
+    by_base: dict[tuple, str] = {}      # (ticker base, first word of name) -> key in best
+    cash = (lists or {}).get("cash") or {}
+    want_ca = (cash.get("CAD") or 0) > (cash.get("USD") or 0)
     pool = set()
     for r, src, why in cand:
         t = r.get("ticker")
@@ -116,6 +132,10 @@ def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | No
             skipped["no_data"] += 1
             continue
         key = _name_key(r.get("name")) or _base(t)
+        bkey = (_base(t), _first_word(r.get("name")))
+        if key not in best and bkey in by_base:
+            key = by_base[bkey]
+        by_base.setdefault(bkey, key)
         cur = best.get(key)
         row = {"ticker": t, "name": r.get("name") or t, "currency": r.get("currency", "USD"), "sector": r.get("sector"),
                "market_cap": r.get("market_cap"), "close": r.get("close"), "change_pct": r.get("change_pct"),
@@ -127,9 +147,11 @@ def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | No
         if src not in cur["sources"]:
             cur["sources"].append(src)
             cur["why"].append(why)
-        if cur["ticker"].endswith((".TO", ".V")) and not t.endswith((".TO", ".V")):   # prefer the US listing
-            row.update(sources=cur["sources"], why=cur["why"])
+        if _is_ca(cur["ticker"]) != _is_ca(t) and _is_ca(t) == want_ca:   # the preferred listing replaces the other
+            row.update(sources=cur["sources"], why=cur["why"], also=cur["ticker"])
             best[key] = row
+        elif cur["ticker"] != t:
+            cur["also"] = t
     rows = sorted(best.values(), key=lambda x: x["swing"])[:N]
     prev = set(prev or [])
     for i, x in enumerate(rows):
