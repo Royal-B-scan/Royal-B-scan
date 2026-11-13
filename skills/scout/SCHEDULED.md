@@ -29,7 +29,9 @@ Where you run:
 4. Email the brief with the Gmail connector (`send_message`) to Taylor's address from the run instructions, and to
    nobody else: subject `Royal B Scout · <Day Mon D> · 6:45am` (or `2:30pm`). Send it as HTML so every source is a
    real link: `htmlBody` = the brief as saved, each line a `<p>` (stock lines as `<li>`), every markdown link
-   `[Name](url)` turned into `<a href="url">Name</a>`. `body` (plain-text fallback) = the same text with each link
+   `[Name](url)` turned into `<a href="url">Name</a>`, and every stock ticker at the start of a stock line (MU, TSM,
+   CNQ.TO…) a link that opens its chart on Royal B: `<a href="https://claude.ai/artifact/4rYahwzjmiEjqqBCYUgf7R#MU">MU</a>`
+   (ticker exactly as in the files, upper case). Stocks not in Royal B's data open the chart page with a note saying so. `body` (plain-text fallback) = the same text with each link
    written as `Name: url` followed by a space, never inside brackets (Gmail swallows the closing bracket into the
    link). No attachments, no signature.
 5. Cloud only: save the memory for the next run. `git add briefs scout-state.json`, commit
