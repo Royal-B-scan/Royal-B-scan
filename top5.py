@@ -13,7 +13,7 @@ Pool (large caps, $10B+, no ETFs), any tested screener that fired today:
   Trend Cross  crossed today (TRIGGER), not an OBV-flat Skip
   Comebacks    a Comeback Turn signal
   Weekly Trend new weekly cross (WK NEW)
-Then: one row per company, not owned, no earnings within 7 days, calmest first
+Then: one row per company, not owned, no earnings within 7 days, Weekly Trend first, then calmest first
 (average daily high-to-low swing over 20 days, % of the close). "new" = not in yesterday's Top 5.
 One row per company (clean-up change 5, Nov 12): a US and a Toronto listing are the same company when the names match,
 or when the ticker without .TO matches and the names start with the same word (COST + COST.TO "COSTCO CDR"; but not
@@ -152,7 +152,9 @@ def build(scan: dict, comeback: dict | None, lists: dict | None, prev: list | No
             best[key] = row
         elif cur["ticker"] != t:
             cur["also"] = t
-    rows = sorted(best.values(), key=lambda x: x["swing"])[:N]
+    # Clean-up change 3 (Nov 12): Weekly Trend first, then calmest. Re-test (research/top5-retests-results.md in the
+    # Scout folder): PF 1.65 vs 1.61 in 2023-25 and 1.11 vs 0.92 in 2026; random 1.63 / 1.03. Small edge.
+    rows = sorted(best.values(), key=lambda x: (0 if "weekly" in x["sources"] else 1, x["swing"]))[:N]
     prev = set(prev or [])
     for i, x in enumerate(rows):
         x["rank"] = i + 1
