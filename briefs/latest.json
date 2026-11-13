@@ -1,0 +1,88 @@
+{
+ "asof": "2026-11-13",
+ "session": "am",
+ "title": "Royal B Scout · Fri Nov 13 · 6:45am",
+ "big_picture": "Futures are modestly higher and Nvidia is bouncing before the open, but money is rotating inside chips. Nvidia is up about 2% pre-market after Thursday's close at 166.19, while one report has AMD and Broadcom down more than 2.5% each ([Globe and Mail](https://www.theglobeandmail.com/investing/markets/inside-the-market/market-news/article-premarket-world-shares-log-modest-losses-as-investors-assess-impact-on/), [CP24](https://www.cp24.com/news/money/2026/11/13/us-futures-climb-as-wall-street-keeps-an-eye-on-nvidia-microsoft-and-producer-prices/)). Sources differ on the size of the moves, so treat them as approximate. October producer prices came in below forecast ([ADVFN](https://uk.advfn.com/market-news/article/26207/us-stock-futures-advance-as-nvidia-recovers-and-october-producer-inflation-falls-short-of-forecasts-dow-jones-sp-nasdaq-wall-street)). CNBC describes a rotation across chip stocks since the Nvidia CEO exit ([CNBC](https://cnbc.com/2026/11/13/nvidia-jensen-huang-affairs-amd-broadcom-tsmc.html)). The prices below are Thursday's close.",
+ "urgent": "",
+ "sectors": [
+  {
+   "name": "Chips and hardware",
+   "stage": "Turning up, pausing",
+   "numbers": "chips fell 24.8%, now 14.0% off the low; 18% of chip stocks up 2%+ on Thursday",
+   "why": "still the Sector Rebound from last night; nothing in the files changed. Overnight, TSMC rose on a report that it is planning stacked memory for Nvidia. That is a report, not confirmed by either company, so it is a rumour and not a reason ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/tsmc-jumped-6-report-could-151351522.html), [TrendForce](https://www.trendforce.com/news/2026/11/13/news-tsmc-pushes-back-on-3d-dram-rumors-three-memory-plays-where-it-still-has-a-say/)). What would change the view: the group giving back half the bounce, or a bad reaction to Nvidia's earnings on Tuesday.",
+   "stocks": [
+    {
+     "ticker": "MU",
+     "stage": "Turning up, entry window (opened Nov 11 at 811.30)",
+     "line": "You hold MU.TO. Last close 798.44, don't chase above 822.39, stop 734.56 (8% under the close). The Nov 11 jump had no Micron-specific news that I could find; investors are reported to be rotating into it from Nvidia ([CNBC](https://cnbc.com/2026/11/13/nvidia-jensen-huang-affairs-amd-broadcom-tsmc.html))."
+    },
+    {
+     "ticker": "TSM",
+     "stage": "Turning up, entry window (opened Nov 9 at 388.62)",
+     "line": "Last close 405.49, don't chase above 417.65, stop 373.05 (8% under the close). Earnings Jan 14. Watch the memory report above: it is unconfirmed."
+    },
+    {
+     "ticker": "ASML",
+     "stage": "Turning up, entry window",
+     "line": "Last close 1497.12, don't chase above 1542.03, stop 1377.35 (8% under the close). Among the calmer names (about 3% a day). Earnings Jan 27."
+    },
+    {
+     "ticker": "NVDA",
+     "stage": "Falling, wait",
+     "line": "Closed 166.19, a new low; bouncing about 2% pre-market. The headline is the CEO exit; nothing found changes sales or products. It reports Tue Nov 17, the first report under interim leadership. Wait for a bottom after the report."
+    },
+    {
+     "ticker": "AMD",
+     "stage": "Late (about 15% above where its window opened Nov 9)",
+     "line": "Missed this leg; wait for a pullback. Reported weak pre-market, unconfirmed size."
+    }
+   ],
+   "notes": [
+    "For any entry window: wait 15-30 minutes after the 7:30am open; size with Trade on the Royal B page (1% risk, 25% cap); exit on a close under the 50-day.",
+    "Applied Materials (AMAT) was due to report after Thursday's close. I could not find the results, so leave it until they are out."
+   ]
+  },
+  {
+   "name": "Energy (US and Canada)",
+   "stage": "Turning up, early",
+   "numbers": "US energy fell 12.3%, now 5.7% off the low",
+   "why": "a Sector Rebound on the numbers. Oil settled higher Thursday (Brent 95.82, WTI 88.74) on worries that an end to the US-Iran war is not in sight, though WTI is still down 16% in November; it was slipping below 87 this morning ([CNBC](https://www.cnbc.com/2026/11/12/oil-prices-jump-after-trump-says-no-iran-deal-needed-weve-got-their-strait.html), [FXStreet](https://fxstreet.com/news/wti-oil-trims-gains-and-eases-below-87-amid-bets-of-a-steeper-fed-tightening-cycle-202611131141)). Oil is headline-driven here. No energy stock is in a tested entry window. What would change the view: a new low in the group.",
+   "stocks": [
+    {
+     "ticker": "DVN",
+     "stage": "Bouncing, watch",
+     "line": "Close 46.23."
+    },
+    {
+     "ticker": "OXY",
+     "stage": "Pulled back, watch",
+     "line": "Close 58.40."
+    },
+    {
+     "ticker": "VLO",
+     "stage": "Bouncing, watch",
+     "line": "Close 374.95."
+    },
+    {
+     "ticker": "CNQ.TO",
+     "stage": "Pulled back, watch",
+     "line": "70.04 CAD."
+    },
+    {
+     "ticker": "SU.TO",
+     "stage": "Pulled back, watch",
+     "line": "98.80 CAD."
+    }
+   ],
+   "notes": []
+  }
+ ],
+ "your_stocks": "nothing urgent. I found no news on them this morning (searches for TTWO, EFX, MCD and RY.TO returned nothing recent; not exhaustive). Stages unchanged: MU.TO, GOOG.TO and OGC.TO pulled back, TTWO and RY.TO in trend, BOS.TO weak.",
+ "coming_up": "NVDA earnings Tue Nov 17. US retail sales for October Tue Nov 17 (scheduled, not confirmed). ADI Nov 24; HPE Nov 23; HPQ and DELL Nov 24.",
+ "changed": "Nothing changed (same Nov 12 close as last night's brief).",
+ "royal_b": "Top 5 COST.TO, COST, TRP.TO, CP.TO, SAP.TO; Bullish Turn BSBR, KHC.",
+ "tested": "the MU, TSM and ASML entry windows, and the two Sector Rebounds. NVDA, AMD and every energy stock are descriptions plus news.",
+ "notes": [],
+ "brief_file": "2026-11-13-am.md",
+ "updated": "2026-11-13T21:28:33+00:00"
+}

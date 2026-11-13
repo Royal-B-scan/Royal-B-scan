@@ -34,7 +34,9 @@ Where you run:
    (ticker exactly as in the files, upper case). Stocks not in Royal B's data open the chart page with a note saying so. `body` (plain-text fallback) = the same text with each link
    written as `Name: url` followed by a space, never inside brackets (Gmail swallows the closing bracket into the
    link). No attachments, no signature.
-5. Cloud only: save the memory for the next run. `git add briefs scout-state.json`, commit
+5. For the Scout box on Royal B's Home page: `/usr/bin/python3 brief_to_json.py briefs/<this brief>.md` (writes
+   `briefs/latest.json`; on the Mac use the Mac Python). Check it printed the sectors and stocks you wrote.
+   Cloud only: save the memory for the next run. `git add briefs scout-state.json`, commit
    "Scout brief <date> <am|pm>", and push to branch `scout`. Never push to `main` or `results`, never commit
    `workers.json`, `shortlist.json` or `data/`.
 6. Nothing else. Do not change Royal B (page, database, lists, crowns, screeners), do not send phone pushes, do not
