@@ -1,0 +1,6 @@
+data/
+workers.json
+shortlist.json
+*.incomplete-prices
+__pycache__/
+*.pkl

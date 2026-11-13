@@ -1,0 +1,10 @@
+date,ticker,group,signal_close,stop,brief
+2026-11-04,WPM.TO,CA Basic Materials,185.96,171.08,2026-11-05-pm (window opened Nov 4; first named Nov 5 at this close)
+2026-11-04,FM.TO,CA Basic Materials,31.96,29.40,2026-11-05-pm (window opened Nov 4; first named Nov 5 at this close)
+2026-11-06,QCOM,Semiconductors,165.41,156.75,2026-11-06-pm
+2026-11-09,AMD,Semiconductors,508.58,467.89,2026-11-09-pm
+2026-11-09,TSM,Semiconductors,388.62,357.53,2026-11-09-pm
+2026-11-09,ASML,Information Technology,1513.25,1392.19,2026-11-09-pm
+2026-11-09,ADI,Semiconductors,394.66,363.09,2026-11-09-pm
+2026-11-11,MU,Semiconductors,811.30,746.40,2026-11-11-pm
+2026-11-11,STX,"Technology Hardware, Storage & Peripherals",551.72,507.58,2026-11-11-pm
