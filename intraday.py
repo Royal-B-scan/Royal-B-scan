@@ -52,7 +52,9 @@ PAGE = "https://claude.ai/artifact/HARpU5ct7TSNX8B1ePjeWJ"
 OPEN_MIN, CLOSE_MIN = 9 * 60 + 30, 16 * 60          # regular session, New York time
 # check windows (New York time): a run counts for the first window it falls in; one alert pass per window per day
 SLOTS = [("open", 10 * 60, 11 * 60 + 40), ("midday", 13 * 60, 14 * 60 + 40), ("late", 15 * 60 + 15, 16 * 60)]
-ALERT_ON = ("TRIGGER", "HEADS-UP")
+# Nov 12 clean-up (Taylor approved changes 1 and 2): no more CROWNED (Trend Cross) or NEXT IN LINE (Almost) pushes.
+# Both were untested or failed as buys. Statuses are still tracked; put them back here to turn the pushes on again.
+ALERT_ON = ()   # was ("TRIGGER", "HEADS-UP")
 NAME = {"TRIGGER": "CROWNED", "HEADS-UP": "NEXT IN LINE"}   # names shown in the alerts (Oct 22)
 
 
@@ -537,7 +539,7 @@ def main() -> None:
     elif force and not breaks and not plan_hits and not own_hits and not add_hits:
         notify("Royal B alerts are connected",
                f"Test check at {when} PT: {checked} stocks, {len(channels)} channels and {len(plans)} trade plans checked, nothing new. You'll get alerts "
-               f"like this when a stock is NEXT IN LINE for its cross, gets CROWNED, drops below a channel you drew, "
+               f"like this when a stock drops below a channel you drew, "
                f"or moves into a trade plan's buy zone.")
 
     state["slots"].append(slot)
