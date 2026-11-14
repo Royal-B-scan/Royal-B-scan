@@ -36,6 +36,9 @@ jobs:
         run: python sync_lists.py
         
       - name: Scan the market
+        env:
+          DATA_SOURCE: eodhd                               # Nov 13: EODHD prices; Yahoo is the automatic fallback
+          EODHD_API_KEY: ${{ secrets.EODHD_API_KEY }}
         run: python github_scan.py || (echo "retrying in 3 minutes" && sleep 180 && python github_scan.py)
 
       - name: Save results to the "results" branch

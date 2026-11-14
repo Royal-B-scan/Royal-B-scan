@@ -272,12 +272,20 @@ def run_scan(progress=_noop) -> dict:
     t0 = time.time()
     # Nov 14: DATA_SOURCE=eodhd uses EODHD (eodhd_source.py) for the list and the daily bars; Yahoo stays the default
     # until the side-by-side check (handoff claude/eodhd-whole-market-handoff-2026-11-13.md) and Taylor's OK.
+    # Nov 13 (Taylor: switch now): EODHD first; if it fails, the same run falls back to Yahoo and says so in problems.
     source = os.environ.get("DATA_SOURCE", "yahoo").lower()
+    source_note = None
     if source == "eodhd":
-        import eodhd_source
-        uni = eodhd_source.get_universe(progress)
-        hist = eodhd_source.update_history(uni["ticker"].tolist(), progress, day=uni.attrs.get("day"))
-    else:
+        try:
+            import eodhd_source
+            uni = eodhd_source.get_universe(progress)
+            hist = eodhd_source.update_history(uni["ticker"].tolist(), progress, day=uni.attrs.get("day"))
+            if len(hist) < 0.9 * len(uni):
+                raise RuntimeError(f"only {len(hist)} of {len(uni)} stocks have prices")
+        except Exception as e:  # noqa: BLE001
+            print("EODHD failed, using Yahoo:", e, file=sys.stderr)
+            source, source_note = "yahoo", f"EODHD failed ({str(e)[:120]}); this screen used Yahoo"
+    if source != "eodhd":
         progress("Finding stocks", None, None, "Asking Yahoo for the list")
         uni = get_universe(progress)
         hist = update_history(uni["ticker"].tolist(), progress)
@@ -320,6 +328,8 @@ def run_scan(progress=_noop) -> dict:
     hits = hits[:MAX_RESULTS]
     # Oct 28: every screen that fails is recorded here and shown in red on the page, instead of a silent zero
     problems = {}
+    if source_note:
+        problems["prices"] = source_note
     try:
         from export_site import timeframes
         progress("Loading hourly/weekly/monthly charts", None, None, None)
@@ -436,6 +446,7 @@ def run_scan(progress=_noop) -> dict:
         "market_open": market_open_now(),
         "seconds": round(time.time() - t0),
         "counts": counts,
+        "data_source": source,   # Nov 13: "eodhd" or "yahoo"
         "sectors": sectors,
         "stocks": hits + setting_up,
         "early": early,
