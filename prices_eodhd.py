@@ -61,6 +61,13 @@ def one(t: str, start: str, k: str) -> tuple[str, pd.DataFrame | None]:
 def history(tickers: list[str], years: int = 2) -> tuple[pd.DataFrame, list[str]]:
     start = (date.today() - timedelta(days=365 * years + 10)).isoformat()
     k = key()
+    # Nov 14: one quick check first, so a blocked network or a bad key fails in seconds instead of retrying every stock
+    try:
+        r = requests.get("https://eodhd.com/api/eod/SPY.US", params={"api_token": k, "fmt": "json", "from": start[:8] + "01"}, timeout=20)
+        if r.status_code != 200 or not r.json():
+            raise RuntimeError(f"EODHD answered {r.status_code}")
+    except Exception as e:  # noqa: BLE001
+        raise RuntimeError(f"EODHD not reachable: {str(e)[:120]}") from None
     parts, missing = {}, []
     with cf.ThreadPoolExecutor(max_workers=6) as ex:
         for t, df in ex.map(lambda t: one(t, start, k), tickers):
