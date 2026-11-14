@@ -48,7 +48,7 @@ PT = ZoneInfo("America/Vancouver")     # Taylor's local time, for the "as of" te
 STATE = os.path.join(BASE, "site", "intraday.json")
 SCAN = os.path.join(BASE, "site", "scan.json")
 WATCH = os.path.join(BASE, "watchlist.txt")
-PAGE = "https://claude.ai/artifact/HARpU5ct7TSNX8B1ePjeWJ"
+PAGE = "https://claude.ai/artifact/4rYahwzjmiEjqqBCYUgf7R"
 OPEN_MIN, CLOSE_MIN = 9 * 60 + 30, 16 * 60          # regular session, New York time
 # check windows (New York time): a run counts for the first window it falls in; one alert pass per window per day
 SLOTS = [("open", 10 * 60, 11 * 60 + 40), ("midday", 13 * 60, 14 * 60 + 40), ("late", 15 * 60 + 15, 16 * 60)]
