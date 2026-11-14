@@ -270,10 +270,18 @@ def run_scan(progress=_noop) -> dict:
     from export_site import make_entry
 
     t0 = time.time()
-    progress("Finding stocks", None, None, "Asking Yahoo for the list")
-    uni = get_universe(progress)
+    # Nov 14: DATA_SOURCE=eodhd uses EODHD (eodhd_source.py) for the list and the daily bars; Yahoo stays the default
+    # until the side-by-side check (handoff claude/eodhd-whole-market-handoff-2026-11-13.md) and Taylor's OK.
+    source = os.environ.get("DATA_SOURCE", "yahoo").lower()
+    if source == "eodhd":
+        import eodhd_source
+        uni = eodhd_source.get_universe(progress)
+        hist = eodhd_source.update_history(uni["ticker"].tolist(), progress, day=uni.attrs.get("day"))
+    else:
+        progress("Finding stocks", None, None, "Asking Yahoo for the list")
+        uni = get_universe(progress)
+        hist = update_history(uni["ticker"].tolist(), progress)
     meta = uni.set_index("ticker").to_dict("index")
-    hist = update_history(uni["ticker"].tolist(), progress)
     bench = {"USD": _bench_close(hist, "SPY"), "CAD": _bench_close(hist, "XIU.TO")}
 
     progress("Checking rules", None, None, None)
