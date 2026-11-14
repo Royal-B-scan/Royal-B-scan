@@ -40,6 +40,19 @@ DATA = os.path.join(HERE, "data")
 PX = os.path.join(DATA, "px_cache.pkl")
 EARN = os.path.join(DATA, "earnings_cache.json")
 UNIVERSE = os.path.join(HERE, "research", "universe.csv")
+UNIVERSE_EODHD = os.path.join(HERE, "research", "universe_eodhd.csv")   # Nov 14: whole market over $2B (universe_eodhd.py)
+PX_EODHD = os.path.join(DATA, "px_eodhd_scout.pkl")
+
+
+def pick_source() -> str:
+    """Nov 14 (Taylor: Scout on the whole market): "eodhd" = 2,133 US + TSX companies over $2B with EODHD prices,
+    re-tested in research/whole-market-retest-results.md. "yahoo" = the old 571 large caps. Env SCOUT_SOURCE overrides;
+    by default EODHD whenever its key is available (env EODHD_API_KEY or the Mac key file)."""
+    s = os.environ.get("SCOUT_SOURCE", "").lower()
+    if s in ("eodhd", "yahoo"):
+        return s
+    has_key = bool(os.environ.get("EODHD_API_KEY")) or os.path.exists(os.path.expanduser("~/Documents/Stock Screener/.eodhd_key"))
+    return "eodhd" if has_key and os.path.exists(UNIVERSE_EODHD) else "yahoo"
 ET = ZoneInfo("America/New_York")
 RESULTS = "https://raw.githubusercontent.com/Royal-B-scan/Royal-B-scan/results/"
 
@@ -67,8 +80,12 @@ def r2(x, n=2):
 
 
 # ---------------------------------------------------------------- universe + prices
-def load_universe() -> tuple[pd.DataFrame, dict]:
-    """(universe table, {ticker: group}). Group = GICS sub-industry with 8+ members, else sector; TSX by TSX sector."""
+def load_universe(source: str = "yahoo") -> tuple[pd.DataFrame, dict]:
+    """(universe table, {ticker: group}). Group = GICS sub-industry with 8+ members, else sector; TSX by TSX sector.
+    EODHD list: its own group column (EODHD industry, under 8 members rolled up to the sector), US and TSX together."""
+    if source == "eodhd":
+        uni = pd.read_csv(UNIVERSE_EODHD, keep_default_na=False)
+        return uni, dict(zip(uni.ticker, uni.group))
     uni = pd.read_csv(UNIVERSE, keep_default_na=False)
     sub = uni[uni.group == "SP500"].groupby("industry").size()
     big = set(sub[sub >= 8].index)
@@ -404,8 +421,8 @@ def check_complete(F: dict) -> None:
 def build(asof: str | None, do_download: bool) -> dict:
     t0 = time.time()
     problems = {}
-    uni, grp = load_universe()
-    names = dict(zip(uni.ticker, uni.name))
+    source = pick_source()
+    uni, grp = load_universe(source)
     etfs = US_SECTORS + US_THEMES + CA_SECTORS + list(BENCH.values())
     replay = bool(asof)
     screens, book, known_earn = {}, {}, {}
@@ -418,14 +435,31 @@ def build(asof: str | None, do_download: bool) -> dict:
             problems["royal b screens"] = str(e)[:200]
     mine = list(dict.fromkeys((book.get("watch") or []) + [h["ticker"] for h in book.get("holdings", []) + book.get("longterm", [])]))
     tickers = list(dict.fromkeys(uni.ticker.tolist() + etfs + mine))
-    if do_download and not replay:
+    if do_download and not replay and source == "eodhd":
+        try:
+            from prices_eodhd import history
+            px, missing = history(tickers, years=2)
+            if len(set(px.columns.get_level_values(0))) < 0.9 * len(tickers):
+                raise RuntimeError(f"only {len(set(px.columns.get_level_values(0)))} of {len(tickers)} stocks have prices")
+            os.makedirs(DATA, exist_ok=True)
+            px.to_pickle(PX_EODHD)
+            if missing:
+                problems["no prices"] = ", ".join(missing[:30])
+        except Exception as e:  # noqa: BLE001
+            problems["prices"] = f"EODHD failed ({str(e)[:120]}); this run used Yahoo and the old 571-stock list"
+            source = "yahoo"
+            uni, grp = load_universe("yahoo")
+            tickers = list(dict.fromkeys(uni.ticker.tolist() + etfs + mine))
+    if source == "yahoo" and do_download and not replay:
         px, missing = download(tickers)
         if missing:
             problems["no prices"] = ", ".join(missing[:30])
-    else:
-        if not os.path.exists(PX):
+    elif not (do_download and not replay):
+        path = PX_EODHD if source == "eodhd" and os.path.exists(PX_EODHD) else PX
+        if not os.path.exists(path):
             raise SystemExit("No saved prices yet: run once without --asof / --no-download.")
-        px = pd.read_pickle(PX)
+        px = pd.read_pickle(path)
+    names = dict(zip(uni.ticker, uni.name))
     F = frames(px, asof)
     check_complete(F)
     day = max(df.index[-1] for df in F.values()).strftime("%Y-%m-%d")
@@ -440,7 +474,8 @@ def build(asof: str | None, do_download: bool) -> dict:
     above50 = [F[t]["Close"].iloc[-1] > F[t]["Close"].iloc[-50:].mean() for t in uni.ticker if t in F and len(F[t]) >= 50]
     market["above_50d_share_large_caps"] = r2(np.mean(above50) * 100, 0) if above50 else None
 
-    sector = {r.ticker: (r.sector if r.group == "SP500" else FOREIGN_SECTOR.get(FOREIGN.get(r.ticker, ""), "")) for r in uni.itertuples()}
+    sector = ({r.ticker: r.sector for r in uni.itertuples()} if source == "eodhd" else
+              {r.ticker: (r.sector if r.group == "SP500" else FOREIGN_SECTOR.get(FOREIGN.get(r.ticker, ""), "")) for r in uni.itertuples()})
     groups, gstate = group_rows(F, grp, sector)
     in_play = [g["group"] for g in groups if g["sector_rebound"] or g["stage"] in ("turning up", "falling", "pulled back")]
     want = set(mine)
@@ -475,7 +510,8 @@ def build(asof: str | None, do_download: bool) -> dict:
             stocks[t]["earnings_date"] = e["date"]
 
     return {
-        "asof": day, "generated": datetime.now(ET).isoformat(timespec="minutes"), "replay": replay,
+        "asof": day, "generated": datetime.now(ET).isoformat(timespec="minutes"), "replay": replay, "source": source,
+        "universe_size": len(uni),
         "tested": {"sector_rebound": "group was leading, fell 8%+, closed 3%+ off its low within 5 days",
                    "entry_window": "Shakeout Bounce on a day a third+ of its group was up 2%+",
                    "everything_else": "stages are labels, not tested signals"},
@@ -486,7 +522,7 @@ def build(asof: str | None, do_download: bool) -> dict:
 
 
 def summary(w: dict) -> None:
-    print(f"\nRoyal B Scout workers · prices to {w['asof']}" + (" (replay)" if w["replay"] else "") + f" · {w['seconds']}s")
+    print(f"\nRoyal B Scout workers · {w.get('source', 'yahoo')}, {w.get('universe_size')} stocks · prices to {w['asof']}" + (" (replay)" if w["replay"] else "") + f" · {w['seconds']}s")
     m = w["market"]
     print("Market: " + " · ".join(f"{k} {m[k]['d1']:+.1f}% today, {m[k]['d5']:+.1f}% 5d, {m[k]['stage']}" for k in ("USD", "CAD") if k in m)
           + f" · {m.get('above_50d_share_large_caps')}% of large caps above their 50-day")
