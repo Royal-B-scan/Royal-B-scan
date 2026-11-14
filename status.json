@@ -1,0 +1,92 @@
+{
+ "ok": true,
+ "counts": {
+  "universe": 3810,
+  "stocks": 3089,
+  "etfs": 721,
+  "liquid": 3526,
+  "hits": 3,
+  "trigger": 0,
+  "triggered": 1,
+  "headsup": 2,
+  "setting_up": 100,
+  "early_breakout": 11,
+  "early_pullback": 25,
+  "early_squeeze": 25,
+  "wh52": 60,
+  "weekly_new": 75,
+  "weekly": 248,
+  "obv_skip": 1
+ },
+ "last_bar": "2026-11-13",
+ "comeback": {
+  "large": 1169,
+  "beaten": 178,
+  "quality": 98,
+  "turn": 3,
+  "still_falling": 35,
+  "basing": 22,
+  "turning_up": 16,
+  "recovered": 25
+ },
+ "comeback_moved_up": [
+  "WSP.TO",
+  "NKE"
+ ],
+ "comeback_turn": [
+  {
+   "ticker": "QH",
+   "name": "Quhuo Limited",
+   "close": 3.05,
+   "stop": 2.8,
+   "sma20": 3.03,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "GIS",
+   "name": "General Mills, Inc.",
+   "close": 34.32,
+   "stop": 31.57,
+   "sma20": 34.21,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "CG",
+   "name": "The Carlyle Group Inc.",
+   "close": 39.77,
+   "stop": 36.59,
+   "sma20": 39.73,
+   "quality": false,
+   "currency": "USD"
+  }
+ ],
+ "lists": {
+  "watch": 32,
+  "holdings": 2,
+  "longterm": 6,
+  "pins": 6,
+  "missing": []
+ },
+ "judgement": 69,
+ "top5": [
+  "COST",
+  "PEG",
+  "WN.TO",
+  "SAP.TO",
+  "GIS"
+ ],
+ "top5_prev": [
+  "COST.TO",
+  "COST",
+  "TRP.TO",
+  "CP.TO",
+  "SAP.TO"
+ ],
+ "earnings_hist": 497,
+ "problems": {},
+ "updated": "2026-11-14T04:16+00:00",
+ "date": "2026-11-13",
+ "seconds": 658
+}
