@@ -23,9 +23,14 @@ Where you run:
    `notebook`, `todo` and `orders` (and `calls`, read only for now). Keep each doc's `version` for the writes in step 7.
    If a doc is missing or the read fails, carry on without it and say so in one line at the end of the brief. Never
    create these docs from scratch over a failed read.
+   **Taylor's market lessons come first** (Nov 14, Taylor): read `notebook.taylor_lessons` (and
+   `taylor_lessons_note`) before anything else and keep them in mind all run. Weigh each lesson next to the numbers:
+   when a stock, sector or event in today's brief is one a lesson speaks to, say so in one line (for example "Your
+   lesson L1 (big fast run + bubble talk) fits here: ..."). A lesson is Taylor's view, not a fact: the numbers still
+   decide, and where they disagree with a lesson, say so plainly.
 4. Read `CLAUDE.md`, then follow `skills/scout/SKILL.md` exactly: run `scout_data.py --summary`, `scout_pick.py`,
    read the news with web search, write `briefs/YYYY-MM-DD-am.md` or `-pm.md`, add scorecard rows, then
-   `scout_pick.py --save`. Do steps 5 and 6 before you write the brief.
+   `scout_pick.py --save`. Do steps 5, 6 and 6b before you write the brief.
    - At 6:45am the newest prices are yesterday's close: that is expected. Lead with overnight news, pre-market movers
      and what to watch at the 7:30am open.
    - If `scout_data.py` prints `STOPPED` (prices incomplete), wait 5 minutes and try once more. If it still stops,
@@ -35,6 +40,10 @@ Where you run:
      **What I dug into:** one or two lines per item from step 5, each with its link(s) (leave the section out if
      nothing was dug into). **Trend board changes:** only what moved since the last brief (new trend, status change,
      closed trend, new evidence that matters). If nothing moved: "Trend board: nothing changed."
+   - **Your lessons:** one line per lesson tested today (step 6b): held or failed, on which stock or event, and the new
+     count (for example "L3 held: RY.TO fell 1.8% on its beat while XLE and SMH led; held 2, failed 0"). Leave the
+     section out if no lesson was tested. If a lesson now looks wrong (step 6b), put "Lesson L<n> looks wrong: <why>"
+     as the FIRST line of the brief, above everything else, and in the email too.
 5. **Dig (at most 3 items).** Pick up to 3 `todo` items with `status: open`, oldest and most important first (an item
    about something Taylor owns, or with a dated event in the next 2 trading days, goes first). Also do anything an
    active `orders` item asks for. For each: EODHD (company news, sentiment, earnings trends, insider transactions, SEC
@@ -52,6 +61,20 @@ Where you run:
    - Close a trend (`status: closed`) when one of its `kills` has happened, and say which.
    - Look past the obvious names to suppliers, customers and peers (for example AI power -> utilities, transformers,
      copper). Beneficiary `kind` is direct | supplier | peer | customer | group.
+6b. **Test Taylor's lessons** (`notebook.taylor_lessons`). A lesson is tested only when something that happened
+   since the last test is exactly the case it speaks to (its `about`, `how_to_use` and `test_with` say which), and the
+   outcome is now known (a report day's move, a 20-day move, a sector's money flow that week). For each test:
+   - Decide `held` or `failed` from the numbers, never from opinion, with a source (EODHD data or an article link).
+   - Add it to the lesson's `tests` list (create it if missing): {date, ticker_or_event, result: held|failed, why
+     (one line with the numbers), source_url}. Count each event once: if `tests` already has that event, skip it.
+     Then add 1 to `times_held` or `times_failed`.
+   - A lesson **looks wrong** when it has been tested at least 3 times and has failed more often than it held, or
+     when the exact case it names went clearly the other way (for example L6's NVDA report). Then set its `status` to
+     `looks_wrong`, with `status_why` and the date, and tell Taylor at the top of the brief (step 4). Otherwise set
+     `status` to `holding` (held more than failed) or `testing`.
+   - Never change Taylor's own fields (`lesson`, `taylor_words`, `how_to_use`, `about`, `test_with`, `id`, `date`)
+     and never delete a lesson, even one that looks wrong: Taylor decides.
+   The lesson changes are saved with the notebook in step 7.
 7. **End of run: write back** (after the brief is written). Add 1-3 new `todo` items: things you noticed but could not
    explain. Each: {id: `t<YYYYMMDD>-<n>`, question, why_it_matters, opened: today (Vancouver date), from_session:
    `<date> am|pm`, status: open, answer: null, sources: []}. Set `updated` on each doc you changed. Write with
