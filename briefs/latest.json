@@ -1,97 +1,87 @@
 {
  "asof": "2026-11-17",
- "session": "am",
- "title": "Atlas · Tue Nov 17 · 6:45am",
- "big_picture": "Taylor, prices below are yesterday's close (Mon Nov 16); the open is 7:30am. Futures were mixed this morning: Dow and S&P slightly lower, Nasdaq slightly higher, after Monday's sharp drop (SPY -1.9%) ([Yahoo Finance](https://finance.yahoo.com/markets/live/stock-market-today-tuesday-november-17-dow-sp-500-nasdaq-nvidia-earnings-091546152.html)). Nvidia reports after the 2:00pm close today, and it is the first report since Jensen Huang left; interim CEO Colette Kress will be on the call. Premarket reports on Nvidia differ (between +1% and -0.5%, captured at different times), so I would not read anything into it ([CNBC](https://www.cnbc.com/2026/11/17/nvidia-stock-earnings-jensen-huang-resignation.html), [TradingKey](https://www.tradingkey.com/analysis/stocks/us-stocks/262308986-nvidia-earnings-ai-chip-remote-access-restrictions-tradingkey)). Consensus is about $108.8B revenue and $2.47 EPS; the watch points are Blackwell shipments, margin, the Q4 guide and Nvidia's financial support for AI customers ([Benzinga](https://www.benzinga.com/markets/prediction-markets/26/11/63337722/nvidia-earnings-preview)). The export rule that hit chips Monday is now confirmed as an interim final rule from Commerce's BIS: licences for advanced chips to Brazil, Indonesia, Malaysia, Singapore and Thailand, plus limits on remote access for China-headquartered firms; reports say US cloud firms that meet reporting duties are exempt ([Bloomberg](https://www.bloomberg.com/news/articles/2026-11-16/us-moves-to-limit-remote-access-to-advanced-ai-chips), [CBS News](https://www.cbsnews.com/news/nvidia-jensen-huang-commerce-department-limit-remote-access-ai-chips/)). One outlet puts customers in those five countries at no more than 1.3% of Nvidia revenue, citing its filing; I could not check that figure ([Techi](https://www.techi.com/us-ai-chip-export-rule-nvidia-revenue-exposure/)). Home Depot beat (EPS $3.86 vs $3.84, revenue $43.4B vs $42.81B) and named its CFO as the next CEO; Disney beat too (EPS $1.77 vs $1.68) ([Benzinga](https://www.benzinga.com/trading-ideas/long-ideas/26/11/63331751/walt-disney-nvidia-and-3-stocks-to-watch-heading-into-tuesday)). Brent was about $93 and spot gold about $3,860 in one pre-open snapshot, so approximate.",
+ "session": "pm",
+ "title": "Atlas · Tue Nov 17 · 2:30pm",
+ "big_picture": "Taylor, the market fell again into Nvidia's report: S&P 500 down for a fourth day, the Dow down about 850 points, QQQ -0.7% and SPY -1.0% by EODHD's close ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/p-500-pullback-extends-fourth-211350265.html)). Nvidia reported after the close and the numbers were strong: revenue $115.8B against its own $108B guide and about $108.9B expected, non-GAAP EPS $2.68 against about $2.47, and a Q4 revenue guide of $130B (plus or minus 3%) against about $125B expected ([Nvidia release](https://finance.yahoo.com/markets/stocks/articles/nvidia-announces-financial-results-third-212000678.html), [Investing.com preview](https://finance.yahoo.com/markets/stocks/articles/nvidia-earnings-scenarios-numbers-guidance-210457990.html)). Early after-hours reports put the stock up roughly 2-4%, but sources differ and the real reaction is Wednesday's open ([Investing.com](https://www.investing.com/news/earnings/nvidia-quarterly-results-beat-estimates-5033943)). Two things in the report are not clean: the Q4 gross margin guide is 71-72% (Q3 was 74.8%), and receivables grew faster than sales again (below).",
  "urgent": "",
  "sectors": [
   {
    "name": "Chips and hardware",
    "stage": "chips and communication equipment turning up, hardware pulled back",
-   "numbers": "chips fell 32.4% from the high, 8.6% off the low; hardware fell 34.1%, 2.2% off the low; 0% of either group up 2%+ on Monday",
-   "why": "the Nov 5 bounce was sold Monday on the export rule and the Nvidia headlines; today's open is a reaction to those, and the real test is Nvidia's guide after the close, so the first answer comes at Wednesday's open. What would change the view: SMH or MU closing under their Nov 5 lows (MU $650), or a light Nvidia guide.",
+   "numbers": "chips fell 32.4% from the high, 8.9% off the low; hardware fell 33.9%, 0.3% off the low; 17% of chips and 0% of hardware up 2%+ today",
+   "why": "the day was a wait for Nvidia, so most chip names moved little (SMH -0.4% to 460.13, its closing low is 447.73, so no new low). TSM was the exception, -3.7%, after the Commerce Department's new foundry rule on advanced logic chips for Chinese chip designers ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/tsmc-stocks-fall-4-26-190103464.html); intraday figure there was -4.3%, EODHD close -3.7%). What would change the view: SMH or MU closing under their Nov 5 lows (MU $650), or a bad open tomorrow despite good numbers.",
    "stocks": [
     {
      "ticker": "NVDA",
      "stage": "Falling, wait",
-     "line": "Closed 156.14 (-4.1%), near its 52-week low of 148.80. Reports today after the close. Your lessons L1, L2 and L6 are all pointed at this report: whether the numbers or the perception drives the move. Nothing to add until it is out."
+     "line": "Closed 155.46 (-0.4%), a new closing low just under Monday's 156.14, and the 52-week low is 148.80. The report is out and beat; the stage stays \"wait\" until the price answers it."
     },
     {
      "ticker": "MU",
-     "stage": "Turning up, entry window (opened Nov 12)",
-     "line": "Closed 719.02 (-7.6%); don't chase above 740.59, stop 661.50 (the shakeout low). The ruling that lets the DRAM price-fixing class action go ahead (Nov 14) is a headline until damages are known; it does not decide that anyone broke the law ([TradingView](https://www.tradingview.com/news/gurufocus:f72125aae094b:0-micron-stocks-sink-nearly-7-after-judge-lets-dram-supply-lawsuit-proceed/)). I found no December contract-price figure; Apple's CEO expects memory prices to keep rising past December, which is one customer's view ([Motley Fool](https://www.fool.com/investing/2026/11/03/apple-says-it-will-keep-paying-more-for-memory-chips-after-december-that-s-good-news-for-micron-stock/)). You hold MU.TO (31.43 CAD, -7.5%, \"turning up alone: watch\", which is not an entry)."
+     "stage": "Pulled back, watch",
+     "line": "Closed 712.42 (-0.9%), 8.5% above its low, 13% under its 20-day. It is no longer in an entry window in today's files (it was in this morning's brief). The kill line is $650; the intraday low today was 667, the closing low 656.39. Nvidia's good guide helps the memory story; the class action ruling is still a headline until damages are known."
     },
     {
      "ticker": "TSM",
-     "stage": "Turning up, entry window",
-     "line": "Closed 373.45 (-6.3%); don't chase above 384.65, stop 353.10. Earnings Jan 14."
-    },
-    {
-     "ticker": "ANET",
-     "stage": "Turning up, entry window",
-     "line": "Closed 187.02 (-5.2%); don't chase above 192.63, stop 172.06."
+     "stage": "Pulled back, watch",
+     "line": "359.69 (-3.7%). The rule is a headline until we know how much revenue touches Chinese chip designers; I found no figure. Earnings Jan 14."
     },
     {
      "ticker": "SNDK",
-     "stage": "Turning up, entry window, but the stop (806.43) is 0.3% under the 809.11 close, so treat it as failing.",
+     "stage": "Falling, wait (797.24, -1.5%, -7.3% over five days).",
      "line": ""
     }
    ],
    "notes": [
-    "Also in an entry window, not named: ARM, STX, ASX, AMD, TSAT.TO. Each fell 4-8% on Monday; the tested signal is under pressure.",
-    "For any entry window: wait 15-30 minutes after the 7:30am open; size with Trade on the Royal B page (1% risk, 25% cap); exit on a close under the 50-day."
+    "- ANET, AMD, STX: no longer entry windows (turning up alone or bouncing: watch). No news found beyond the sector move.",
+    "No new entry windows today."
    ]
   },
   {
    "name": "Energy (refiners, integrated, E&P)",
-   "stage": "refiners and E&P turning up, integrated pulled back",
-   "numbers": "refiners fell 26.0%, 3.6% off the low; integrated fell 14.1%, 0.3% off the low; E&P fell 14.0%, 4.0% off the low",
-   "why": "oil is headline-driven; US crude was higher pre-open after Monday's slide on the IEA surplus view ([Benzinga](https://www.benzinga.com/trading-ideas/long-ideas/26/11/63331751/walt-disney-nvidia-and-3-stocks-to-watch-heading-into-tuesday)). What would change the view: a new low in the groups.",
+   "stage": "all three pulled back",
+   "numbers": "refiners fell 26.0%, 1.9% off the low; integrated 14.1%, 0.6% off; E&P 14.0%, 2.6% off",
+   "why": "refiners and E&P slipped from \"turning up\" to \"pulled back\" today. Oil is headline-driven: the IEA now sees a Q4 surplus, with Brent about 95 and WTI about 88 ([ADVFN](https://uk.advfn.com/market-news/article/26325/brent-and-wti-oil-prices-fall-as-iea-predicts-global-supply-surplus)). What would change the view: a new low in the groups.",
    "stocks": [
     {
      "ticker": "CVI",
-     "stage": "Turning up, entry window (opened Nov 13)",
-     "line": "Closed 39.12 (-4.2%); don't chase above 40.29, stop 38.04, 2.8% away. Very swingy (about 7% a day). The Marathon refinery purchase is funded by debt and shares, so the market is still pricing risk."
-    },
-    {
-     "ticker": "LB",
-     "stage": "Turning up, entry window",
-     "line": "Closed 72.52 (-0.9%); don't chase above 74.70, stop 66.72. No news found."
+     "stage": "Falling, wait (38.01, -2.8%)",
+     "line": "It lost its entry window; the stop from the morning brief (38.04) was closed under, so treat that call as failed."
     }
    ],
    "notes": [
-    "- IPCO.TO (entry window, 37.99 CAD, don't chase above 39.13, stop 34.95) and TOU.TO (yours, quiet, 64.75 CAD).",
-    "- VLO, MPC, PSX: Pulled back, watch."
+    "- XOM 167.21 (+0.2%), BP 44.85 (-0.2%): pulled back, watch. VLO, MPC, PSX: pulled back, watch.",
+    "- TOU.TO (yours, quiet), CNQ.TO and SU.TO: Canadian closes in the files may still be Monday's, so I will not quote them as today's."
    ]
   },
   {
    "name": "Basic materials",
    "stage": "gold turning up, copper falling, steel pulled back",
-   "numbers": "gold fell 14.7%, 3.6% off the low; copper fell 21.6%, 5.8% below its low",
-   "why": "no dated reason found for the gold-miner moves; gold hit a one-year low last week and slipped again pre-open. Copper miners fell 5-8% Monday and are still falling: wait.",
+   "numbers": "gold fell 14.7%, 3.6% off the low; copper fell 21.6% and is 5.8% under its low",
+   "why": "",
    "stocks": [],
    "notes": [
-    "- OGC.TO (yours): Pulled back, watch. 37.29 CAD (-2.9%). Earnings Feb 17.",
-    "- FCX, SCCO, TECK-B.TO: Falling, wait.",
+    "Why for copper: copper hit a four-month low, $13,227.50 a tonne on the LME, on the tech sell-off, weak China data (industrial output +4.8% against 5.3% expected) and rate-hike worries; miners fell with it ([Bloomberg](https://www.bloomberg.com/news/articles/2026-11-16/copper-sinks-to-four-month-low-on-tech-rout-china-growth-woes), [Rio Times](https://www.riotimesonline.com/copper-markets-latam-monday-november-16-2026/)). That is a price move from demand fears, not a company event. I found no company-specific news for Teck, First Quantum or Hudbay.",
+    "- FCX 55.30 (+0.2%), SCCO 155.42 (+1.0%), TECK-B.TO: Falling, wait. All ten copper names are in \"falling: wait\".",
+    "- OGC.TO (yours): Pulled back, watch, 37.29 CAD (Canadian close may be Monday's). Earnings Feb 17.",
     "No stock here is in a tested entry window."
    ]
   }
  ],
- "your_stocks": "Taylor, nothing urgent from the business side. TTWO 213.47 (-6.3%) ahead of the GTA VI release Thursday; I found no new dated news this morning, only the earlier preorder reports. MU.TO -7.5% (above). RY.TO 285.69 (-0.9%), reports in 17 days. OGC.TO, EFX.TO (27.71, -3.9%), BOS.TO (6.27), GOOG.TO (44.67, -3.7%), MCD (274.67, +1.0%): no news found; searches were not exhaustive.",
- "coming_up": "NVDA today after the close; Home Depot and Disney reported this morning; Lowe's, TJX, Target Wed; Walmart Thu. Anthropic IPO: pricing expected Wed Nov 18, first trade Thu Nov 19 as ANT; reports (Bloomberg, anonymous sources) say the book is six to seven times covered at $70-78 for 825M shares; an investor says 10-20x, which is one party's claim; dates and price are not company-confirmed ([Bloomberg via Silicon Republic](https://www.siliconrepublic.com/business/bloomberg-anthropic-ipo-six-times-oversubscribed-ai), [Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/altimeter-capital-says-anthropic-ipo-065905955.html)). GTA VI Thu. ADI Nov 24.",
- "changed": "nothing in the stages; these are the same closes as the 2:30pm brief (Mon Nov 16). The new facts are the confirmed Commerce rule and the pre-open numbers above. No new entry windows.",
+ "your_stocks": "Taylor, nothing urgent on the business side. TTWO 203.93 (-4.5%, weak): no company news; reports say traders are trimming ahead of the GTA VI launch Thursday ([Schaeffer's](https://www.schaeffersresearch.com/content/news/2026/11/16/take-two-interactive-stock-slips-ahead-of-gta-vi-drop)). That is one source's reading. MU is above. RY.TO, OGC.TO, EFX.TO, BOS.TO, GOOG.TO, MU.TO: the Canadian prices in today's files match Monday's, so I have nothing new to say on them. MCD 275.82 (+0.4%): quiet.",
+ "coming_up": "Anthropic IPO pricing Wed Nov 18 (range $70-78, 825M shares), first trade Thu Nov 19 as ANT; oversubscription reports come from anonymous sources and are not company-confirmed. GTA VI launch Thu Nov 19. Lowe's, TJX, Target Wed; Walmart Thu. ADI and AMBA report Nov 24.",
+ "changed": "ANET, AMD, STX, SNDK, TSM and TSAT.TO left the entry-window or turning-up lists; CVI fell out of its window; refiners and E&P went from turning up to pulled back; TTWO went from quiet to weak. No new entry windows.",
  "royal_b": "Top 5 AEE, ATO, ETR, NI, EXC; Bullish Turn T.TO, TU, TPX-B.TO.",
- "tested": "the chip and energy entry windows are the tested Shakeout Bounce signal, but most are down 4-14% since opening and SNDK is at its stop. Everything else is a description plus news. This signal's 2026 result came from a few big winners, and about 3 in 10 hit the stop.",
+ "tested": "the entry-window signal is the only tested call here, and there are none open today. Everything else is a description plus news. Not financial advice.",
  "notes": [
   "What I dug into:",
-  "- NVDA's cash flow and guide (t20261114-1, -2): still open until the report; the pre-report consensus is $108.8B revenue and $2.47 EPS against Nvidia's own $108B guide ([Benzinga](https://www.benzinga.com/markets/prediction-markets/26/11/63337722/nvidia-earnings-preview)).",
-  "- Commerce chip rule (t20261116-4): partly answered. It is an interim final rule, five countries named, US cloud firms reportedly exempt with reporting; the 1.3%-of-Nvidia-revenue figure is one outlet's, unchecked. I found no similar figure for MU or TSM ([Bloomberg](https://www.bloomberg.com/news/articles/2026-11-16/us-moves-to-limit-remote-access-to-advanced-ai-chips), [Techi](https://www.techi.com/us-ai-chip-export-rule-nvidia-revenue-exposure/)). I read search summaries only; the official BIS text was not found.",
-  "- Anthropic IPO (t20261114-3): still open; oversubscription numbers above are anonymous-source or one investor's claim.",
-  "- I did not use EODHD tools this run, and one news site would not open.",
-  "Trend board changes: AI build-out stays \"watching\"; no kill hit (MU 719 is above $650). Added evidence: the rule's confirmed terms and the Anthropic book reports. Next test is Nvidia's report today.",
-  "Lessons: none tested yet; L1, L2 and L6 get their first test after Nvidia reports.",
-  "Notes: notebook, to-do and orders were read normally. Not financial advice."
+  "- NVDA guide (t20261114-2): answered. Q4 revenue guide $130.0B plus or minus 3% (more than the $125B expected and my ~$109B line), no China data-centre compute assumed, but gross margin guide 71.0-72.0% against 74.8% in Q3. My earlier bull marker was margins at 74% or more, so it is half met: revenue yes, margin no ([Nvidia release](https://finance.yahoo.com/markets/stocks/articles/nvidia-announces-financial-results-third-212000678.html)). Fact, from the company's own release.",
+  "- NVDA cash flow and receivables (t20261114-1): answered from the release. Free cash flow $43.8B against net income $65.3B (67%, up from 36% last quarter); that part recovered. But receivables are $81.0B against $63.1B last quarter, up 28% while revenue rose 20%, and inventory is $39.7B. Net cash from operations includes an $18.1B receivables build. The company bought $15.7B of equity securities in the quarter and its non-marketable securities are $65.5B (from $22.3B in January); who it invested in is not in the release. I read the release only, not the CFO commentary or the call ([same release](https://finance.yahoo.com/markets/stocks/articles/nvidia-announces-financial-results-third-212000678.html)).",
+  "- Copper miners (t20261117-2): answered above, price fall on demand fears, not company news.",
+  "Trend board changes: AI build-out moves from \"watching\" to \"fading\", and this is a judgement call you may want to overrule. One kill line has happened on the numbers: \"NVDA receivables keep climbing faster than sales\" (receivables +28% against revenue +20%, up from $63.1B to $81.0B). Against that, revenue, the Q4 guide and cash flow were strong, no other kill hit (MU 712 is above $650; SMH is above its low), and the Anthropic pricing and tomorrow's market reaction are still ahead. I did not close it, because the main kill line is intact and the call is not yet read. Added evidence: the release numbers, the Q4 margin guide, and today's closes.",
+  "Your lessons: none tested yet. L6 (NVDA report, perception over numbers) is the live one: the numbers beat and the guide is above expectations; its test needs the next-day and one-week moves of NVDA, SMH and MU, so it waits for Wednesday's close and later. L1 and L2 stay waiting too.",
+  "Notes: notebook, to-do and orders were read normally. One news site and the Nvidia investor site would not open; I used EODHD's copy of the release and search summaries for the rest."
  ],
- "brief_file": "2026-11-17-am.md",
- "updated": "2026-11-17T13:51:26+00:00"
+ "brief_file": "2026-11-17-pm.md",
+ "updated": "2026-11-17T21:41:19+00:00"
 }
