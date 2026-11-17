@@ -92,6 +92,10 @@ Where you run:
    link). No attachments, no signature.
 9. For the Scout box on Royal B's Home page: `/usr/bin/python3 brief_to_json.py briefs/<this brief>.md` (writes
    `briefs/latest.json`; on the Mac use the Mac Python). Check it printed the sectors and stocks you wrote.
+   **Then publish it to Royal B (Nov 17, Taylor: the page was not getting the brief):** the Home Scout box listens to the
+   db doc `state/scout`. Write the whole `briefs/latest.json` there with ArtifactData: `set`, collection `state`, doc
+   `scout`, `file_path` `briefs/latest.json`, passing `if_version` from a fresh `get` of that doc (omit it only if the
+   doc does not exist). This must happen on every run, even when the email fails.
    Cloud only: save the memory for the next run. `git add briefs scout-state.json`, commit
    "Scout brief <date> <am|pm>", and push to branch `scout`. Never push to `main` or `results`, never commit
    `workers.json`, `shortlist.json` or `data/`.
