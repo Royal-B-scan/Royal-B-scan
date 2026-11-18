@@ -1,80 +1,126 @@
 {
  "asof": "2026-11-18",
- "session": "am",
- "title": "Atlas · Wed Nov 18 · 6:45am",
- "big_picture": "Taylor, the market fell on Tuesday (SPY -1.0%, 48% of large caps above their 50-day) and futures are pointing up this morning on Nvidia. Nvidia reported fiscal Q3 after the close: revenue $115.8B (+103% from a year ago), EPS $2.68 against about $2.48 expected, a Q4 revenue guide of about $130B, and a gross margin guide of 71-72% against 74.9% in Q3 ([CNBC](https://www.cnbc.com/2026/11/17/nvidia-nvda-earnings-report-q3-2027.html), [Investing.com](https://www.investing.com/news/stock-market-news/premarket-movers-nvidia-jumps-on-strong-ai-outlook-lowes-falls-5035719)). Premarket NVDA is up roughly 3-4% from $155.46-156.14, depending on the source and the minute, so the real answer is the 7:30am open. Anthropic prices tonight (range $70-78) and trades Thursday; the Fed minutes are also due today ([TradingKey](https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey)).",
+ "session": "pm",
+ "title": "Atlas · Wed Nov 18 · 2:30pm",
+ "big_picture": "Taylor, Nvidia's report did not hold the chip trade up. NVDA opened about 4% higher on the beat, then reversed and closed at 150.96 (-2.9%) on twice its usual volume, its lowest close since June 2025 ([TECHi](https://www.techi.com/nvidia-stock-falls-day-after-earnings-ten-report-record/), [CNBC](https://www.cnbc.com/2026/11/17/stock-market-today-live-updates.html)). Micron closed 705.27 (-1.0%) and the chip ETF SMH was flat (-0.1%), so the group did not break down; it just refused to rally. The S&P 500 ETF (SPY) fell 0.3%, its fifth down day in a row; 48% of large caps are above their 50-day. The Fed minutes read hawkish: nearly everyone saw further rate rises as likely, markets price a December hike at roughly 95%, and the 10-year yield is near 5.1% ([Kitco](https://www.kitco.com/news/article/2026-11-18/gold-prices-remain-under-pressure-fed-minutes-show-central-bank-committed), [Discovery Alert](https://discoveryalert.com/news/gold-price-below-3800-fed-hike-november-2026/)). Anthropic is reported to have priced its IPO at $83, above the $70-78 range, and starts trading Thursday as ANT ([Bloomberg](https://www.bloomberg.com/news/articles/2026-11-18/anthropic-is-said-to-price-ipo-at-83-per-share)). That price comes from people familiar with the matter, so I treat it as reported, not confirmed, until the company announces it.",
  "urgent": "",
  "sectors": [
   {
    "name": "Chips and hardware",
-   "stage": "chips and communication equipment turning up, hardware pulled back",
-   "numbers": "chips fell 32.4% from the high, 8.9% off the low, 17% up 2%+ Tuesday; hardware fell 33.9%, 0.3% off the low, 0% up 2%+",
-   "why": "Tuesday was a wait for Nvidia. The numbers beat; the open decides whether the market cares. Two things in the report are not clean: the margin guide (71-72%, Rubin ramp and memory costs; the report is a fact, the reason is the company's and a news summary's) and receivables, which grew faster than sales. What would change the view: MU closing under $650, SMH under its Nov 5 low, or a gap up that fades in the first hour. Wait 15-30 minutes after the 7:30am open.",
+   "stage": "chips and communication equipment turning up, hardware falling",
+   "numbers": "chips fell 31.1% from the high, 8.3% off the low, 10% up 2%+ today; communication equipment fell 28.4%, 5.7% off the low, 39% up 2%+; hardware fell 33.8%, at its low, 17% up 2%+",
+   "why": "the group's low is still its Nov 5 low, and today's premarket gain faded by the close. Two things in Nvidia's report are not clean: receivables of $81.0B up 29% while revenue rose 20% (about 64 days of sales, the most since 2022), and $118B of guarantees that Nvidia says take effect only as buildings finish and have had no payments so far ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/nvidia-interim-ceo-guarantee-doesn-153404226.html), [Motley Fool](https://www.fool.com/investing/2026/11/17/nvidia-has-a-usd118-billion-promise-tucked-inside-its-blowout-quarter-here-s-what-it-means-for-the-stock/)). The 10-Q is not filed yet, so the make-up of both comes from the release and call. What would change the view: MU closing under $650, SMH under its Nov 5 low of 447.73 (it closed 459.54), or NVDA closing under today's 150.96.",
    "stocks": [
     {
      "ticker": "NVDA",
      "stage": "Falling, wait",
-     "line": "Closed 155.46 (-0.4%). It stays \"wait\" until the price answers the report; a premarket gain is not a stage change."
+     "line": "150.96 (-2.9%), 20% under its 20-day. A reversal from a gap up on a beat is the day's lesson, not a signal."
     },
     {
      "ticker": "MU",
-     "stage": "Pulled back, watch",
-     "line": "Closed 712.42 (-0.9%), 8.5% above its low of 656.39, 13% under its 20-day. Premarket +3.4% would still leave it under the 20-day. Kill line $650."
+     "stage": "Pulled back, watch (yours via MU.TO)",
+     "line": "705.27 (-1.0%), 7.4% above its low of 656.39, 12.8% under its 20-day. Kill line $650."
     },
     {
      "ticker": "TSM",
      "stage": "Pulled back, watch",
-     "line": "359.69 (-3.7%) on Tuesday after the Commerce Department rule; I still have no figure for how much revenue it touches. Earnings Jan 14."
+     "line": "362.62 (+0.8%) after -12.3% in five days. Still no figure for how much revenue the Commerce remote-access rule touches. Earnings Jan 14."
     },
     {
      "ticker": "AVGO",
      "stage": "Bouncing, watch",
-     "line": "341.60 (+2.5%). Earnings Dec 9."
+     "line": "354.05 (+3.6%), 21.4% off its low. Earnings Dec 9."
+    },
+    {
+     "ticker": "ANET",
+     "stage": "Bouncing, watch",
+     "line": "193.94 (+4.0%). Not an entry: it left its window Tuesday."
     }
    ],
    "notes": [
-    "- ANET, AMD: turning up alone, watch (not an entry; the \"alone\" signal tested no better than random). No news beyond the sector.",
-    "No stock is in an entry window this morning."
+    "No stock here is in an entry window."
    ]
   },
   {
-   "name": "Energy (refiners, integrated, E&P)",
-   "stage": "all three pulled back",
-   "numbers": "refiners fell 26.0%, 2.6% off the low; integrated 14.1%, 0.6%; E&P 14.0%, 2.9%",
-   "why": "no new news found this morning beyond the IEA's Q4 surplus call and oil price headlines from Tuesday. What would change the view: a new low in the groups.",
-   "stocks": [],
+   "name": "Cybersecurity and infrastructure software",
+   "stage": "turning up with its group",
+   "numbers": "Software - Infrastructure: 42% of the group up 2%+ today",
+   "why": "cyber stocks rallied hard before Palo Alto's report, with Qualys, Tenable and Palo Alto up between 9.9% and 15.8% in the price files; one outlet ties the move to a DHS warning that hackers are using AI to scale attacks ([FourWeekMBA](https://fourweekmba.com/ai-cyber-stocks-jump-up-to-11-5-ahead-of-palo-altos-results/), [Business Upturn](https://businessupturn.com/usa/money/us-markets/top-movers-cyber-security-stocks-surge-while-miners-retreat-wednesday-18-november-2026/)). That reason is one outlet's, not confirmed by DHS in what I found. Palo Alto then reported after the close: revenue $3.45B against $3.31B expected, adjusted EPS $1.05 against $0.97, and an acquisition (Applied Compute); the stock was up about 8% after hours ([Benzinga](https://www.benzinga.com/markets/earnings/26/11/63414200/palo-alto-posts-q1-double-beat-announces-applied-compute-acquisition)). MarketBeat shows a different EPS (a GAAP figure); I used the adjusted one. What would change the view: the group giving back the day on the open.",
+   "stocks": [
+    {
+     "ticker": "PANW",
+     "stage": "Turning up: entry window (with its group, +9.9% on 2.4x volume)",
+     "line": "Last close 339.92. Don't chase above 350.12, stop 312.73 (8% under the close). It reported tonight and trades near $367 after hours, so tomorrow it will probably open above the do-not-chase line: by the plan that is chasing, and the entry-window signal was tested on the close, not on a gap. Missed this leg unless it pulls back. Wait 15-30 minutes after the 7:30am open; size with Trade on Royal B (1% risk, 25% cap); exit on a close under the 50-day."
+    },
+    {
+     "ticker": "QLYS",
+     "stage": "Turning up: entry window (+12.9%, 1.4x volume)",
+     "line": "Last close 197.24. Don't chase above 203.16, stop 181.46 (8% under). A 13% one-day jump is already a big run for one day; wait 15-30 minutes after the open. Its earnings date is not in the files."
+    },
+    {
+     "ticker": "DLO",
+     "stage": "Turning up: entry window (+3.5% on 2.4x volume)",
+     "line": "Last close 12.89. Don't chase above 13.28, stop 12.46 (the shakeout low, 3.3% risk). I found no company news for it; it is a payments stock moving with the group, not a cyber name. Its earnings date is not in the files."
+    },
+    {
+     "ticker": "TENB",
+     "stage": "Bouncing, watch",
+     "line": "44.68 (+15.8%), not a tested entry."
+    }
+   ],
    "notes": [
-    "- XOM 167.21, BP 44.85: pulled back, watch. CNQ.TO and TOU.TO (watched in Royal B): Canadian closes may be one day old.",
-    "- CSAN bouncing (3.25, +5.2%), a refiner, high swing (8.1%): watch only."
+    "About 3 in 10 tested entry windows hit the stop, and 2026's results leaned on a few big winners."
    ]
   },
   {
    "name": "Gold",
-   "stage": "turning up",
-   "numbers": "fell 14.7%, 4.0% off the low, 12% up 2%+",
-   "why": "gold miners bounced while copper (a separate group) is still falling (-26.1% from the high, all ten names \"falling: wait\"). A reported drop in gold below $3,800 this morning would test the bounce; I could not confirm a dated reason for the miners' bounce.",
-   "stocks": [],
+   "stage": "turning up per the files, under pressure per the news",
+   "numbers": "fell 14.7%, 4.0% off the low, 12% up 2%+ today",
+   "why": "the news and the files disagree. Reports say spot gold fell below $3,800 to a one-year low (about $3,720, down more than 3% in one report) on the hawkish minutes and 5% yields, with US miners down 2-4% early ([Kitco](https://www.kitco.com/news/article/2026-11-18/gold-prices-remain-under-pressure-fed-minutes-show-central-bank-committed), [MINING.COM](https://www.mining.com/web/gold-price-drops-to-14-month-low-as-dollar-yields-rise-on-hawkish-fed-rhetoric/)). The files show the Canadian miners flat to up (group +0.4%, OGC.TO +1.4%), likely because Canadian closes came before the late drop. Not reconciled; I would not read the group's stage as a bounce until the next close. What would change the view: gold reclaiming $3,850, or a new low in the miners.",
+   "stocks": [
+    {
+     "ticker": "SEA.TO",
+     "stage": "Bouncing, watch",
+     "line": "37.59 CAD (+7.2% on 2.3x volume); no dated reason found."
+    },
+    {
+     "ticker": "TXG.TO",
+     "stage": "Bouncing, watch",
+     "line": "77.51 CAD (+2.1%, +18.7% in five days)."
+    },
+    {
+     "ticker": "WPM.TO",
+     "stage": "Bouncing, watch",
+     "line": "181.81 CAD (+0.3%)."
+    },
+    {
+     "ticker": "AEM.TO",
+     "stage": "Pulled back, watch",
+     "line": "247.49 CAD (+1.3%)."
+    }
+   ],
    "notes": [
-    "- OGC.TO (yours): Bouncing, watch. 37.81 CAD (+1.4%). Earnings Feb 17.",
-    "- SEA.TO +7.2% (37.59), TXG.TO, WPM.TO, GMIN.TO: bouncing, watch."
+    "- OGC.TO (yours): Bouncing, watch. 37.81 CAD (+1.4%), 14.2% off its low. Earnings Feb 17.",
+    "No stock here is in an entry window."
    ]
   }
  ],
- "your_stocks": "Taylor, nothing urgent on the business side. TTWO 203.93 (-4.5%, weak): no company news; one source says traders are trimming ahead of the GTA VI launch Thursday ([Schaeffer's](https://www.schaeffersresearch.com/content/news/2026/11/16/take-two-interactive-stock-slips-ahead-of-gta-vi-drop)). MU is above (MU.TO 31.04, -1.2%, pulled back). GOOG.TO fell from pulled back to falling, wait (44.05, -1.4%); no news found. RY.TO 280.99 (-1.6%, quiet, reports Dec 3), EFX.TO 28.02, BOS.TO 6.29, MCD 275.82: nothing new.",
- "coming_up": "Anthropic pricing tonight, first trade Thursday Nov 19 as ANT (825M shares, range $70-78; Micron is one of seven buyers in a $26B private placement at the IPO price: [CNBC](https://www.cnbc.com/2026/11/17/anthropic-ipo-price.html)); Fed minutes today; GTA VI launch and Walmart Thursday; ADI and AMBA report Nov 24; AVGO Dec 9; RY.TO Dec 3.",
- "changed": "GOOG.TO to falling; MU.TO to pulled back; TTWO to weak; ANET, AMD, STX, TSM, SNDK, CVI left their entry windows on Tuesday; refiners and E&P went to pulled back. Nothing new this morning in the files (prices are Tuesday's close).",
+ "your_stocks": "Taylor, one item. TTWO 216.61 (+6.2%) on GTA VI reviews (Metacritic 99; Wells Fargo raised its net bookings forecast 19%), ahead of Thursday's launch ([Benzinga via TradingView](https://www.tradingview.com/news/benzinga:8af147d7c094b:0-take-two-shares-jump-as-gta-vi-draws-near-perfect-reviews-ahead-of-release/)). Reviews are a headline; the business effect is the bookings estimate, which is one analyst's. It reversed this morning's -4.5% and is now stage quiet. MU 705.27 and MU.TO 31.04 (-1.2%): see Focus 1. GOOG.TO 44.05 (-1.4%) still falling, wait; no Alphabet news found. OGC.TO: Focus 3. RY.TO 280.99 (-1.6%, reports Dec 3), EFX.TO 28.02 (+1.1%), BOS.TO 6.29 (+0.3%), MCD 274.03 (-0.6%): nothing new.",
+ "coming_up": "Anthropic (ANT) first trade Thursday Nov 19; GTA VI launch and Walmart earnings Thursday; Palo Alto's reaction at tomorrow's open; ADI and AMBA report Nov 24; AVGO Dec 9; RY.TO Dec 3; the Fed's December meeting, where a hike is priced at about 95% (reports, not an official figure). Nvidia's 10-Q is due \"in the coming weeks\".",
+ "changed": "Energy dropped out of the focus: refiners, integrated oil and E&P are falling or pulled back with crude down about 2% on a surprise US inventory build of 5.28 million barrels ([EnergyNow](https://energynow.com/2026/11/oil-prices-fall-sharply-as-u-s-crude-inventories-rise-overshadowing-middle-east-supply-risks/)); XOM, BP, EQNR, VLO, HAL moved to falling, wait. New: Software - Infrastructure with three entry windows (PANW, QLYS, DLO). TTWO weak to quiet. ANET to bouncing. Computer Hardware went from pulled back to falling.",
  "royal_b": "Top 5 L.TO, CU.TO, BIP, NYT; Bullish Turn none.",
- "tested": "the entry-window signal is the only tested call in this brief, and none is open. Everything else is a description plus news. Not financial advice.",
+ "tested": "the entry-window signal behind PANW, QLYS and DLO is the only tested call here; everything else is a description plus news. PANW's after-hours gap is outside the tested setup. Not financial advice.",
  "notes": [
-  "Premarket movers (EODHD files are Tuesday's close; the moves below are from news reports and differ by source): MU +3.4%, AMD +3%, AVGO +2.5%, Marvell +4.4%, CoreWeave and Nebius up, Dell, HPE and Super Micro +3-6%. Target raised its outlook but dipped about 3%; Lowe's fell; Walmart reports Thursday ([Investing.com](https://www.investing.com/news/stock-market-news/premarket-movers-nvidia-jumps-on-strong-ai-outlook-lowes-falls-5035719), [Yahoo Finance](https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-18-dow-sp-500-nasdaq-nvidia-anthropic-ipo-090613569.html)). Gold is reported below $3,800 ([TradingKey](https://www.tradingkey.com/analysis/stocks/us-stocks/262311015-us-pre-market-nvda-anthropic-tradingkey)).",
+  "Your lesson L6 (perception over numbers) fits here: Nvidia beat, guided about $130B for next quarter against roughly $125B expected, and the stock still fell. The numbers did not decide the day; the outlook and the guarantees did. One day only: the one-week read is still ahead.",
+  "Plan for tomorrow: nothing in chips or gold is an entry. Watch whether NVDA holds 150.96, MU holds 650, and how ANT trades (Micron is a buyer in the placement); wait 15-30 minutes after the 7:30am open before anything.",
   "What I dug into:",
-  "- Nvidia call (t20261117-3): answered. Management said its neocloud commitments ($32B) take effect only if the customer secures financing and the capacity is deployed and accepted; guarantees total $118B, including $105B of credit support for the PORTS-Pike campus, with no payments made so far. The written commentary said some commitments \"could be reduced or eliminated\" if neoclouds overextend, and Kress said Nvidia is \"rigorously evaluating future investments, commitments, and guarantees\". These come from news summaries of the call, not the transcript or 10-Q ([TheStreet](https://www.thestreet.com/latest-news/nvda-nvidia-corporation-q3-2027-earnings-stock-updates), [CNBC](https://www.cnbc.com/2026/11/17/nvidia-nvda-earnings-report-q3-2027.html)). It speaks to your money-trail question: the company itself describes the exposure as large and conditional.",
-  "- Anthropic IPO (t20261114-3): still open. Range $70-78 unchanged in the Tuesday filing; CNBC and Bloomberg sources say it will likely price above the range (anonymous-source reports, a rumour until priced) ([CNBC](https://www.cnbc.com/2026/11/17/anthropic-ipo-price.html)).",
-  "- DRAM prices (t20261114-4): still open. TrendForce's Q4 2026 forecast is contract prices up 10-15% quarter on quarter, slower than Q3; I found no December-specific price, and the pages are mostly second-hand ([COINOTAG on TrendForce](https://en.coinotag.com/trendforce-2026-q4-dram-contract-prices-up-10-15)). Rising, but slowing, is the cycle-peak worry in a sentence.",
-  "Trend board changes: AI build-out stays \"fading\" (set last night). New evidence: Nvidia's beat and $130B guide, the conditional-commitment wording, and Anthropic's likely above-range pricing (rumour). Nothing closes it: MU is above $650 and SMH has not made a new low. Today's open and tonight's Anthropic pricing are the next tests.",
-  "Your lessons: none tested this morning. L6 (NVDA report, perception over numbers) waits for the next-day and one-week moves of NVDA, SMH and MU; the first read is today's close.",
-  "Notes: notebook, to-dos and orders were read normally. CNBC and some other sites would not open directly; I worked from search results and say so above. EODHD tools were not used this run (the price files are from the workers)."
+  "- Anthropic's price (t20261114-3): reported at $83, above the $70-78 range, about six times covered, trading Thursday. Bloomberg's source-based report; no company announcement in what I found ([Bloomberg](https://www.bloomberg.com/news/articles/2026-11-18/anthropic-is-said-to-price-ipo-at-83-per-share), [Yahoo Finance live](https://finance.yahoo.com/technology/live/anthropic-ipo-live-company-set-to-price-stock-between-70-and-78-as-trading-starts-thursday-174130523.html)).",
+  "- NVDA, SMH, MU closes (t20261118-2): NVDA 150.96 (-2.9%), MU 705.27 (-1.0%), SMH 459.54 (-0.1%) from the price files; the gap-up faded by the close ([TECHi](https://www.techi.com/nvidia-stock-falls-day-after-earnings-ten-report-record/)).",
+  "- NVDA's guarantees and receivables (t20261118-3): still open. The $118B is $105B of SB Energy credit support, $9.5B power and systems, $3.5B land and shell; none paid, first one expected to take effect in fiscal 2029; receivables $81.0B ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/nvidia-interim-ceo-guarantee-doesn-153404226.html), [Motley Fool](https://www.fool.com/investing/2026/11/17/nvidia-has-a-usd118-billion-promise-tucked-inside-its-blowout-quarter-here-s-what-it-means-for-the-stock/)). I read search summaries; the 10-Q is not out. Several pages would not open directly.",
+  "Trend board changes: AI build-out stays \"fading\". New evidence: NVDA reversed to its lowest close since June 2025 despite the beat; Anthropic's reported $83 price (a rumour until confirmed; the kill \"prices below range\" did not happen); receivables 64 days of sales; hawkish Fed minutes as a headwind. No kill has hit: MU is above $650 and SMH has no new low. Two new trends opened as \"watching\": Cyber and infrastructure software bounce, and Rate-hike pressure (gold, growth stocks).",
+  "Your lessons: L6 held on day one: NVDA beat and guided up, then closed -2.9% after reversing a +3.9% premarket gain, while SMH closed -0.1% and MU -1.0%, so the group was not crushed. Held 1, failed 0. The one-week move is still to come. L1 and L2 not tested.",
+  "Notes: notebook, to-dos and orders were read normally. EODHD tools were not used this run (prices came through the workers). Several news sites would not open; I worked from search results, which disagree on some figures (closes and percentages), so I used the price files for closes."
  ],
- "brief_file": "2026-11-18-am.md",
- "updated": "2026-11-18T13:51:03+00:00"
+ "brief_file": "2026-11-18-pm.md",
+ "updated": "2026-11-18T21:50:04+00:00"
 }
