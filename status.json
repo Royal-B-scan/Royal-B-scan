@@ -1,0 +1,63 @@
+{
+ "ok": true,
+ "counts": {
+  "universe": 3723,
+  "stocks": 3004,
+  "etfs": 719,
+  "liquid": 3443,
+  "hits": 13,
+  "trigger": 0,
+  "triggered": 2,
+  "headsup": 11,
+  "setting_up": 100,
+  "early_breakout": 8,
+  "early_pullback": 25,
+  "early_squeeze": 11,
+  "wh52": 19,
+  "weekly_new": 20,
+  "weekly": 225,
+  "obv_skip": 1
+ },
+ "last_bar": "2026-11-20",
+ "comeback": {
+  "large": 1131,
+  "beaten": 183,
+  "quality": 100,
+  "turn": 1,
+  "still_falling": 46,
+  "basing": 29,
+  "turning_up": 8,
+  "recovered": 17
+ },
+ "comeback_moved_up": [],
+ "comeback_turn": [
+  {
+   "ticker": "RKT",
+   "name": "Rocket Companies, Inc.",
+   "close": 13.75,
+   "stop": 12.65,
+   "sma20": 13.55,
+   "quality": true,
+   "currency": "USD"
+  }
+ ],
+ "lists": {
+  "watch": 32,
+  "holdings": 2,
+  "longterm": 6,
+  "pins": 6,
+  "missing": []
+ },
+ "judgement": 67,
+ "top5": [
+  "CU.TO",
+  "BIP",
+  "RKT"
+ ],
+ "top5_prev": [],
+ "earnings_hist": 464,
+ "problems": {},
+ "updated": "2026-11-20T22:26+00:00",
+ "date": "2026-11-20",
+ "seconds": 439
+}
