@@ -687,7 +687,10 @@ def run(tickers: list[str], closes: dict | None = None, earnings: dict | None = 
     backup, why = [], []   # Nov 20: stocks where EODHD failed and Yahoo filled in (shown in red as a problem)
     for t in dict.fromkeys(tickers):
         c = cache.get(t)
-        if ((not c or now - c.get("at", 0) > MAX_AGE) and fetched < max_fetch and fails < 6
+        # Nov 21: numbers from the other source count as stale, so a switch to EODHD takes effect on the next run
+        # (stocks marked "yahoo_backup", where EODHD already failed, keep the normal 4-day wait)
+        other = bool(c) and SOURCE == "eodhd" and c.get("src", "yahoo") == "yahoo"
+        if ((not c or now - c.get("at", 0) > MAX_AGE or other) and fetched < max_fetch and fails < 6
                 and time.time() - t0 < budget_s):
             try:
                 c = None
@@ -705,6 +708,8 @@ def run(tickers: list[str], closes: dict | None = None, earnings: dict | None = 
                 if c is None:
                     c = fetch(t)
                     c.setdefault("src", "yahoo")
+                    if SOURCE == "eodhd":
+                        c["src"] = "yahoo_backup"   # EODHD failed for it: wait the normal 4 days before trying again
                 cache[t] = c
                 fetched += 1
                 fails = 0 if c.get("rev") else fails + 1
