@@ -266,6 +266,25 @@ def near_52wh(df: pd.DataFrame) -> tuple[bool, float | None]:
     return bool(float(c.iloc[-5:].max()) >= hi and off >= -3.0), round(off, 1)
 
 
+def _push_backup_alert(why: str) -> None:
+    """Nov 20 (Taylor: keep the Yahoo backup, but tell me when it kicks in): one phone push when EODHD fails and the
+    daily screen falls back to Yahoo. Uses the same ntfy topic as the intraday alerts. No extra data calls."""
+    topic = os.environ.get("NTFY_TOPIC", "").strip()
+    if not topic:
+        print("  (no NTFY_TOPIC set, so no backup alert was sent)")
+        return
+    try:
+        import requests
+        body = (f"EODHD didn't answer for tonight's daily screen, so it used the Yahoo backup instead. "
+                f"The results are still there; check the screener looks normal. Reason: {why[:160]}")
+        requests.post(f"https://ntfy.sh/{topic}", data=body.encode("utf-8"), timeout=20,
+                      headers={"Title": "Royal B: daily screen used the Yahoo backup", "Tags": "warning",
+                               "Priority": "high", "Click": "https://claude.ai/artifact/4rYahwzjmiEjqqBCYUgf7R"}
+                      ).raise_for_status()
+    except Exception as e:  # noqa: BLE001
+        print("  backup alert push failed:", e, file=sys.stderr)
+
+
 def run_scan(progress=_noop) -> dict:
     from export_site import make_entry
 
@@ -285,6 +304,7 @@ def run_scan(progress=_noop) -> dict:
         except Exception as e:  # noqa: BLE001
             print("EODHD failed, using Yahoo:", e, file=sys.stderr)
             source, source_note = "yahoo", f"EODHD failed ({str(e)[:120]}); this screen used Yahoo"
+            _push_backup_alert(str(e))
     if source != "eodhd":
         progress("Finding stocks", None, None, "Asking Yahoo for the list")
         uni = get_universe(progress)
