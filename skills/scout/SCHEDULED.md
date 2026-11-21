@@ -95,6 +95,12 @@ Where you run:
    link). No attachments, no signature.
 9. For the Scout box on Royal B's Home page: `/usr/bin/python3 brief_to_json.py briefs/<this brief>.md` (writes
    `briefs/latest.json`; on the Mac use the Mac Python). Check it printed the sectors and stocks you wrote.
+   **Market mood line (Nov 21, Taylor's index strip):** before publishing, add one field to `briefs/latest.json`:
+   `"market_mood": {"asof": "<now, ISO 8601 with offset, from date -Iseconds>", "line": "<one sentence>"}`. The line
+   is one plain spoken sentence on the market's mood right now (am: overnight and pre-market; pm: the day's close),
+   e.g. "Everything sold off today; tech took the worst of it and the fear gauge jumped." Under 160 characters, no
+   tickers in brackets, no codes, no advice, nothing about Taylor's own holdings (this file is public). Royal B shows
+   it beside the Risk-on / Mixed / Risk-off tag in the index strip.
    **Then publish it to Royal B (Nov 17, Taylor: the page was not getting the brief):** the Home Scout box listens to the
    db doc `state/scout`. Write the whole `briefs/latest.json` there with ArtifactData: `set`, collection `state`, doc
    `scout`, `file_path` `briefs/latest.json`, passing `if_version` from a fresh `get` of that doc (omit it only if the
