@@ -50,8 +50,9 @@ Where you run:
    filings, peers' price and volume) plus web search mode "extended", opening the full articles where you can (if two
    sites fail to open, work from the search results and say you read summaries). Follow SKILL.md section 3: a source
    for every why, fact vs rumour, headline vs business. Mark the item `done` with a short `answer` and `sources`
-   [{title, url}], or `dropped` with the reason in `answer`. If you could not finish, leave it `open` and add what you
-   found to `answer`.
+   [{title, url}]. If you could not finish, leave it `open` and add what you found to `answer`. Never mark an item
+   `dropped` yourself: only Taylor drops to-dos (the TO-DO LIST CAP in the run instructions, Nov 20). Items with a
+   `focus` number from Taylor are dug first, then `big: true` items, then oldest.
 6. **Update the trend board** (`notebook.trends`):
    - Add new evidence as {date, fact, source_url, fact_or_rumour}. Never add evidence without a source, and never
      invent numbers or news.
@@ -76,7 +77,9 @@ Where you run:
      and never delete a lesson, even one that looks wrong: Taylor decides.
    The lesson changes are saved with the notebook in step 7.
 7. **End of run: write back** (after the brief is written). Add 1-3 new `todo` items: things you noticed but could not
-   explain. Each: {id: `t<YYYYMMDD>-<n>`, question, why_it_matters, opened: today (Vancouver date), from_session:
+   explain, following the TO-DO LIST CAP in the run instructions (Nov 20): big items always (new trend, big market
+   move, Taylor's stocks, events in the next 2 trading days) with `big: true`; when 15 or more are open, the rest go
+   into `todo.parked` instead. Each: {id: `t<YYYYMMDD>-<n>`, question, why_it_matters, opened: today (Vancouver date), from_session:
    `<date> am|pm`, status: open, answer: null, sources: []}. Set `updated` on each doc you changed. Write with
    ArtifactData `set` (or a `batch`) on the same artifact, passing the `version` you read in step 3 as `if_version`. If
    a write fails because the doc changed, read it again, re-apply your changes and write once more; if it fails again,
