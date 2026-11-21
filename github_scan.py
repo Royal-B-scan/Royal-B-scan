@@ -60,6 +60,10 @@ def main() -> None:
     try:
         judgement = run_judgement()
         status["judgement"] = len(judgement["by"])
+        jb = judgement.get("yahoo_backup")
+        if jb:   # Nov 20: loud, like the price backup: shown in red on the page and in the daily summary
+            status["judgement_yahoo"] = (f"EODHD failed for {jb['count']} stock(s) ({', '.join(jb['tickers'][:8])}); "
+                                         f"Judgement Day used Yahoo for those. EODHD said: {jb['why']}")
     except Exception as e:  # noqa: BLE001
         print("judgement failed:", e, file=sys.stderr)
         status["judgement_error"] = str(e)[:200]
@@ -114,7 +118,7 @@ def main() -> None:
         status["earnings_hist_error"] = str(e)[:200]
     # Oct 28: collect every failure in one place (status.json and scan.json), so the page can show it in red
     problems = dict(out.get("problems") or {})
-    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists"), ("judgement_error", "judgement day"), ("top5_error", "top 5")):
+    for key, label in (("comeback_error", "comeback kings"), ("lists_error", "your lists"), ("judgement_error", "judgement day"), ("judgement_yahoo", "judgement day data"), ("top5_error", "top 5")):
         if status.get(key):
             problems[label] = status[key]
     if isinstance(status.get("lists"), dict) and status["lists"].get("longterm_error"):

@@ -18,7 +18,7 @@ Verdict
         ("wait for the next pitch"). Nov 5: reward-to-risk is shown but no longer decides it; utilities judged on
         cash from operations; a high debt-to-equity only skips when the debt is hard to carry
   PASS  everything else
-  NODATA Yahoo gave us too little to judge
+  NODATA the data source (Yahoo, or EODHD since Nov 20) gave us too little to judge
 
 Writes nothing itself: github_scan.py puts the result into scan.json under "judgement".
 Fundamentals are cached in cache/judgement.json for 4 days (they change quarterly); the price-based parts
@@ -38,6 +38,9 @@ CACHE = os.path.join(BASE, "cache", "judgement.json")
 MAX_AGE = 4 * 24 * 3600
 STOP_PCT = 0.08          # our rule: 8% stop
 MIN_RR = 2.0
+# Nov 20: where the company numbers come from. "yahoo" (default) or "eodhd" (env JUDGE_SOURCE, set in scan.yml).
+# With "eodhd", any stock EODHD can't give is fetched from Yahoo instead and listed in the screen's problems.
+SOURCE = (os.environ.get("JUDGE_SOURCE") or "yahoo").strip().lower()
 FIN_SECTORS = {"Financial Services", "Real Estate", "Utilities"}   # debt-heavy by design (and pipelines): debt checks are info only
 
 
@@ -183,6 +186,157 @@ def fetch(t: str) -> dict:
         raw["close"] = _num(c.iloc[-1])
         raw["hi52"] = _num(h["High"].max())
         raw["sma200"] = _num(c.iloc[-200:].mean()) if len(c) >= 200 else None
+    return raw
+
+
+# ------------------------------------------------------------------ fetch from EODHD (Nov 20)
+def fetch_eodhd(t: str) -> dict:
+    """Nov 20 (Taylor, follow-up handoff 2b): the same raw numbers as fetch(), from EODHD instead of Yahoo.
+    Two requests per stock (fundamentals + ~13 months of daily prices). Units are made to match Yahoo's, so judge()
+    is unchanged: fractions where Yahoo gives fractions, dividend yield in percent, EPS from net income / shares
+    (the reported figure, like Yahoo's Diluted EPS; EODHD's own epsActual is the adjusted one analysts use)."""
+    import eodhd_source as eo
+
+    code = eo.eod_code(t)
+    d = eo._get(f"fundamentals/{code}")
+    if not isinstance(d, dict) or not d.get("General"):
+        raise RuntimeError("EODHD has no fundamentals for " + code)
+    raw: dict = {"at": time.time(), "src": "eodhd"}
+    g, hl, val = d.get("General") or {}, d.get("Highlights") or {}, d.get("Valuation") or {}
+    ss, tech = d.get("SharesStats") or {}, d.get("Technicals") or {}
+    ar, earn, fin = d.get("AnalystRatings") or {}, d.get("Earnings") or {}, d.get("Financials") or {}
+
+    def put(k, v):   # numbers only: EODHD sends some numbers as text ("13.65")
+        v = _num(v)
+        if v is not None:
+            raw[k] = v
+
+    for k, v in (("sector", g.get("Sector")), ("industry", g.get("Industry")), ("currency", g.get("CurrencyCode"))):
+        if isinstance(v, str) and v.strip():
+            raw[k] = v.strip()
+    put("trailingPE", val.get("TrailingPE"))
+    put("forwardPE", val.get("ForwardPE"))
+    put("trailingEps", hl.get("DilutedEpsTTM") or hl.get("EarningsShare"))
+    put("pegRatio", hl.get("PEGRatio"))
+    put("priceToSalesTrailing12Months", val.get("PriceSalesTTM"))
+    put("targetMeanPrice", ar.get("TargetPrice") or hl.get("WallStreetTargetPrice"))
+    n_an = sum(_num(ar.get(k)) or 0 for k in ("StrongBuy", "Buy", "Hold", "Sell", "StrongSell"))
+    if n_an:
+        raw["numberOfAnalystOpinions"] = n_an
+    rt = _num(ar.get("Rating"))   # EODHD: 1 = strong sell ... 5 = strong buy
+    if rt is not None and n_an:
+        raw["recommendationKey"] = ("strong_buy" if rt >= 4.5 else "buy" if rt >= 3.5 else "hold" if rt >= 2.5
+                                    else "underperform" if rt >= 1.5 else "sell")
+    for k, src, scale in (("heldPercentInsiders", ss.get("PercentInsiders"), 0.01),          # EODHD gives percent,
+                          ("heldPercentInstitutions", ss.get("PercentInstitutions"), 0.01),  # Yahoo a fraction
+                          ("shortPercentOfFloat", ss.get("ShortPercentFloat"), 1)):
+        if _num(src) is not None:
+            raw[k] = _num(src) * scale
+    put("sharesShort", ss.get("SharesShort") or tech.get("SharesShort"))
+    put("sharesShortPriorMonth", ss.get("SharesShortPriorMonth") or tech.get("SharesShortPriorMonth"))
+    if _num(hl.get("DividendYield")):
+        raw["dividendYield"] = _num(hl.get("DividendYield")) * 100   # judge() expects percent, like yfinance
+    put("fiftyTwoWeekHigh", tech.get("52WeekHigh"))
+    put("returnOnEquity", hl.get("ReturnOnEquityTTM"))
+    put("revenueGrowth", hl.get("QuarterlyRevenueGrowthYOY"))
+    put("earningsGrowth", hl.get("QuarterlyEarningsGrowthYOY"))
+
+    def quarters(section):
+        q = ((fin.get(section) or {}).get("quarterly") or {})
+        rows = [q[k] for k in sorted(q, reverse=True) if isinstance(q[k], dict)]
+        if section == "Income_Statement":   # skip a just-reported quarter that is only half filled in (like _filled)
+            rows = [r for r in rows if _num(r.get("totalRevenue")) is not None or _num(r.get("netIncome")) is not None]
+        return rows
+
+    def col(rows, *names, n=None):
+        out = []
+        for r in rows:
+            v = None
+            for nm in names:
+                v = _num(r.get(nm))
+                if v is not None:
+                    break
+            out.append(v)
+        return out[:n] if n else out
+
+    inc, cfl, bal = quarters("Income_Statement"), quarters("Cash_Flow"), quarters("Balance_Sheet")
+    raw["rev"] = col(inc, "totalRevenue", n=5)
+    raw["gp"] = col(inc, "grossProfit", n=5)
+    raw["op"] = col(inc, "operatingIncome", "ebit", n=5)
+    raw["ni"] = col(inc, "netIncomeApplicableToCommonShares", "netIncome", n=5)
+    raw["int"] = col(inc, "interestExpense", n=5)
+    raw["tax"] = col(inc, "taxProvision", "incomeTaxExpense", n=5)
+    raw["pretax"] = col(inc, "incomeBeforeTax", n=5)
+    raw["q_dates"] = [str(r.get("date"))[:10] for r in inc[:5]]
+    # shares per quarter: the balance sheet's count for the same quarter-end (works for odd fiscal years too),
+    # else EODHD's outstandingShares table for that month
+    bal_sh = {str(r.get("date"))[:10]: _num(r.get("commonStockSharesOutstanding")) for r in bal}
+    osq = ((d.get("outstandingShares") or {}).get("quarterly") or {}).values()
+    sh_by = {str(x.get("dateFormatted"))[:7]: _num(x.get("shares")) for x in osq if isinstance(x, dict)}
+    raw["shares"] = [bal_sh.get(q) or sh_by.get(q[:7]) for q in raw["q_dates"]]
+    raw["eps"] = [(n / s) if (n is not None and s) else None for n, s in zip(raw["ni"], raw["shares"])]
+    yr = ((fin.get("Income_Statement") or {}).get("yearly") or {})
+    yrows = [yr[k] for k in sorted(yr, reverse=True) if isinstance(yr[k], dict) and _num(yr[k].get("totalRevenue")) is not None]
+    raw["rev_fy"] = col(yrows, "totalRevenue", n=4)
+    osa = ((d.get("outstandingShares") or {}).get("annual") or {}).values()
+    sa_by = {str(x.get("dateFormatted"))[:4]: _num(x.get("shares")) for x in osa if isinstance(x, dict)}
+    raw["shares_fy"] = [sa_by.get(str(r.get("date"))[:4]) for r in yrows[:4]]
+
+    raw["fcf"] = col(cfl, "freeCashFlow", n=5)
+    raw["ocf"] = col(cfl, "totalCashFromOperatingActivities", n=5)
+    raw["buyback"] = col(cfl, "salePurchaseOfStock", n=4)
+    raw["cash"] = col(bal, "cashAndShortTermInvestments", "cashAndEquivalents", "cash", n=1)
+    raw["debt"] = col(bal, "shortLongTermDebtTotal", n=1)
+    if not any(x is not None for x in raw["debt"]) and bal:
+        parts = [_num(bal[0].get(k)) for k in ("shortTermDebt", "longTermDebt")]
+        raw["debt"] = [sum(x for x in parts if x is not None)] if any(x is not None for x in parts) else [None]
+    raw["equity"] = col(bal, "totalStockholderEquity", "commonStockTotalEquity", n=1)
+    raw["ca"] = col(bal, "totalCurrentAssets", n=1)
+    raw["cl"] = col(bal, "totalCurrentLiabilities", n=1)
+    if raw["cash"] and raw["cash"][0] is not None:
+        raw["totalCash"] = raw["cash"][0]
+    if raw["debt"] and raw["debt"][0] is not None:
+        raw["totalDebt"] = raw["debt"][0]
+    f4 = [x for x in raw["fcf"][:4] if x is not None]
+    if len(f4) == 4:
+        raw["freeCashflow"] = sum(f4)
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    hist = [h for h in (earn.get("History") or {}).values() if isinstance(h, dict)]
+    past = sorted([h for h in hist if h.get("reportDate") and h["reportDate"] <= today and _num(h.get("epsActual")) is not None],
+                  key=lambda h: h["reportDate"], reverse=True)
+    raw["surprises"] = [_num(h.get("surprisePercent")) for h in past[:4]]
+    future = sorted(h["reportDate"] for h in hist if h.get("reportDate") and h["reportDate"] > today)
+    if future:
+        raw["next_earn"] = future[0]
+    trend = {str(x.get("period")): x for x in (earn.get("Trend") or {}).values() if isinstance(x, dict)}
+    if "+1y" in trend:
+        raw["est_next"] = _num(trend["+1y"].get("epsTrendCurrent")) or _num(trend["+1y"].get("earningsEstimateAvg"))
+        raw["est_next_30"] = _num(trend["+1y"].get("epsTrend30daysAgo"))
+        put("forwardEps", trend["+1y"].get("earningsEstimateAvg"))
+    if "0y" in trend:
+        raw["est_this"] = _num(trend["0y"].get("earningsEstimateAvg"))
+
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=90)).strftime("%Y-%m-%d")
+    buys = sells = 0.0
+    for x in (d.get("InsiderTransactions") or {}).values():
+        if not isinstance(x, dict) or str(x.get("transactionDate") or x.get("date") or "") < cutoff:
+            continue
+        v = (_num(x.get("transactionAmount")) or 0) * (_num(x.get("transactionPrice")) or 0)
+        if x.get("transactionCode") == "S":
+            sells += v
+        elif x.get("transactionCode") == "P":
+            buys += v
+    raw["ins_buy"], raw["ins_sell"] = buys, sells
+
+    start = (datetime.now(timezone.utc) - timedelta(days=380)).strftime("%Y-%m-%d")
+    bars = eo._get(f"eod/{code}", **{"from": start}) or []
+    closes = [_num(b.get("adjusted_close")) for b in bars if _num(b.get("adjusted_close")) is not None]
+    highs = [_num(b.get("high")) for b in bars if _num(b.get("high")) is not None]
+    if closes:
+        raw["close"] = closes[-1]
+        raw["hi52"] = max(highs[-252:]) if highs else None
+        raw["sma200"] = sum(closes[-200:]) / 200 if len(closes) >= 200 else None
     return raw
 
 
@@ -530,12 +684,27 @@ def run(tickers: list[str], closes: dict | None = None, earnings: dict | None = 
         cache = {}
     t0 = now = time.time()
     fetched, fails, out = 0, 0, {}
+    backup, why = [], []   # Nov 20: stocks where EODHD failed and Yahoo filled in (shown in red as a problem)
     for t in dict.fromkeys(tickers):
         c = cache.get(t)
         if ((not c or now - c.get("at", 0) > MAX_AGE) and fetched < max_fetch and fails < 6
                 and time.time() - t0 < budget_s):
             try:
-                c = fetch(t)
+                c = None
+                if SOURCE == "eodhd":
+                    try:
+                        c = fetch_eodhd(t)
+                        if not any(x is not None for x in c.get("rev") or []):
+                            raise RuntimeError("no quarterly revenue")
+                    except Exception as e:  # noqa: BLE001
+                        print(f"  judgement {t} EODHD failed, using Yahoo: {str(e)[:80]}", file=sys.stderr)
+                        backup.append(t)
+                        if not why:
+                            why.append(str(e)[:100])
+                        c = None
+                if c is None:
+                    c = fetch(t)
+                    c.setdefault("src", "yahoo")
                 cache[t] = c
                 fetched += 1
                 fails = 0 if c.get("rev") else fails + 1
@@ -552,8 +721,11 @@ def run(tickers: list[str], closes: dict | None = None, earnings: dict | None = 
     with open(CACHE + ".tmp", "w") as fh:
         json.dump(cache, fh)
     os.replace(CACHE + ".tmp", CACHE)
-    print(f"  judgement: {len(out)} judged ({fetched} fetched from Yahoo)", file=sys.stderr)
-    return {"updated": datetime.now(timezone.utc).isoformat(timespec="minutes"), "by": out}
+    print(f"  judgement: {len(out)} judged ({fetched} fetched, source {SOURCE}, Yahoo backup for {len(backup)})", file=sys.stderr)
+    res = {"updated": datetime.now(timezone.utc).isoformat(timespec="minutes"), "by": out, "source": SOURCE}
+    if backup:
+        res["yahoo_backup"] = {"count": len(backup), "tickers": backup[:20], "why": (why or [""])[0]}
+    return res
 
 
 if __name__ == "__main__":
