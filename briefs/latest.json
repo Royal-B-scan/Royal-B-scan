@@ -1,30 +1,30 @@
 {
- "asof": "2026-11-20",
- "session": "pm",
- "title": "Atlas · Fri Nov 20 · 2:30pm",
- "big_picture": "a broad AI sell-off. The S&P 500 fell 3.7% to 6,910 and the Nasdaq 5.3% to 22,618, erasing its 2026 gain; the S&P and Dow closed in a correction ([CNBC](https://www.cnbc.com/2026/11/19/stock-market-today-live-updates.html), [Kiplinger](https://www.kiplinger.com/investing/stocks/nasdaq-dives-1-261-points-as-anthropic-ai-stocks-sink-stock-market-today), [FXStreet](https://www.fxstreet.com/news/nasdaq-plunges-5-on-friday-ending-worst-week-since-april-202611202111)). Reported triggers, in order of weight: Reuters, citing two unnamed sources, said SEC enforcement staff are examining Nvidia's accounting (rumour: not confirmed by the SEC or Nvidia), and Nvidia fell 14.0% to 125.53 ([Seeking Alpha](https://seekingalpha.com/news/4675286-nvidia-tumbles-as-sec-probe-explores-accounting-issues-report), [Fool](https://www.fool.com/investing/2026/11/20/nvidia-stock-plunge-wipes-out-nearly-usd500-billion-in-one-day-as-sec-reportedly-probes-its-accounting/)); Anthropic (ANT) gave back about 8.5% a day after closing its first day at $97.17, up 17% from the $83 IPO price ([Invezz](https://invezz.com/nz/news/2026/11/19/anthropics-ant-closes-at-dollar9717-up-17percent-on-its-first-day-of-trading/), [Yahoo Finance](https://finance.yahoo.com/technology/live/anthropic-ipo-live-anthropic-stock-drops-after-first-day-of-trading-143300513.html)); and the Financial Times reported TSMC and Samsung paused some chip shipments to Chinese customers as a new US export rule took effect ([StockAnalysis](https://stockanalysis.com/news/tsmc-samsung-suspend-chip-shipments-china/)). Asia was weak first: Taiwan closed its worst week since 1991 ([24/7 Wall St.](https://247wallst.com/investing/2026/11/20/amd-stock-drops-another-7-0-before-the-bell-and-taiwan-semiconductor-slides-4-2-as-nasdaq-futures-fall-1-6-after-asias-chip-selloff/)). Sources differ on exact closes; I use the price file. Money went to defensives: the staples ETF (XLP) rose 0.7% while the tech ETF (XLK) fell 7.1%. Headline or business: the SEC item is a headline so far (no filing, nothing confirmed), but the China-shipment pause is a business effect on TSMC and Samsung. Taylor, your lesson L5 (crowd and easy-money signs) and L1 (big run plus bubble talk) both speak to a week like this; I did not count a test because no company report was involved today.",
- "urgent": "your Micron CDR (MU.TO) sits on a stock that fell hard today. Micron (MU) closed 594.51 USD, -13.9% on the day and -23.6% in five days, which is under the 650 line (its Nov 5 low) that I had named as the kill line for the AI-trade view ([Seeking Alpha](https://seekingalpha.com/news/4675351-tech-retreat-takes-micron-down-14?feed_item_type=news), [FX Leaders](https://www.fxleaders.com/news/2026/11/20/micron-stock-tests-the-last-support-at-600-is-the-memory-rally-losing-momentum/)). MU.TO itself closed 30.13 CAD, -2.0% in the price file; that gap to the US move is not explained and I would check a live quote. Micron's next report is Dec 17 (per Yahoo Finance via search, not in my files). Taylor, I am not telling you what to do; this is the fact.",
+ "asof": "2026-11-23",
+ "session": "am",
+ "title": "Atlas \u00b7 Mon Nov 23 \u00b7 6:45am",
+ "big_picture": "Futures are sharply higher: Nasdaq-100 up about 3.6%, S&P 500 up about 2.8%, Dow up about 2% in the 5:19am ET update ([CNBC](https://www.cnbc.com/2026/11/23/futures-rally-after-wall-streets-nightmare-week-.html)). Friday's close is the base: S&P 500 6,910, down 8.6% on the week, VIX 35.9. Two things are being named. First, President Trump posted on Truth Social that he hopes Nvidia's board rehires Jensen Huang, and Nvidia is up about 7-9% pre-market; but Nvidia's chair said the board \"unanimously accepted his resignation and does not intend to reinstate\" him, and a prediction market puts a return at 16% ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/article/nvidia-stock-jumps-as-dc-makes-stunning-u-turn-on-jensen-huang-113419437.html), [Tokenist](https://tokenist.com/nvidia-stock-trump-huang-return-bessent/)). That is a political headline, not a change in Nvidia's business. Second, a calmer backdrop: the 2-year Treasury yield fell to about 4.61% and Asian authorities (South Korea, China) propped up their markets ([Saxo](https://www.home.saxo/en-sg/content/articles/macro/asia-market-quick-take--23-november-2026-23112026), [Reuters via Investing.com](https://za.investing.com/news/economy-news/us-futures-rally-as-ai-rout-pauses-asian-authorities-prop-up-stocks-4591490)). Gold is up about 2.5% to near $3,620 after a one-year low on Friday, Brent is down about 4% to roughly $88-91 on supply-surplus worries, and bitcoin sits near $61,500 ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/us-futures-bounce-while-asia-234419517.html), [JournalArta](https://journalarta.com/en/2026/11/23/stock-market-today-dow-sp-500-futures-surge-after-tech-rout-as-oil-slides/)). The Fed still looks set to hike on Dec 9 (above 90% odds) ([CNBC](https://www.cnbc.com/2026/11/23/futures-rally-after-wall-streets-nightmare-week-.html)). Prices below are Friday's close (my price files), pre-market moves are from EODHD quotes at about 6:55am Pacific and will have moved.",
+ "urgent": "",
  "sectors": [
   {
    "name": "Chips, hardware and tech",
-   "stage": "falling (Semiconductors fell 24% from its peak and 10% today with 0% of the group up 2%+; Computer Hardware fell 33%, 0% up; XLK -7.1%)",
+   "stage": "falling (Semiconductors fell about 24% from its peak, 0% of the group up 2%+ at Friday's close; the stage is Friday's, the pre-market is not in it)",
    "numbers": "",
-   "why": "the sell-off above. Chips had been \"turning up\" at the 11-19 brief and are now falling again; the bounce failed. What would change the view: the group stopping its fall for several days, volume drying up, and a clean answer on the Nvidia accounting report. No stock here is an entry window.",
+   "why": "Friday's sell-off (Nvidia SEC report, Anthropic's debut fading, TSMC/Samsung pausing some China shipments) has not been undone; today's gap up only starts to answer it. What would change the view: the group holding gains for several days and a clean company or SEC word on the Nvidia accounting report, which I still could not find. No stock here is an entry window.",
    "stocks": [
     {
      "ticker": "NVDA",
      "stage": "Falling, wait",
-     "line": "Closed 125.53 (-14.0%, volume 3.6x), down about 40% in 20 days. Reuters SEC report is a rumour (anonymous sources); Nvidia's 10-Q was still delayed when I last found news, and I could not find the filed 10-Q. Next report Feb 24."
+     "line": "Closed 125.53 (-14.0%); pre-market 136.27. The SEC item is still the anonymous-source Reuters report from Friday (rumour, not confirmed by the SEC or Nvidia); I found nothing new on it this morning. Next report Feb 24."
     },
     {
      "ticker": "MU",
      "stage": "Falling, wait (yours via MU.TO)",
-     "line": "Closed 594.51 (-13.9%), 51% under its 52-week high. See URGENT."
+     "line": "Closed 594.51 (-13.9%); pre-market 624.63."
     },
     {
      "ticker": "TSM",
      "stage": "Falling, wait",
-     "line": "Closed 318.71 (-9.5%, volume 2.8x). The China pause is reported by the FT through other outlets; one outlet puts China at about 9% of TSMC's revenue (not checked against TSMC's own filing) ([FourWeekMBA](https://fourweekmba.com/ai-tsmc-samsung-pause-some-china-chip-shipments-china-was-9/)). Earnings Jan 14."
+     "line": "Closed 318.71 (-9.5%); pre-market 337.50."
     },
     {
      "ticker": "AVGO",
@@ -34,80 +34,93 @@
     {
      "ticker": "ADI",
      "stage": "Falling, wait",
-     "line": "Closed 345.92 (-8.4%). Earnings Tuesday Nov 24 (4 days), so a report lands inside the week."
+     "line": "Closed 345.92 (-8.4%). Earnings date as Friday's brief had it: Tue Nov 24 (not in my files, so check)."
     }
    ],
    "notes": [
-    "Other names worth knowing, not picked: AMD 424.39 (-13.2%), CoreWeave 39.51 (-12.0%, 71% under its 52-week high), Sandisk 79.27 (-16.0%)."
+    "Other names, not picked: AMD, CoreWeave 39.51 on Friday, 42.00 pre-market, Sandisk."
    ]
   },
   {
    "name": "Energy (refiners, integrated, E&P)",
-   "stage": "falling, but holding up better than the market (Refining fell 29% from its peak, Integrated 18%, E&P 14%; XLE -0.6% today and about 1.7 points better than the market over 5 days)",
+   "stage": "falling, but held up better than tech on Friday (XLE -0.6% then; pre-market XLE +0.2%)",
    "numbers": "",
-   "why": "I did not find a dated energy story for today, so the reason is not confirmed; the sector fell on the earlier IEA surplus call, but today it simply fell far less than tech ([Advfn](https://uk.advfn.com/market-news/article/26325/brent-and-wti-oil-prices-fall-as-iea-predicts-global-supply-surplus), dated Nov 16). What would change the view: oil prices turning up, not just the group falling less.",
+   "why": "Brent is down about 4% this morning on supply-surplus worries, which cuts against these stocks on a day when the rest of the market jumps; I found no company-specific news ([JournalArta](https://journalarta.com/en/2026/11/23/stock-market-today-dow-sp-500-futures-surge-after-tech-rout-as-oil-slides/)). What would change the view: oil turning up, not just the group falling less.",
    "stocks": [
     {
      "ticker": "COP",
      "stage": "Pulled back, watch",
-     "line": "Closed 136.12 (+0.8%)."
-    },
-    {
-     "ticker": "XOM",
-     "stage": "Falling, wait",
-     "line": "Closed 159.99 (+0.7%)."
-    },
-    {
-     "ticker": "SUN",
-     "stage": "Pulled back, watch",
-     "line": "Closed 62.55 (-1.1%)."
+     "line": "136.12. XOM: Falling, wait. 159.99. SUN: Pulled back, watch. 62.55."
     },
     {
      "ticker": "TVE.TO",
      "stage": "Pulled back, watch",
-     "line": "Closed 11.58 CAD (+3.7%)."
-    },
-    {
-     "ticker": "EFX.TO",
-     "stage": "Pulled back, watch (yours, oil services)",
-     "line": "Closed 26.90 CAD (-2.1%)."
+     "line": "11.58 CAD. CVE.TO: Pulled back, watch."
     }
    ],
    "notes": []
   },
   {
-   "name": "Education and training (Consumer Defensive family)",
-   "stage": "falling (fell 16% from its peak, -2.8% today)",
+   "name": "Education and training",
+   "stage": "falling. Not researched; no news found, listed only because the files rank it. MH is the one name bouncing.",
    "numbers": "",
-   "why": "not researched. The group's own stage is \"falling\" and I found no news for it, so there is nothing to act on; it is in the list only because the files rank it. The one name bouncing is MH (12.05, +1.9%). Money rotating into staples (XLP, in trend) is the broader point, with the reason not confirmed beyond \"away from tech\".",
-   "stocks": [],
-   "notes": []
+   "why": "",
+   "stocks": [
+    {
+     "ticker": "RY.TO",
+     "stage": "weak",
+     "line": "263.05 CAD (-2.4%). Earnings Dec 3. No company news found."
+    },
+    {
+     "ticker": "OGC.TO",
+     "stage": "falling, wait",
+     "line": "32.19 CAD (-5.6%). Gold is bouncing this morning (+2.5%), so watch it at the open."
+    },
+    {
+     "ticker": "EFX.TO",
+     "stage": "falling, wait",
+     "line": "25.57 CAD (-4.9%). GOOG.TO: falling, wait, 41.96 CAD (-2.4%). BOS.TO: falling, wait, 6.05 CAD (-1.8%)."
+    },
+    {
+     "ticker": "TTWO",
+     "stage": "quiet, 210.00",
+     "line": "MCD: quiet, 273.24."
+    }
+   ],
+   "notes": [
+    "Your stocks (Canadian closes are now Friday's; Friday's brief had some Thursday prices):",
+    "- MU / MU.TO: MU.TO closed 25.97 CAD, -13.8% Friday. That answers my \"stale price\" question: the file had lagged by one day. Micron's next report is Dec 17 (per Yahoo Finance, not in my files). Pre-market MU is +4.8%.",
+    "Taylor, nothing here needs a decision before the open; the one to watch is MU.",
+    "Bottom watch (you asked for signs the sell-off is lifting): Met: extreme fear (Fear & Greed 10 on Friday), VIX above 35, heavy selling by trend-followers, and this morning the 2-year yield is falling. Missing: no reversal day yet (Friday closed near its low), AAII is not extreme (bears 42.2%, bulls 33.3%, survey closed before Friday's close), and credit is not in panic but is widening: one source has the ICE BofA high-yield spread at 3.52% from 3.20% a week earlier, Saxo cites 367 basis points, the highest since early 2025. I'd call it \"relief bounce possible, bottom not confirmed\". Sources: [Saxo](https://www.home.saxo/content/articles/macro/market-quick-take---sentiment-bounces-after-friday-mayhem---23-november-2026-23112026), [Cycledesk](https://cycledesk.substack.com/p/have-we-seen-the-bottom-and-what), [Kalkine](https://kalkine.ca/news/economic-news/is-the-high-yield-credit-spread-widening-currently-at-343-after-a-20-basis-point-rise). Sources disagree on exact credit numbers."
+   ]
   }
  ],
  "your_stocks": "",
- "coming_up": "ADI, Agilent (A, Nov 23) and Autodesk/Burlington (Nov 24) report; Nov 24 is the next dated earnings day for these lists; RBC Dec 3; Fed Dec 8-9 (hike priced about 90-95% as of Nov 18); Adobe and Broadcom Dec 9; Micron Dec 17 (per Yahoo Finance, not in my files); next Nvidia report Feb 24. Next trading day is Monday Nov 23.",
- "changed": "",
- "royal_b": "Top 5 none; Bullish Turn none; Early Turn Breakout LNTH.",
- "tested": "nothing in this brief rests on a tested signal today (no new entry window). Stage labels are descriptions. Not financial advice.",
+ "coming_up": "Agilent reports today (Nov 23), Autodesk and Burlington Tue Nov 24, Dell Tue Nov 25 per my notebook (one newsletter says Nov 24); core PCE and Q3 GDP Wed Nov 26 ([TraderFactor](https://traderfactor.com/market-outlook-us-pce-flash-pmis-and-fed-rate-hike/)); US closed Thu Nov 27, early close Fri Nov 28; jobs Dec 4; RBC Dec 3; Fed Dec 9.",
+ "changed": "Nothing in the stage files (no new price day since Friday's close). What changed is the pre-market: a broad rebound, the CrowdStrike/Zscaler deal, and the Trump/Huang headline.",
+ "royal_b": "Top 5 CU.TO, BIP, RKT; Bullish Turn RKT.",
+ "tested": "nothing in this brief rests on a tested signal (no entry windows; stage labels are descriptions). Not financial advice.",
  "notes": [
-  "- MU / MU.TO: see URGENT.",
-  "- TTWO: quiet. 210.00 (+0.6%). No sales figure from Take-Two: I found no filing or release dated today; the earlier Oppenheimer idea of a disclosure around Nov 20 did not show up in my search.",
-  "- RY.TO: quiet. 269.45 CAD (-1.0%), -6.9% in five days. No company news found. Earnings in 13 days (Dec 3).",
-  "- OGC.TO: weak. 34.11 CAD (-2.8%), -11.9% in five days with gold weak. No company news found.",
-  "- GOOG.TO: falling, wait. 42.97 CAD (-3.0%). BOS.TO: falling, wait, 6.16 CAD (+1.0%). MCD: quiet, 273.24 (+0.3%). EFX.TO: see Focus 2.",
-  "Taylor, one real item: MU. The rest: nothing urgent.",
+  "Morning, Taylor. After the worst week in about 18 months, this is a bounce morning, and I would treat it as a bounce until something else proves it. Your Micron is the name to watch at the open.",
+  "Pre-market movers (EODHD, vs Friday's close):",
+  "- NVDA 136.27 (+7.9%), MU 624.63 (+4.8%), TSM 337.50 (+5.6%), CRWV 42.00 (+5.9%), SMH 422.50 (+5.3%), QQQ +3.2%, SPY +2.4%. MU is still under the $650 line (Nov 5 low) that was the kill line in the old AI-build-out view.",
+  "- CrowdStrike agreed to buy Zscaler for $43.9B in stock ($260.41 a share, a 34% premium to Friday). Zscaler is up about 16% pre-market and CrowdStrike down about 8% ([CNBC](https://www.cnbc.com/2026/11/23/futures-rally-after-wall-streets-nightmare-week-.html), [MLQ](https://mlq.ai/news/nasdaq-futures-rise-3-and-nvidia-gains-9-premarket-as-zscaler-jumps-20-on-crowdstrikes-offer/)). That is a business event: the buyer is paying up and its own holders take the dilution.",
+  "- Memory names are up on Citi saying AI-spending fears are overdone ([Invezz](https://invezz.com/ie/news/2026/11/23/micron-sandisk-climb-in-premarket-as-citi-strikes-optimistic-tone-on-memory-stocks/)). An analyst note and a rebound are not a turn; MarketBeat itself calls it a relief bounce.",
+  "What to watch at the 7:30am open: whether the pre-market gains hold or fade in the first 30 minutes (wait 15-30 minutes before reading anything into it), whether MU can get above $650 on real volume ([TradingKey](https://www.tradingkey.com/analysis/stocks/us-stocks/262317982-stock-microm-mu-price-650-ai-vix-tradingkey)), and whether the VIX closes lower than Friday's 35.9.",
   "What I dug into:",
-  "- Anthropic after the open (t20261119-1): opened (first trade) at $111.50 from the auction, closed day one at $97.17 (+17% over $83), then fell about 8.5-9% on Nov 20; chips did not keep the Nov 19 pre-market bounce ([Invezz](https://invezz.com/nz/news/2026/11/19/anthropics-ant-closes-at-dollar9717-up-17percent-on-its-first-day-of-trading/), [Yahoo Finance](https://finance.yahoo.com/technology/live/anthropic-ipo-live-anthropic-stock-drops-after-first-day-of-trading-143300513.html)). Search summaries only; Yahoo pages did not open from this session.",
-  "- Nvidia's guarantees and 10-Q (t20261118-3): the filed 10-Q is still not found. One Yahoo Finance piece says receivables are $81B (64 days of sales), guarantees about $118B (about $105B tied to an Ohio campus for OpenAI), supply commitments $390B from $279B, a board committee investigation, and an SEC look reported by the press; single source, not checked against a filing ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/nvidia-crushes-q3-115-8-141958141.html)). Reuters' SEC report today is on the record as anonymous-source reporting ([Seeking Alpha](https://seekingalpha.com/news/4675286-nvidia-tumbles-as-sec-probe-explores-accounting-issues-report)).",
-  "- Commerce rule and TSM/MU (t20261117-1): the FT reports TSMC and Samsung paused some China shipments and Reuters says TSMC is limiting advanced orders from Chinese designers; a transition window to Dec 21 is one secondary source's reading ([Taipei Times](https://taipeitimes.com/News/biz/archives/2026/11/20/2003868041), [StockAnalysis](https://stockanalysis.com/news/tsmc-samsung-suspend-chip-shipments-china/)). Micron's China exposure still not answered: left open.",
-  "EODHD tools were not used (the data files are the price source).",
-  "Trend board changes: AI build-out is CLOSED. Kill hit: MU closed under 650 (594.51). Evidence added: Nvidia SEC report (rumour), ANT after its debut, TSMC/Samsung China pause, the Nov 20 closes. Cyber bounce stays \"watching\": PANW closed 343.32 (-5.1%), still above its Nov 18 close of 339.92, so that kill is not hit, but QLYS fell to 185.92 from 197.24 and DLO to 12.04 from 12.89 so it is weakening. Rate-hike pressure stays \"watching\": nothing new found today on the Fed odds.",
+  "- CoreWeave and Nvidia (t20261114-L3, t20261115-L1; still open): CoreWeave's Q3 10-Q debt note shows about $46.9B of debt at Sep 30, 2026, and one third-party reading of its maturity table has about $2.4B due in the rest of 2026 and $11.0B in 2027 (not checked by me against the filing). The 10-Q calls it a take-or-pay business (98% of Q3 revenue per one source) and says top-two customers were 54% (secondary source). Nvidia's share of CoreWeave's revenue is still not found. Sources: [CoreWeave 10-Q](https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000465/crwv-20260930.htm), [CCIR Research](https://ccir.io/research/coreweave-debt-by-entity-q3-2026), [Converge Digest](https://convergedigest.com/coreweave-q3-2026-earnings-financing-nvidia-backlog/). I read search summaries; the filing page itself did not open here.",
+  "- Commerce chip rule and MU/TSM (t20261116-4, t20261117-1; still open): nothing new today beyond what I had: the rule needs licences for Singapore, Malaysia, Thailand, Indonesia and Brazil, Micron had about $14.6B of China-linked revenue last fiscal year by customer headquarters, and the share that the rule actually touches is still not found ([24/7 Wall St](https://247wallst.com/investing/2026/11/16/micron-has-14-6-billion-in-china-linked-revenue-are-these-new-u-s-chip-export-rules-a-threat/)).",
+  "- What a real bottom looks like (t20261121-L1; still open): see Bottom watch above.",
+  "EODHD was used for pre-market quotes only.",
+  "Trend board changes: AI build-out stays closed (kill hit Friday); evidence added: pre-market rebound with MU 624.63 still under 650. Cyber bounce stays \"watching\": CrowdStrike buying Zscaler for $43.9B in stock is a fact that supports the idea that big security vendors are consolidating, but one deal is not a trend and CRWD is down about 8% on it. Rate-hike pressure stays \"watching\": hike odds still above 90%, but the 2-year yield fell this morning, which is the first softening I have seen.",
   "Your lessons: none tested today.",
-  "Plan for Monday: wait. After a 10% chip day, the useful signals are whether the group stops falling, what the SEC report turns into (a company or SEC statement, the 10-Q), and what Asia does overnight.",
-  "Changed since the last brief (vs Nov 18 close): Semiconductors turning up -> falling; ANET, WDC, STX, STM, GFS, UMC bouncing or pulled back -> falling; TSM and ADI pulled back -> falling; TXN and NXPI quiet -> weak; AAPL in trend -> quiet; BOS.TO weak -> falling. New focus: Technology and Education and training (falling), Oil & Gas E&P (falling). Dropped from focus: Communication Equipment, Oil & Gas Equipment & Services, Copper, Gold, Steel (now falling). No new entry window today. PANW, QLYS and DLO are from Nov 18 and are two days old.",
   "Notebook and to-dos were read and updated without problems.",
   "Atlas"
  ],
- "brief_file": "2026-11-20-pm.md",
- "updated": "2026-11-20T21:43:58+00:00"
+ "brief_file": "2026-11-23-am.md",
+ "updated": "2026-11-23T13:51:29+00:00",
+ "market_mood": {
+  "asof": "2026-11-23T13:51:35+00:00",
+  "line": "Big bounce after the worst week in 18 months: futures up 3%, but credit is still widening and no bottom is confirmed."
+ }
 }
