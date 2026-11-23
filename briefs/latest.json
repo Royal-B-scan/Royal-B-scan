@@ -1,126 +1,121 @@
 {
  "asof": "2026-11-23",
- "session": "am",
- "title": "Atlas \u00b7 Mon Nov 23 \u00b7 6:45am",
- "big_picture": "Futures are sharply higher: Nasdaq-100 up about 3.6%, S&P 500 up about 2.8%, Dow up about 2% in the 5:19am ET update ([CNBC](https://www.cnbc.com/2026/11/23/futures-rally-after-wall-streets-nightmare-week-.html)). Friday's close is the base: S&P 500 6,910, down 8.6% on the week, VIX 35.9. Two things are being named. First, President Trump posted on Truth Social that he hopes Nvidia's board rehires Jensen Huang, and Nvidia is up about 7-9% pre-market; but Nvidia's chair said the board \"unanimously accepted his resignation and does not intend to reinstate\" him, and a prediction market puts a return at 16% ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/article/nvidia-stock-jumps-as-dc-makes-stunning-u-turn-on-jensen-huang-113419437.html), [Tokenist](https://tokenist.com/nvidia-stock-trump-huang-return-bessent/)). That is a political headline, not a change in Nvidia's business. Second, a calmer backdrop: the 2-year Treasury yield fell to about 4.61% and Asian authorities (South Korea, China) propped up their markets ([Saxo](https://www.home.saxo/en-sg/content/articles/macro/asia-market-quick-take--23-november-2026-23112026), [Reuters via Investing.com](https://za.investing.com/news/economy-news/us-futures-rally-as-ai-rout-pauses-asian-authorities-prop-up-stocks-4591490)). Gold is up about 2.5% to near $3,620 after a one-year low on Friday, Brent is down about 4% to roughly $88-91 on supply-surplus worries, and bitcoin sits near $61,500 ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/us-futures-bounce-while-asia-234419517.html), [JournalArta](https://journalarta.com/en/2026/11/23/stock-market-today-dow-sp-500-futures-surge-after-tech-rout-as-oil-slides/)). The Fed still looks set to hike on Dec 9 (above 90% odds) ([CNBC](https://www.cnbc.com/2026/11/23/futures-rally-after-wall-streets-nightmare-week-.html)). Prices below are Friday's close (my price files), pre-market moves are from EODHD quotes at about 6:55am Pacific and will have moved.",
+ "session": "pm",
+ "title": "Atlas \u00b7 Mon Nov 23 \u00b7 2:30pm",
+ "big_picture": "The S&P 500 closed up 4.73% at 7,237 and the Nasdaq Composite up 6.51% at 24,090, the best day since April 2025; the Dow gained about 3% ([CNBC](https://www.cnbc.com/2026/11/22/stock-market-today-live-updates.html), [Yahoo Finance](https://finance.yahoo.com/markets/live/stock-market-today-monday-november-23-dow-sp-500-nasdaq-nvidia-reinstates-jensen-huang-141511975.html)). The trigger was a fact, not a rumour: Nvidia's board reinstated Jensen Huang as CEO and the stock rose about 31% ([CNBC](https://www.cnbc.com/2026/11/23/nvidia-jensen-huang-ceo-market-rally.html), [Yahoo Finance](https://finance.yahoo.com/markets/article/nvidia-soars-25-as-board-reinstates-jensen-huang-as-ceo-chip-stocks-jump-142353537.html)). That is a leadership headline: it takes away the \"what is Nvidia hiding\" worry, but it does not change Nvidia's sales or the open questions on receivables, and the report on an SEC accounting probe (anonymous sources, unconfirmed) is still unanswered. The fear gauge fell from 35.89 to about 26.6 (delayed EODHD quote; I could not confirm the official close). BTIG expects a short-term push toward 7,250-7,350 and then likely lower again ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/stock-market-today-dow-p-141517672.html)). Toronto bounced too, and my price files still carry Friday's Toronto closes, so I used live quotes for your Canadian names below.",
  "urgent": "",
  "sectors": [
   {
    "name": "Chips, hardware and tech",
-   "stage": "falling (Semiconductors fell about 24% from its peak, 0% of the group up 2%+ at Friday's close; the stage is Friday's, the pre-market is not in it)",
+   "stage": "turning up, Sector Rebound (Semiconductors fell 29.4% from the peak, now 14.3% off the low with 95% of the group up 2%+ today; Computer Hardware 100% up 2%+, Communication Equipment 89%)",
    "numbers": "",
-   "why": "Friday's sell-off (Nvidia SEC report, Anthropic's debut fading, TSMC/Samsung pausing some China shipments) has not been undone; today's gap up only starts to answer it. What would change the view: the group holding gains for several days and a clean company or SEC word on the Nvidia accounting report, which I still could not find. No stock here is an entry window.",
+   "why": "One headline lifted all of them at once: the Huang reinstatement ([CNBC](https://www.cnbc.com/2026/11/23/nvidia-jensen-huang-ceo-market-rally.html)). Memory names also had Citi saying the AI-spending fears are overdone, with only about 12% (DRAM) and 7% (NAND) demand at risk even if Nvidia's financing stopped entirely ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/good-news-micron-citi-says-061541171.html)). Analyst notes and relief rallies are not a turn. What would change the view: the group holding these gains Tuesday and Wednesday, and a clean Nvidia or SEC word on the probe report. Taylor, your lesson L2 (the CEO exit as a worry about hidden problems) is what this day was about; the exit reversing was enough to move the whole group, which tells me how much of last week was fear of the unknown rather than new numbers. I am not counting it as a test yet.",
    "stocks": [
     {
      "ticker": "NVDA",
-     "stage": "Falling, wait",
-     "line": "Closed 125.53 (-14.0%); pre-market 136.27. The SEC item is still the anonymous-source Reuters report from Friday (rumour, not confirmed by the SEC or Nvidia); I found nothing new on it this morning. Next report Feb 24."
+     "stage": "Turning up, entry window",
+     "line": "Last close 165.05 (+31.5% on 4.3x normal volume). Don't chase above 170.00, stop 151.85 (8% under the close). Earnings Feb 24. It is still 45% below its high and 19% under its 50-day average. Wait 15-30 minutes after the 7:30am open; size with Trade on the Royal B page (1% risk, 25% cap); exit on a close under the 50-day. A one-day gap this size is the riskiest kind of entry; the signal is tested, but about 3 in 10 hit the stop and a few big winners carried the result."
     },
     {
      "ticker": "MU",
-     "stage": "Falling, wait (yours via MU.TO)",
-     "line": "Closed 594.51 (-13.9%); pre-market 624.63."
+     "stage": "Turning up, entry window (yours via MU.TO)",
+     "line": "Last close 707.70 (+19.0%, back above the 650 line it broke Friday). Don't chase above 728.93, stop 651.08. Next report Dec 17 (per [Invezz/Citi note](https://invezz.com/nz/news/2026/11/23/micron-sandisk-climb-in-premarket-as-citi-strikes-optimistic-tone-on-memory-stocks/), not in my files). MU.TO is 30.90 CAD live (+19.0%, delayed quote). Same cautions as NVDA."
     },
     {
-     "ticker": "TSM",
-     "stage": "Falling, wait",
-     "line": "Closed 318.71 (-9.5%); pre-market 337.50."
+     "ticker": "MRVL",
+     "stage": "Turning up, entry window",
+     "line": "Last close 144.74 (+18.4%). Don't chase above 149.08, stop 133.16. Earnings date not in my files. Down 54.5% from its peak, so this is a bounce inside a deep hole."
     },
     {
-     "ticker": "AVGO",
-     "stage": "Pulled back, watch",
-     "line": "Closed 304.41 (-12.2%). Earnings Dec 9."
+     "ticker": "CSCO",
+     "stage": "Turning up, entry window",
+     "line": "Last close 96.80 (+6.8%). Don't chase above 99.70, stop 90.64. Calmer than the chip names (swing 3.8%); that ordering is not tested."
     },
     {
-     "ticker": "ADI",
-     "stage": "Falling, wait",
-     "line": "Closed 345.92 (-8.4%). Earnings date as Friday's brief had it: Tue Nov 24 (not in my files, so check)."
+     "ticker": "INTC",
+     "stage": "Turning up, entry window",
+     "line": "Last close 59.66 (+16.3%). Don't chase above 61.45, stop 54.89. Down 50% from its peak. I did not find a company reason for its move beyond the group."
     }
    ],
    "notes": [
-    "Other names, not picked: AMD, CoreWeave 39.51 on Friday, 42.00 pre-market, Sandisk."
+    "TSM bounced +14.1% on 2.3x volume (bouncing, watch; not an entry). ADI reports before the open Tuesday: consensus about $3.89 EPS on $4.32B revenue per [MarketBeat](https://www.marketbeat.com/earnings/reports/2026-11-24-analog-devices-inc-stock/) (aggregator, check the company release)."
    ]
   },
   {
-   "name": "Energy (refiners, integrated, E&P)",
-   "stage": "falling, but held up better than tech on Friday (XLE -0.6% then; pre-market XLE +0.2%)",
+   "name": "Energy",
+   "stage": "Oil and gas equipment and services is turning up (Sector Rebound: fell 17.1%, 3.0% off the low, 52% up 2%+); refiners and integrated oil are still falling (21% and 13% up 2%+)",
    "numbers": "",
-   "why": "Brent is down about 4% this morning on supply-surplus worries, which cuts against these stocks on a day when the rest of the market jumps; I found no company-specific news ([JournalArta](https://journalarta.com/en/2026/11/23/stock-market-today-dow-sp-500-futures-surge-after-tech-rout-as-oil-slides/)). What would change the view: oil turning up, not just the group falling less.",
+   "why": "Energy lagged a rally that was about tech. Brent fell about 4% to roughly $88-91 this morning on supply-surplus worries ([JournalArta](https://journalarta.com/en/2026/11/23/stock-market-today-dow-sp-500-futures-surge-after-tech-rout-as-oil-slides/)); I could not find a dated company reason for the service group's bounce today, so treat it as the market's general rebound. What would change the view: oil turning up, not just the stocks falling less.",
    "stocks": [
-    {
-     "ticker": "COP",
-     "stage": "Pulled back, watch",
-     "line": "136.12. XOM: Falling, wait. 159.99. SUN: Pulled back, watch. 62.55."
-    },
-    {
-     "ticker": "TVE.TO",
-     "stage": "Pulled back, watch",
-     "line": "11.58 CAD. CVE.TO: Pulled back, watch."
-    }
-   ],
-   "notes": []
-  },
-  {
-   "name": "Education and training",
-   "stage": "falling. Not researched; no news found, listed only because the files rank it. MH is the one name bouncing.",
-   "numbers": "",
-   "why": "",
-   "stocks": [
-    {
-     "ticker": "RY.TO",
-     "stage": "weak",
-     "line": "263.05 CAD (-2.4%). Earnings Dec 3. No company news found."
-    },
-    {
-     "ticker": "OGC.TO",
-     "stage": "falling, wait",
-     "line": "32.19 CAD (-5.6%). Gold is bouncing this morning (+2.5%), so watch it at the open."
-    },
     {
      "ticker": "EFX.TO",
-     "stage": "falling, wait",
-     "line": "25.57 CAD (-4.9%). GOOG.TO: falling, wait, 41.96 CAD (-2.4%). BOS.TO: falling, wait, 6.05 CAD (-1.8%)."
+     "stage": "Falling, wait (yours: Enerflex)",
+     "line": "File close 25.57 CAD (Friday); live 26.17 (+2.3%, delayed)."
     },
     {
-     "ticker": "TTWO",
-     "stage": "quiet, 210.00",
-     "line": "MCD: quiet, 273.24."
+     "ticker": "LBRT",
+     "stage": "Bouncing, watch",
+     "line": "11.67 (+8.5%). SEI: Bouncing, watch. 61.23 (+12.0%)."
+    },
+    {
+     "ticker": "WHD",
+     "stage": "Pulled back, watch",
+     "line": "58.60. TDW: Pulled back, watch. 71.93."
     }
    ],
    "notes": [
-    "Your stocks (Canadian closes are now Friday's; Friday's brief had some Thursday prices):",
-    "- MU / MU.TO: MU.TO closed 25.97 CAD, -13.8% Friday. That answers my \"stale price\" question: the file had lagged by one day. Micron's next report is Dec 17 (per Yahoo Finance, not in my files). Pre-market MU is +4.8%.",
-    "Taylor, nothing here needs a decision before the open; the one to watch is MU.",
-    "Bottom watch (you asked for signs the sell-off is lifting): Met: extreme fear (Fear & Greed 10 on Friday), VIX above 35, heavy selling by trend-followers, and this morning the 2-year yield is falling. Missing: no reversal day yet (Friday closed near its low), AAII is not extreme (bears 42.2%, bulls 33.3%, survey closed before Friday's close), and credit is not in panic but is widening: one source has the ICE BofA high-yield spread at 3.52% from 3.20% a week earlier, Saxo cites 367 basis points, the highest since early 2025. I'd call it \"relief bounce possible, bottom not confirmed\". Sources: [Saxo](https://www.home.saxo/content/articles/macro/market-quick-take---sentiment-bounces-after-friday-mayhem---23-november-2026-23112026), [Cycledesk](https://cycledesk.substack.com/p/have-we-seen-the-bottom-and-what), [Kalkine](https://kalkine.ca/news/economic-news/is-the-high-yield-credit-spread-widening-currently-at-343-after-a-20-basis-point-rise). Sources disagree on exact credit numbers."
+    "No entry windows here. Sourcing is thin: I read price pages and one commodity page, not company news."
+   ]
+  },
+  {
+   "name": "Basic materials",
+   "stage": "Steel is turning up, Sector Rebound (fell 15.9%, 4.2% off the low, 89% up 2%+); copper is still falling",
+   "numbers": "",
+   "why": "Steel moved with the market; I found no steel-specific news dated today (the results were October items). The copper group in my files is mostly Toronto names with Friday's prices, so its \"falling\" label is stale for the Toronto stocks; FCX (US) bounced 8.1%.",
+   "stocks": [
+    {
+     "ticker": "MT",
+     "stage": "Pulled back, watch",
+     "line": "59.02 (+6.3%). NUE: Pulled back, watch. 248.15. STLD: Pulled back, watch. 215.52. TX: Pulled back, watch. 47.92."
+    },
+    {
+     "ticker": "FCX",
+     "stage": "Bouncing, watch",
+     "line": "49.71 (+8.1%, down 37% from its peak)."
+    }
+   ],
+   "notes": [
+    "No entry windows here."
    ]
   }
  ],
  "your_stocks": "",
- "coming_up": "Agilent reports today (Nov 23), Autodesk and Burlington Tue Nov 24, Dell Tue Nov 25 per my notebook (one newsletter says Nov 24); core PCE and Q3 GDP Wed Nov 26 ([TraderFactor](https://traderfactor.com/market-outlook-us-pce-flash-pmis-and-fed-rate-hike/)); US closed Thu Nov 27, early close Fri Nov 28; jobs Dec 4; RBC Dec 3; Fed Dec 9.",
- "changed": "Nothing in the stage files (no new price day since Friday's close). What changed is the pre-market: a broad rebound, the CrowdStrike/Zscaler deal, and the Trump/Huang headline.",
+ "coming_up": "Tue Nov 24: Analog Devices (before the open), Autodesk and Burlington (after); Dell Nov 25 (one newsletter says Nov 24); core PCE and Q3 GDP Wed Nov 26; US closed Thu Nov 27, early close Fri Nov 28; jobs Dec 4; RBC Dec 3; Fed Dec 9 (hike odds above 90%).",
+ "changed": "Semiconductors and Computer Hardware went from falling to turning up (Sector Rebound), Communication Equipment, Oil and Gas Equipment and Services and Steel are new Sector Rebounds. NVDA, MU, MRVL, INTC and CSCO went from falling to entry window. TSM, ADI and TXN went to bouncing.",
  "royal_b": "Top 5 CU.TO, BIP, RKT; Bullish Turn RKT.",
- "tested": "nothing in this brief rests on a tested signal (no entry windows; stage labels are descriptions). Not financial advice.",
+ "tested": "the five entry windows (NVDA, MU, MRVL, CSCO, INTC) rest on the Shakeout Bounce with a group rebound, which beat random in 2023-25 and 2026; in 2026 a few big winners carried it and about 3 in 10 hit the stop. Everything else (Sector Rebound labels aside) is a description. Not financial advice.",
  "notes": [
-  "Morning, Taylor. After the worst week in about 18 months, this is a bounce morning, and I would treat it as a bounce until something else proves it. Your Micron is the name to watch at the open.",
-  "Pre-market movers (EODHD, vs Friday's close):",
-  "- NVDA 136.27 (+7.9%), MU 624.63 (+4.8%), TSM 337.50 (+5.6%), CRWV 42.00 (+5.9%), SMH 422.50 (+5.3%), QQQ +3.2%, SPY +2.4%. MU is still under the $650 line (Nov 5 low) that was the kill line in the old AI-build-out view.",
-  "- CrowdStrike agreed to buy Zscaler for $43.9B in stock ($260.41 a share, a 34% premium to Friday). Zscaler is up about 16% pre-market and CrowdStrike down about 8% ([CNBC](https://www.cnbc.com/2026/11/23/futures-rally-after-wall-streets-nightmare-week-.html), [MLQ](https://mlq.ai/news/nasdaq-futures-rise-3-and-nvidia-gains-9-premarket-as-zscaler-jumps-20-on-crowdstrikes-offer/)). That is a business event: the buyer is paying up and its own holders take the dilution.",
-  "- Memory names are up on Citi saying AI-spending fears are overdone ([Invezz](https://invezz.com/ie/news/2026/11/23/micron-sandisk-climb-in-premarket-as-citi-strikes-optimistic-tone-on-memory-stocks/)). An analyst note and a rebound are not a turn; MarketBeat itself calls it a relief bounce.",
-  "What to watch at the 7:30am open: whether the pre-market gains hold or fade in the first 30 minutes (wait 15-30 minutes before reading anything into it), whether MU can get above $650 on real volume ([TradingKey](https://www.tradingkey.com/analysis/stocks/us-stocks/262317982-stock-microm-mu-price-650-ai-vix-tradingkey)), and whether the VIX closes lower than Friday's 35.9.",
+  "Taylor, that was the kind of day that makes everyone feel clever for about six hours. Stocks gave back more than half of last week's plunge in one session, and I would still call it a relief bounce until the next few days say otherwise. The one thing that moved everything was Nvidia.",
+  "- MU / MU.TO: see above. MU.TO 30.90 CAD live, +19.0%.",
+  "- RY.TO: Weak. File close 263.05 (Friday); live 270.29 (+2.75%, delayed). Earnings Dec 3. No RBC-specific news explains last week's fall; see \"What I dug into\".",
+  "- OGC.TO: Falling, wait. File 32.19; live 34.08 (+5.9%). EFX.TO above.",
+  "- GOOG.TO: Falling, wait, 41.96 (Friday close). BOS.TO: Falling, wait, 6.05 (Friday close).",
+  "- TTWO: Quiet, 209.36 (-0.3%). MCD: Quiet, 276.38 (+1.1%).",
+  "Nothing urgent; the Toronto stage labels will refresh once Monday's closes are in my files.",
   "What I dug into:",
-  "- CoreWeave and Nvidia (t20261114-L3, t20261115-L1; still open): CoreWeave's Q3 10-Q debt note shows about $46.9B of debt at Sep 30, 2026, and one third-party reading of its maturity table has about $2.4B due in the rest of 2026 and $11.0B in 2027 (not checked by me against the filing). The 10-Q calls it a take-or-pay business (98% of Q3 revenue per one source) and says top-two customers were 54% (secondary source). Nvidia's share of CoreWeave's revenue is still not found. Sources: [CoreWeave 10-Q](https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000465/crwv-20260930.htm), [CCIR Research](https://ccir.io/research/coreweave-debt-by-entity-q3-2026), [Converge Digest](https://convergedigest.com/coreweave-q3-2026-earnings-financing-nvidia-backlog/). I read search summaries; the filing page itself did not open here.",
-  "- Commerce chip rule and MU/TSM (t20261116-4, t20261117-1; still open): nothing new today beyond what I had: the rule needs licences for Singapore, Malaysia, Thailand, Indonesia and Brazil, Micron had about $14.6B of China-linked revenue last fiscal year by customer headquarters, and the share that the rule actually touches is still not found ([24/7 Wall St](https://247wallst.com/investing/2026/11/16/micron-has-14-6-billion-in-china-linked-revenue-are-these-new-u-s-chip-export-rules-a-threat/)).",
-  "- What a real bottom looks like (t20261121-L1; still open): see Bottom watch above.",
-  "EODHD was used for pre-market quotes only.",
-  "Trend board changes: AI build-out stays closed (kill hit Friday); evidence added: pre-market rebound with MU 624.63 still under 650. Cyber bounce stays \"watching\": CrowdStrike buying Zscaler for $43.9B in stock is a fact that supports the idea that big security vendors are consolidating, but one deal is not a trend and CRWD is down about 8% on it. Rate-hike pressure stays \"watching\": hike odds still above 90%, but the 2-year yield fell this morning, which is the first softening I have seen.",
-  "Your lessons: none tested today.",
+  "- RBC (t20261119-3, done): No company-specific cause found. Nov 18: Canadian stocks fell a fourth session on yields, geopolitics and the Nvidia sell-off, BMO fell 2.4% the same day with no company catalyst, and RBC's 3.1% drop was larger than TD and CIBC (about 1.7%), which no source explains. Later, one report ties a 1-1.4% bank dip to a regulator's proposal to ease capital rules for smaller lenders (not confirmed by me). RBC closed Friday at 263.05, -9.1% on the week. I read search summaries; the EODHD news feed had only RBC Capital Markets conference releases. Sources: [Global Banking & Finance](https://www.globalbankingandfinance.com/royal-bank-of-canada-ry-to-falls-2026-11-18/), [Motley Fool Canada](https://www.fool.ca/2026/11/18/tsx-today-why-canadian-stock-market-sell-off-could-intensify-on-wednesday-november-18/), [Kalkine on BMO](https://kalkine.ca/news/financial/why-did-bank-of-montreal-tsxbmo-fall-2374-on-november-18-2026).",
+  "- Micron December prices (t20261114-4, still open): I found no December-specific DRAM contract price. TrendForce's latest view is conventional DRAM contract prices +10-15% in Q4 2026, +5-10% in Q1 2027 and +3-8% in Q2 2027, with NAND possibly down as much as 5% in Q1 2027; an older July forecast had Q4 at only +3-8%, so the outlook was raised. Micron said 75% of its 2027 supply is sold out. Direction is up but slowing for DRAM; NAND (26% of Micron's revenue) is the soft spot. Sources: [Wisevoter summary](https://wisevoter.com/world/us/2026/11/22/micron-stock-falls-memory-price-forecast), [Invezz](https://invezz.com/nz/news/2026/11/23/micron-sandisk-climb-in-premarket-as-citi-strikes-optimistic-tone-on-memory-stocks/), [TrendForce](https://www.trendforce.com/price/dram/dram_spot). These are secondary reports of TrendForce, not the TrendForce release itself.",
+  "- When the sell-off ends (t20261121-L1, still open): today looks like a relief rally. Met: extreme fear (VIX 35.89 Friday, about 26.6 today), heavy trend-follower selling, a one-day reversal on volume. Missing: confirmation (BTIG itself expects a fade), a Fed turn (December hike still priced), and credit still widening (high-yield spread 3.52% from 3.20% a week earlier, per [Cycledesk](https://cycledesk.substack.com/p/have-we-seen-the-bottom-and-what)). Sources disagreed on today's VIX level.",
+  "Trend board changes: AI build-out stays closed (its kill, MU under 650, hit Friday). Evidence added: NVDA +31.5%, MU back at 707.70. Taylor, this is the one to decide: reopen it or leave it closed; I did not reopen it myself. Cyber/software bounce stays watching: Software Infrastructure turned up (86% up 2%+) alongside everything else, so it adds nothing independent. Rate-hike pressure stays watching, nothing new today.",
+  "Bottom watch: see the third item above. My read: relief bounce, bottom not confirmed.",
+  "Your lessons: none tested today (L2 fits, no outcome to count yet).",
   "Notebook and to-dos were read and updated without problems.",
   "Atlas"
  ],
- "brief_file": "2026-11-23-am.md",
- "updated": "2026-11-23T13:51:29+00:00",
+ "brief_file": "2026-11-23-pm.md",
+ "updated": "2026-11-23T21:41:45+00:00",
  "market_mood": {
-  "asof": "2026-11-23T13:51:35+00:00",
-  "line": "Big bounce after the worst week in 18 months: futures up 3%, but credit is still widening and no bottom is confirmed."
+  "asof": "2026-11-23T14:42:00-07:00",
+  "line": "Big relief rally today: stocks recovered over half of last week's plunge as chips jumped, and the fear gauge fell, though the bottom isn't confirmed."
  }
 }
