@@ -1,122 +1,126 @@
 {
- "asof": "2026-11-24",
- "session": "pm",
- "title": "Atlas \u00b7 Tue Nov 24 \u00b7 2:30pm",
- "big_picture": "The S&P 500 closed 7,201 (-0.50%), the Nasdaq 23,734 (-1.48%) and the Dow 50,019 (+0.85%), so this was a chip story, not a whole-market one ([MLQ/CNBC data](https://mlq.ai/news/nasdaq-falls-15-as-nvidia-drops-59-and-chip-stocks-slide-dow-rises-09-and-anthropic-closes-below-its-ipo-price/)). Nvidia closed -5.9% at 155.38, Micron -11.0%, and the chip index fell about 7.9% one day after Nvidia's +31% on Huang's return ([MarketScreener](https://www.marketscreener.com/news/nasdaq-s-p-500-end-lower-following-monday-s-nvidia-fueled-rally-ce7851dbdd81f720)). Reuters blames tech giving back gains while investors brace for possible new tariffs; I could not find what the tariff news actually is, so I treat that as unconfirmed. Anthropic closed at $81.91, under its $83 IPO price ([MLQ](https://mlq.ai/news/nasdaq-falls-15-as-nvidia-drops-59-and-chip-stocks-slide-dow-rises-09-and-anthropic-closes-below-its-ipo-price/)). Headline versus business: yesterday's jump was a headline (a CEO returning); today's drop is investors deciding the headline did not fix the AI-spending doubts.",
+ "asof": "2026-11-25",
+ "session": "am",
+ "title": "Atlas · Wed Nov 25 · 6:45am",
+ "big_picture": "Early this morning Nasdaq-100 futures were down about 2.4%, S&P 500 futures about 1.4% and Dow futures about 0.8%; Nvidia was down about 5%, AMD 6.5% and Micron 6% pre-market ([Yahoo Finance live](https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-25-dow-sp-500-nasdaq-pce-inflation-data-091428237.html), [Investing.com](https://www.investing.com/news/stock-market-news/wall-st-futures-fall-after-sp-500-nasdaq-end-lower-inflation-data-eyed-5049469)). Yesterday's close (the newest prices in my files) was S&P 500 fund -0.5%, with the chip index about -8%. The 8:30am ET data: October PCE inflation came in at 3.8% from a year ago, as expected, and the second estimate of Q3 growth was revised up to 4.3% from 3.4%, above the 3.5% forecast ([Benzinga](https://www.benzinga.com/markets/economic-data/26/11/63619838/pce-inflation-october-gdp-second-estimate)). One smaller site puts core PCE at 3.3% against 3.2% expected; I could not confirm that on a main source. Strong growth plus sticky inflation is the wrong mix for stocks hoping for a pause: December hike odds are about 97% per CME FedWatch ([Yahoo Finance live](https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-25-dow-sp-500-nasdaq-pce-inflation-data-091428237.html)). The tariff worry is a report, not a decision: the Wall Street Journal is said to have reported a plan to raise tariffs on 16 economies including South Korea, Taiwan and Japan, with no duties announced and rates reportedly kept inside existing deal caps ([Techi](https://www.techi.com/premarket-ai-hardware-stocks-erase-monday-rally-tariff-reports-nvidia/), a secondary source; I have not seen it on a main wire). Korean chip makers fell hard again, SK hynix about 11% and Samsung about 10% by one count ([Admiral Markets](https://admiralmarkets.com/analytics/traders-blog/sk-hynix-samsung-stock-plunge-memory-chips)); the dates differ between sources, so treat the exact numbers with care. Headline versus business: tariff talk and the rate path are headlines for the chip price today; neither has changed anyone's chip orders yet. US markets close Thursday for Thanksgiving and close early Friday.",
  "urgent": "",
  "sectors": [
   {
    "name": "Chips and hardware",
-   "stage": "turning up, Sector Rebound, but today it was hit hard (Semiconductors fell 29.4% from the peak, 4.7% off the low, only 2% of the group up 2%+ today; Computer Hardware fell 36.6%, 0% up; Communication Equipment fell 28.0%, 0% up)",
+   "stage": "turning up (Sector Rebound), but it is failing today (Semiconductors fell 29.4% from the peak, only 4.7% off the low, 2% of the group up 2%+ yesterday; Computer Hardware fell 36.6%; Communication Equipment fell 28.0%)",
    "numbers": "",
-   "why": "After yesterday's headline lift the group had no business news to hold it. Three things landed today: BNP Paribas Exane is reported to have cut Micron to neutral and its target from $1,700 to $775 over hyperscaler, HBM and pricing risks (two secondary sites, [Crypto Briefing](https://cryptobriefing.com/micron-stock-drops-bnp-paribas-downgrade/) and [Parameter](https://parameter.io/micron-mu-stock-drops-11-as-bnp-downgrade-cuts-short-mondays-nvidia-rally/); I could not confirm it on a main wire); Nvidia's reported SEC accounting inquiry is still unconfirmed ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/micron-falls-7-nvidia-pullback-140733539.html)); and the Commerce Department's Nov 16 rule requiring licences for overseas data centres that serve Chinese customers keeps weighing on Nvidia ([Crypto Briefing](https://cryptobriefing.com/commerce-department-closes-ai-chip-cloud-loophole/)). Analog Devices reported before the open (EPS $4.06, a next-quarter guide a touch light) and closed -17.4% at 312.95, HPE -16.3% after its margin warning, Dell -11.8% going into its report. What would change my view: the chip ETF (SMH) closed 426.75, still above its Nov 20 low of 396.85; a close under 397 says the bounce failed. Your lesson L1 and L6 fit here: a big fast run, then bubble talk, and the market going for the downside even on good news.",
+   "why": "Monday's +15% chip jump was a headline (Huang back at Nvidia), and two days later the group is giving it back. Pre-market selling is the same story: rate-hike fears hurt capital-hungry AI companies ([Yahoo Finance live](https://finance.yahoo.com/markets/live/stock-market-today-wednesday-november-25-dow-sp-500-nasdaq-pce-inflation-data-091428237.html)). A BNP Paribas downgrade of Micron to neutral is now backed by a Yahoo Finance headline ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/micron-just-hit-700-ceiling-185509186.html)); the cut in the target from $1,700 to $775 and the reason (supply and demand for memory roughly balancing by mid-2027) come from smaller sites ([Crypto Briefing](https://cryptobriefing.com/micron-stock-drops-bnp-paribas-downgrade)). That reason is a real business argument, not just mood, so it matters more than the tariff talk. Nvidia's reported SEC accounting inquiry is still a report only: Nvidia has not answered publicly in anything I found and its late quarterly filing is still not out ([Yahoo Finance](https://finance.yahoo.com/markets/stocks/articles/michael-burry-flagged-nvidia-10-232352996.html)). What would change my view: a chip fund close under its Nov 20 low (about 397 on SMH) says the bounce failed; so far it has not closed there. Your lessons L1 and L6 fit this group: a huge, fast run and then bubble talk, and good news not being enough.",
    "stocks": [
     {
      "ticker": "NVDA",
      "stage": "Turning up, entry window (opened Nov 23)",
-     "line": "Last close 155.38, don't chase above 160.04, stop 142.95 (8% under the close). Yesterday's +31% is now -6%; wait 15-30 minutes after the 7:30am open, size with Trade on the Royal B page (1% risk, 25% cap), exit on a close under the 50-day. About 3 in 10 of these hit the stop."
-    },
-    {
-     "ticker": "MU",
-     "stage": "Turning up, entry window (yours via the Micron CDR)",
-     "line": "Last close 629.79, don't chase above 648.68, stop 594.51 (the shakeout low). Yesterday's plan stop of 651.08 was broken on the close, so for the signal as I gave it yesterday this one has failed; today's line uses the Nov 20 low."
+     "line": "Last close 155.38, don't chase above 160.04, stop 142.95 (8% under the close). Down about 5% pre-market puts it near 147.5, still above the stop but well off the signal close. Same rules: wait 15-30 minutes, size with Trade, exit on a close under the 50-day."
     },
     {
      "ticker": "MRVL",
-     "stage": "Turning up, entry window",
-     "line": "Last close 131.57, don't chase above 135.52, stop 122.28. It closed under yesterday's stop (133.16) too."
+     "stage": "Turning up, entry window (opened Nov 23)",
+     "line": "Last close 131.57 (-9.1%), don't chase above 135.52, stop 122.28 (the shakeout low). Chip-wide selling, no company news found. Same rules."
     },
     {
-     "ticker": "INTC",
-     "stage": "Turning up, entry window",
-     "line": "Last close 54.80, don't chase above 56.44, stop 51.28. Closed a cent under yesterday's stop (54.89)."
+     "ticker": "TSM",
+     "stage": "Pulled back, watch",
+     "line": "Closed 349.20 (-4.0%), 16.8% under its 50-day; next report Jan 14. Wait for the group to stop falling."
     },
     {
-     "ticker": "CSCO",
-     "stage": "Turning up, entry window",
-     "line": "Last close 93.99 (-2.9%), don't chase above 96.81, stop 90.64. The calmest of the group; it held."
+     "ticker": "ADI",
+     "stage": "Falling, wait",
+     "line": "Closed 312.95 (-17.4%) after its report (EPS $4.06, next-quarter guide a touch light), which hurts the idea that chips outside AI are safe. TXN fell 11.2% in sympathy."
     }
    ],
    "notes": [
-    "TSM: pulled back, watch, 349.20 (-4.0%); earnings in 51 days. AMD and AVGO: falling, wait. ADI, HPE: falling, wait (see above). DELL: pulled back, watch, reports soon; one tracker has it Tue after the close last year, so I would not assume the date."
+    "- MU (yours): Turning up, entry window (opened Nov 23). Last close 629.79 (-11.0%), don't chase above 648.68, stop 594.51 (the shakeout low). With the stock down about 6% pre-market it would open near 592, under that stop, so this window is likely failing at the open; I would not treat it as an entry today. Next report Dec 16. Wait 15-30 minutes after the 7:30am open; size with Trade on the Royal B page (1% risk, 25% cap); exit on a close under the 50-day. About 3 in 10 of these signals hit the stop."
    ]
   },
   {
-   "name": "Healthcare",
-   "stage": "Biotechnology (fell 11.7%, 12.1% off the low, 87% of the group up 2%+) and Diagnostics and Research, both Sector Rebounds",
+   "name": "Biotechnology",
+   "stage": "turning up (Sector Rebound) (fell 11.7%, 12.1% off the low, 87% of the group up 2%+ yesterday)",
    "numbers": "",
-   "why": "Biotech was the one group that went up in a down-tape. Sanofi agreed to buy Insmed for $175 a share in cash, about $41B and roughly a 46% premium to the unaffected Nov 18 close, closing expected in the first half of 2027 and subject to regulatory and shareholder approval ([Insmed 8-K](https://www.sec.gov/Archives/edgar/data/0001104506/000114036126045364/ef20086426_ex99-1.htm), [Fierce Pharma on the earlier talks](https://www.fiercepharma.com/pharma/facing-down-dupixent-cliff-sanofi-mulls-buyout-insmed-and-its-blockbuster-be-brinsupri)). That is a headline with real money behind it, and takeover talk tends to lift the whole group, but it does not change any single small biotech's pipeline. What would change the view: the group giving the move back tomorrow without a second deal.",
+   "why": "Sanofi agreed to buy Insmed for $175 a share in cash, about $41 billion, a 46% premium to its Nov 18 close; it is the year's biggest biopharma deal and needs shareholder and US regulatory approval ([Sanofi release](https://www.sanofi.com/en/media-room/press-releases/2026/2026-11-24-06-30-00-3409002), [CNBC](https://www.cnbc.com/2026/11/24/insmed-sanofi-deal-stock-pharma.html)). The group jumped on it, but one deal is not a wave: 2026 already had a record count of $1B+ biotech takeovers, almost all smaller ones ([Endpoints](https://endpoints.news/biotechs-groove-is-back-for-2026-as-xbi-surges-on-ma-and-lower-rates/), [IQVIA](https://www.iqvia.com/locations/emea/blogs/2026/07/biopharma-ma-mid-year-2026-update)). I found no company news behind the five names below, so their move looks like group sympathy, which I have not confirmed name by name. A 6-7% one-day group jump is also easy to chase; the chip lesson says to wait. What would change my view: the group giving back yesterday's gain on no news. Not financial advice, and no lesson of yours covers this group.",
    "stocks": [
     {
      "ticker": "RVMD",
-     "stage": "Turning up, entry window (new today, +7.7%)",
-     "line": "Last close 181.17, don't chase above 186.61, stop 166.68."
+     "stage": "Turning up, entry window (opened Nov 24)",
+     "line": "Last close 181.17 (+7.7%), don't chase above 186.61, stop 166.68 (8% under the close). Wait 15-30 minutes after the open; size with Trade; exit on a close under the 50-day."
     },
     {
      "ticker": "SYRE",
-     "stage": "Turning up, entry window (new, +8.1%)",
-     "line": "Last close 103.13, don't chase above 106.22, stop 94.88. Earnings in 86 days."
-    },
-    {
-     "ticker": "XNCR",
-     "stage": "Turning up, entry window (new, +8.6%)",
-     "line": "Last close 38.18, don't chase above 39.33, stop 35.13."
+     "stage": "Turning up, entry window (opened Nov 24)",
+     "line": "Last close 103.13 (+8.1%), don't chase above 106.22, stop 94.88 (8% under the close). Next report is 86 days out."
     },
     {
      "ticker": "DFTX",
-     "stage": "Turning up, entry window (new, +9.9%)",
-     "line": "Last close 32.23, don't chase above 33.20, stop 29.65."
+     "stage": "Turning up, entry window (opened Nov 24)",
+     "line": "Last close 32.23 (+9.9%), don't chase above 33.20, stop 29.65 (8% under the close)."
     },
     {
      "ticker": "TNGX",
-     "stage": "Turning up, entry window (new, +3.5%)",
-     "line": "Last close 24.70, don't chase above 25.44, stop 22.72."
+     "stage": "Turning up, entry window (opened Nov 24)",
+     "line": "Last close 24.70 (+3.5%), don't chase above 25.44, stop 22.72 (8% under the close). Calmest-moving of the new group but still 7.7% average daily swing; that ordering is not tested."
+    },
+    {
+     "ticker": "XNCR",
+     "stage": "Turning up, entry window (opened Nov 24)",
+     "line": "Last close 38.18 (+8.6%), don't chase above 39.33, stop 35.13 (8% under the close). KYMR (+15.7% on Nov 23) and VIR are also in windows but KYMR has run too far: missed this leg, wait for a pullback."
     }
    ],
-   "notes": [
-    "Five new windows in one group on one deal headline is a crowd, so I would treat them as one bet on biotech, not five. VIR (+6.0%, window from yesterday): 9.57, stop 8.80. KYMR is +15.7% and up about 16% since its window opened yesterday: missed this leg, wait for a pullback. NTRA: bouncing, watch, 298.83."
-   ]
+   "notes": []
   },
   {
-   "name": "Financial services",
-   "stage": "Banks - Diversified, Asset Management and Credit Services, all new Sector Rebounds (fell 10.2%, 10.8% and 10.6%; 3.0-3.5% off the low; almost none of them up 2%+ today)",
+   "name": "Gold",
+   "stage": "turning up (Sector Rebound), new on my list today (fell 25.4%, 4.5% off the low, none of the group up 2%+ yesterday, group -2.6%)",
    "numbers": "",
-   "why": "Quiet money moving back, not a surge; I found no news driving it, so call it a market-wide bounce with the Fed hike risk still sitting over the banks. No entry windows in the group today.",
+   "why": "Gold is bouncing off a deep drop but is not leading yet. Spot gold is about $3,520-3,550, depending on the site ([TradingView](https://www.tradingview.com/symbols/XAUUSD/), [Kitco](https://www.kitco.com/charts/gold)), far under its Jan 29 record near $5,600, and higher rate-hike odds keep weighing on it. Today's hotter-for-longer rate read is a headwind. I found no miner-specific news. What would change my view: spot gold back over $3,850 (that is the kill line on my rate-hike trend).",
    "stocks": [
     {
-     "ticker": "RY.TO",
-     "stage": "Quiet, 270.29 (yours; the Canadian prices in my files look to be a day behind, showing Monday's move)",
-     "line": "Earnings Dec 3, nine days away. Your lesson L3 (banks lag when oil and tech lead) gets tested then; it is not tested today."
+     "ticker": "PRU.TO",
+     "stage": "Turning up, entry window (opened Nov 23)",
+     "line": "Last close 5.42 (-4.4%), don't chase above 5.58, stop 5.30 (the shakeout low). It is a low-priced stock; wait 15-30 minutes and size with Trade."
+    },
+    {
+     "ticker": "FNV.TO",
+     "stage": "Pulled back, watch",
+     "line": "338.95 (-0.2%). Calm, but not tested as a pick."
+    },
+    {
+     "ticker": "AEM.TO",
+     "stage": "Pulled back, watch",
+     "line": "223.35 (-2.9%)."
+    },
+    {
+     "ticker": "TXG.TO",
+     "stage": "Bouncing, watch",
+     "line": "77.51 (+2.1%)."
     }
    ],
    "notes": [
-    "- UBS, BAC, KKR: pulled back, watch. V, MA: quiet. ING and HSBC: falling, wait."
+    "- OGC.TO (yours): Pulled back, watch. Closed 33.63 (-1.3%); next report is 85 days out. Nothing urgent."
    ]
   }
  ],
- "your_stocks": "",
- "coming_up": "Wed Nov 25: core PCE and Q3 GDP, the last full session before Thanksgiving; Dell is expected soon after the close, date unconfirmed. US closed Thu Nov 26, early close Fri Nov 27. Dec 1: Box and American Eagle report. RBC Dec 3. Jobs Dec 4. Fed Dec 9, with a hike priced at roughly 90%+. Micron reports Dec 17 ([Unusual Whales](https://unusualwhales.com/news/micron-stock-falls-downgrade-chip-selloff-2026-11-24)).",
- "changed": "Stage moves: RVMD, SYRE, XNCR, DFTX and TNGX opened entry windows; MCHP, ASTS, CIEN, HPE and VIAV went from bouncing to falling; MCD and TTWO moved to in trend; Asset Management, Credit Services and Banks - Diversified are new focus groups; Steel, Specialty Chemicals and Copper left the focus list. Three of yesterday's chip windows (MU, MRVL, INTC) closed under yesterday's stop.",
- "royal_b": "Top 5 FE, H.TO, EMA.TO, CU.TO, KHC (all Weekly Trend); Bullish Turn none.",
- "tested": "the entry windows (NVDA, MU, MRVL, INTC, CSCO, RVMD, SYRE, XNCR, DFTX, TNGX, VIR) rest on the Shakeout Bounce with a group rebound, which beat random in 2023-25 and 2026; in 2026 a few big winners carried it and about 3 in 10 hit the stop. Today's chip drop is a live example of that stop risk. Everything else (the news reads, the Sanofi lift, the bottom watch) is description, not tested. Not financial advice.",
+ "your_stocks": "MU and MU.TO: see above; the Micron CDR fell 11.0% to C$27.51 yesterday, in step with Micron. RY.TO 269.64 (-0.2%), quiet; reports Dec 3 before the open. TTWO 220.41 (+5.3%) and MCD 280.70 (+1.6%) moved to \"in trend\"; nothing urgent. BOS.TO 6.26 (+3.0%) moved from falling to pulled back. GOOG.TO 43.90 (-0.9%) and EFX.TO 25.60 (-2.2%): nothing urgent. No material company news on any of them that I found.",
+ "coming_up": "The US market is closed Thursday Nov 26 (Thanksgiving) and closes early Friday. Dec 1: CrowdStrike, CRDO, BOX report. Dec 2: Salesforce, American Eagle. Dec 3: Royal Bank before the open. Dec 9: Broadcom and Adobe report, and the Fed meeting (hike about 97% priced).",
+ "changed": "Gold is new in focus (Sector Rebound). Copper went from turning up to pulled back (fell 35.7%, down 6% yesterday). RVMD, SYRE, DFTX, TNGX and XNCR (biotech) entered entry windows yesterday. In chips, a handful slid from bouncing to falling: ADI, TXN, MTSI, MCHP, MXL (semis), HPE, CIEN, VIAV (equipment), SNDK. TSM went from bouncing to pulled back.",
+ "royal_b": "Top 5: COST.TO, EMP-A.TO, RDY, CHP-UN.TO, L.TO (food, grocery and real estate names, which fits money hiding). Bullish Turn: BX, APO, CRH.",
+ "tested": "Entry windows (Shakeout Bounce on a day a third or more of the group was up 2%+) are tested; in 2026 about 3 in 10 hit the stop, and the chip ones are already near or under their stops pre-market. The pre-market moves, news reasons, the biotech and gold focus calls beyond the entry-window flag, and the \"wait\" calls are descriptions, not tested. PRU.TO and the order of the biotech names are not tested.",
  "notes": [
-  "Rough close for chips, Taylor, and Micron took the worst of it. Yesterday's big bounce gave back a good part of itself, though the S&P only slipped half a percent and the fear gauge barely moved.",
-  "Date fix: this morning's brief put Thanksgiving a day late. The US market is closed Thu Nov 26 and closes early Fri Nov 27. Core PCE and Q3 GDP are Wed Nov 25, tomorrow, not Wed Nov 26.",
-  "- MU: see Focus 1. The CDR in my files (MU.TO 30.90 CAD) still shows Monday's +19%; I read that as a one-day price lag, not a gain, because the US stock fell 11%.",
-  "- TTWO: In trend, 220.41 (+5.3%). MCD: In trend, 280.70. OGC.TO: pulled back, watch, 34.08. EFX.TO: falling, wait, 26.17. GOOG.TO: pulled back, watch, 44.30. BOS.TO: falling, wait, 6.08. Nothing urgent in the news for any of them, with the same one-day lag caveat on the Canadian names.",
+  "Rough start, Taylor: futures are pointing down again and chips are leading it. Micron and Nvidia are both down 5 to 6 percent before the bell, and the inflation report is already out.",
   "What I dug into:",
-  "- Micron (t20261120-L2, still open): Today's company-specific news is the BNP Paribas Exane downgrade (two secondary sites, not confirmed on a main wire) on top of the chip sell-off; the Dec 17 report is the next real event. The stock closed at 629.79, under your $650 line again. I could not get the CDR's own price. Sources: [Crypto Briefing](https://cryptobriefing.com/micron-stock-drops-bnp-paribas-downgrade/), [Unusual Whales](https://unusualwhales.com/news/micron-stock-falls-downgrade-chip-selloff-2026-11-24).",
-  "- DRAM December prices (t20261114-4, still open): Still no December contract print. TrendForce's September 30 release has conventional DRAM contract prices up 10-15% in Q4 and NAND up 15-20%; the spot price of a DDR4 16Gb chip was $82.80 on Oct 30, 11% under its Sept 4 peak, so spot is softer than contracts. This is search-summary level, not the TrendForce page. Sources: [Capital Times](https://capitaltimes.asia/tech/semiconductors/dram-contract-prices-rise-spot-market-stalls-trendforce/), [TrendForce price page](https://www.trendforce.com/price/dram/dram_spot).",
-  "- Bottom watch (t20261121-L1, still open): Still no confirmed bottom. VIX closed 26.36 (26.62 yesterday; it spiked to 32.4 intraday), so fear did not fall much on a down day for tech. S&P fund closed 718.58, SMH 426.75 held above its Nov 20 low of 396.85. Still missing: the Fed turn (hike priced ~90%+), credit (high-yield spread 3.52% and widening as of Nov 19), AAII at an extreme (33% bulls, 42% bears, not yet the 20-25% bulls Franklin Templeton calls capitulation), and a Franklin Templeton marker of a VIX close above 30 to start accumulating (we are under it). Sources: [Franklin Templeton](https://www.advisorperspectives.com/commentaries/2026/11/24/fear-here-good-thing?topic=real-estate), [Yahoo Finance](https://finance.yahoo.com/markets/article/the-fed-isnt-riding-to-the-rescue--wall-street-still-sees-a-december-rate-hike-after-techs-worst-week-since-2020-chart-of-the-day-110000273.html), EODHD prices.",
-  "Trend board changes: AI build-out stays closed. New evidence added: Micron closed under $650 again and Anthropic closed under its $83 IPO price (both kill-line facts, which fits the trend being closed), plus the reported BNP downgrade as a rumour-grade item. Rate-hike pressure: hike odds still around 90%+ (one source 91%), no change. Cyber/software bounce: nothing new. Nothing was reopened; that is your call, Taylor.",
-  "Your lessons: none tested today.",
-  "Notebook and to-dos were read without problems.",
-  "Atlas"
+  "- Dec memory prices (your pick): I still can't find a December contract print. TrendForce put PC DRAM contract prices up 13-18% in Q4 (Nov 11 release, relayed by a secondary site), conventional DRAM up 10-15% (Sept 30), and a headline of about +20% on Oct 20 ([TrendForce](https://www.trendforce.com/news/2026/10/20/news-dram-prices-seen-rising-20-qoq-in-4q26-despite-slower-gains-ai-demand-tight-supply-support-outlook/)). The numbers disagree and are secondary. The tone is slower increases, and the BNP view says balance by mid-2027. Still open.",
+  "- Royal Bank CEO share sales (your pick): Insider-tracking sites list Dave McKay's 2026 sales as option exercises paired with same-day sales, in near-identical lots of about 23,090 shares on Jan 21, Jul 22 and Aug 24 ([Globe and Mail](https://www.theglobeandmail.com/investing/markets/indices/JX/pressreleases/37224783/david-mckay-selling-at-royal-bank-of-canada-ry/), [Barchart](https://www.barchart.com/story/news/3475204/public-market-insider-selling-at-royal-bank-of-canada-ry)). That looks like a regular exercise-and-sell routine, not a sudden exit, but these are aggregators with price mismatches, and I could not open SEDI or a filing. Still open.",
+  "- Micron CDR (MU.TO) vs Micron: answered. The Nov 20 \"-2.0%\" in my files was a stale early quote; settled daily prices show MU.TO closed 25.97 (-13.8%) vs Micron -13.9% that day, and both fell 11.0% on Nov 24 (EODHD daily prices, MU.TO and MU). No lag.",
+  "- Biotech takeover wave (your pick): partly done, see Focus 2. One $41B deal, not yet a wave. Still open.",
+  "Trend board changes: New trend, \"Biotech takeovers\", watching: Sanofi-Insmed plus a record count of $1B+ deals in 2026 from separate sources; it dies if the group gives back the Nov 24 gain on no news. Rate-hike pressure: still watching and getting stronger (Oct PCE 3.8%, Q3 growth revised to 4.3%, December hike about 97%; gold about $3,520). AI build-out stays closed.",
+  "Your lessons: No lesson tested today (no report from a stock the lessons name). L1 held 2, failed 0; L6 held 2, failed 0."
  ],
- "brief_file": "2026-11-24-pm.md",
- "updated": "2026-11-24T21:41:24+00:00",
+ "brief_file": "2026-11-25-am.md",
+ "updated": "2026-11-25T13:53:09+00:00",
  "market_mood": {
-  "asof": "2026-11-24T14:41:00-07:00",
-  "line": "Chips gave back most of Monday's bounce while the rest of the market held up; fear barely moved, so no bottom yet."
+  "asof": "2026-11-25T06:53:16-07:00",
+  "line": "Stock futures are sliding again this morning, led by chips, with sticky inflation and tariff talk adding to the worry."
  }
 }
