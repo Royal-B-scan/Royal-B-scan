@@ -23,6 +23,14 @@ above that and within 6% of the price). The plan's rule is a daily close above i
   - late: still above on 1.5x+ pace -> high-priority push "add signal likely at the close"
   - first check of the day: yesterday CLOSED above it on 1.5x+ volume -> high-priority push
 
+Nov 25: SETUP alerts. A setup is saved on the page with "+ Setup" under a chart (lists.json plans[T].trigger, synced
+from the page). The page's rule: a daily close above the trigger price on vol_mult (default 1.5x) the 50-day volume, on a
+day after the setup was made, and before any close below its line in the sand. Same pattern as the add alerts:
+  - open / midday: price NEWLY above the trigger with volume on pace for vol_mult+ -> high-priority push
+  - late: still above on pace -> high-priority push "trigger likely at the close"
+  - first check of the day: yesterday's close was the setup's first trigger -> high-priority push "triggered"
+Setups already triggered, broken (closed below the line) or past their expiry date are skipped.
+
 Today's volume is incomplete during the day, so it is scaled to a full-day pace
 (volume so far / share of a normal day's volume that has usually traded by now: VOLUME_CURVE, Nov 6). A morning signal can fade by
 the close; the daily 3:20pm summary has the final status.
@@ -348,6 +356,76 @@ def owned_alerts(hist: dict, lists: dict, state: dict, today: str, now, slot: st
     return out
 
 
+def setup_of(plan) -> dict | None:
+    """The setup saved on a trade plan (page: + Setup), or None."""
+    if not isinstance(plan, dict) or not isinstance(plan.get("trigger"), dict):
+        return None
+    try:
+        trig = float(plan["trigger"].get("price") or 0)
+        vm = float(plan["trigger"].get("vol_mult") or 1.5)
+        line = float(plan["line"]) if plan.get("line") is not None else None
+    except (TypeError, ValueError):
+        return None
+    if trig <= 0:
+        return None
+    return {"trig": trig, "vm": vm if vm > 0 else 1.5, "line": line if line and line > 0 else None,
+            "start": str(plan.get("start") or plan.get("made") or ""), "expires": str(plan["expires"]) if plan.get("expires") else None,
+            "type": plan.get("type") or ""}
+
+
+def setup_closes(done, S: dict) -> tuple[str | None, str | None]:
+    """Same judging as the page: (date of the first trigger close, date of the first close below the line), using
+    completed daily bars after the setup's start date. A break ends the setup, so nothing after it counts."""
+    c, v = done["Close"], done["Volume"]
+    trig = None
+    for i in range(len(done)):
+        d = done.index[i].strftime("%Y-%m-%d")
+        if S["start"] and d <= S["start"]:
+            continue
+        close = float(c.iloc[i])
+        if S["line"] and close < S["line"]:
+            return trig, d
+        if not trig and i >= 50:
+            avg = float(v.iloc[i - 50:i].mean())
+            if avg and close > S["trig"] and float(v.iloc[i]) >= S["vm"] * avg:
+                trig = d
+    return trig, None
+
+
+def setup_alerts(hist: dict, plans: dict, state: dict, today: str, now, slot: str, pace: float) -> list[dict]:
+    """Nov 25: setups crossing their trigger (see the module notes)."""
+    out, seen = [], state.setdefault("setup", {})
+    for t, plan in plans.items():
+        S = setup_of(plan)
+        if not S or (S["expires"] and today > S["expires"]):
+            continue
+        df = hist.get(t)
+        if df is None or len(df) < 53 or df.index[-1].strftime("%Y-%m-%d") != today:
+            continue
+        done = df.iloc[:-1]
+        me = seen.setdefault(t, {})
+        cur = "CAD" if t.endswith((".TO", ".V")) else "USD"
+        base = {"ticker": t, "kind": "setup", "trig": round(S["trig"], 2), "vm": S["vm"], "line": S["line"],
+                "currency": cur, "time": now.strftime("%H:%M")}
+        first_trig, broke = setup_closes(done, S)
+        yday = done.index[-1].strftime("%Y-%m-%d")
+        if not me.get("closed_checked"):
+            me["closed_checked"] = True
+            if first_trig == yday and not broke:
+                out.append({**base, "level": "closed", "price": round(float(done["Close"].iloc[-1]), 2), "vr": vol_ratio(done)})
+        if first_trig or broke:
+            continue                               # already triggered or broken: nothing left to ping
+        price, vr = float(df["Close"].iloc[-1]), vol_ratio(df, pace)
+        st = "above" if price > S["trig"] and vr and vr >= S["vm"] else "no"
+        prev = me.get("st", "no")
+        me["st"] = st
+        if st == "above" and (prev != "above" or (slot == "late" and not me.get("late"))):
+            if slot == "late":
+                me["late"] = True
+            out.append({**base, "level": "late" if slot == "late" else "now", "price": round(price, 2), "vr": vr})
+    return out
+
+
 def notify(title: str, body: str, high: bool = False, urgent: bool = False) -> None:
     topic = os.environ.get("NTFY_TOPIC", "").strip()
     print(f"ALERT {title}: {body}")
@@ -499,6 +577,28 @@ def main() -> None:
             notify(f"{a['ticker']}: above your add line",
                    f"{a['ticker']} at ${a['price']} {a['currency']}, above its add line (${a['line']}), volume on pace for {a['vr']:.1f}x. "
                    f"Not final until the close: the add signal is a close above it on 1.5x volume. As of {when} PT. Not financial advice.", high=True)
+    setup_hits = []
+    try:
+        setup_hits = setup_alerts(hist, plans, state, today, now, slot, pace)
+    except Exception as e:  # noqa: BLE001
+        print("setup check failed:", e, file=sys.stderr)
+    for a in setup_hits:
+        line_txt = f" Line in the sand ${a['line']:g}." if a["line"] else ""
+        if a["level"] == "closed":
+            notify(f"SETUP TRIGGERED: {a['ticker']} closed above ${a['trig']:g}",
+                   f"{a['ticker']} closed at ${a['price']} {a['currency']} yesterday, above your setup's trigger (${a['trig']:g}) "
+                   f"on {a['vr'] or 0:.1f}x normal volume.{line_txt} Check the chart, then size it with Trade on the page. Not financial advice.",
+                   high=True)
+        elif a["level"] == "late":
+            notify(f"{a['ticker']}: setup trigger likely at the close",
+                   f"{a['ticker']} at ${a['price']} {a['currency']}, still above your trigger (${a['trig']:g}), volume on pace for "
+                   f"{a['vr']:.1f}x (needs {a['vm']:g}x). If it closes here, the setup triggers.{line_txt} As of {when} PT. Not financial advice.",
+                   high=True)
+        else:
+            notify(f"{a['ticker']}: above your setup trigger",
+                   f"{a['ticker']} at ${a['price']} {a['currency']}, above your trigger (${a['trig']:g}), volume on pace for "
+                   f"{a['vr']:.1f}x (needs {a['vm']:g}x). Not final until the close.{line_txt} As of {when} PT. Not financial advice.",
+                   high=True)
     for a in plan_hits:
         er = a["earn"]
         er_txt = f" Earnings in {er} days: a gap could jump your stop." if isinstance(er, int) and 0 <= er <= 7 else ""
@@ -536,19 +636,19 @@ def main() -> None:
                (f"NEXT IN LINE: {', '.join(heads)}. " if heads else "") + (f"CROWNED: {', '.join(trig)}. " if trig else "")
                + f"As of {when} PT; not final until the close. Tap to open Royal B. Not financial advice.",
                high=bool(trig))
-    elif force and not breaks and not plan_hits and not own_hits and not add_hits:
+    elif force and not breaks and not plan_hits and not own_hits and not add_hits and not setup_hits:
         notify("Royal B alerts are connected",
-               f"Test check at {when} PT: {checked} stocks, {len(channels)} channels and {len(plans)} trade plans checked, nothing new. You'll get alerts "
+               f"Test check at {when} PT: {checked} stocks, {len(channels)} channels and {len(plans)} trade plans ({sum(1 for p in plans.values() if setup_of(p))} setups) checked, nothing new. You'll get alerts "
                f"like this when a stock drops below a channel you drew, "
-               f"or moves into a trade plan's buy zone.")
+               f"moves into a trade plan's buy zone, or crosses a setup's trigger.")
 
     state["slots"].append(slot)
-    state["alerts"] = (state.get("alerts") or []) + new + breaks + plan_hits + own_hits + add_hits
+    state["alerts"] = (state.get("alerts") or []) + new + breaks + plan_hits + own_hits + add_hits + setup_hits
     state["checked_at"] = now.isoformat(timespec="minutes")
     os.makedirs(os.path.dirname(STATE), exist_ok=True)
     with open(STATE, "w") as fh:
         json.dump(state, fh, separators=(",", ":"))
-    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} plans={len(plan_hits)} owned={len(own_hits)} add={len(add_hits)} pace={pace:.2f}")
+    print(f"SUMMARY slot={slot} checked={checked} new={len(new)} channel_breaks={len(breaks)} plans={len(plan_hits)} owned={len(own_hits)} add={len(add_hits)} setups={len(setup_hits)} pace={pace:.2f}")
 
 
 if __name__ == "__main__":
