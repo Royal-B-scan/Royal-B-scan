@@ -1,0 +1,138 @@
+{
+ "ok": true,
+ "counts": {
+  "universe": 3782,
+  "stocks": 3038,
+  "etfs": 744,
+  "liquid": 3496,
+  "hits": 35,
+  "trigger": 1,
+  "triggered": 3,
+  "headsup": 31,
+  "setting_up": 100,
+  "early_breakout": 21,
+  "early_pullback": 25,
+  "early_squeeze": 25,
+  "wh52": 51,
+  "weekly_new": 53,
+  "weekly": 244,
+  "obv_skip": 2
+ },
+ "last_bar": "2026-11-27",
+ "comeback": {
+  "large": 1161,
+  "beaten": 167,
+  "quality": 90,
+  "turn": 8,
+  "still_falling": 43,
+  "basing": 14,
+  "turning_up": 9,
+  "recovered": 24
+ },
+ "comeback_moved_up": [
+  "CSGP",
+  "AMRZ",
+  "COO"
+ ],
+ "comeback_turn": [
+  {
+   "ticker": "SHOP.TO",
+   "name": "SHOPIFY INC",
+   "close": 202.9,
+   "stop": 186.67,
+   "sma20": 202.26,
+   "quality": false,
+   "currency": "CAD"
+  },
+  {
+   "ticker": "HWM",
+   "name": "Howmet Aerospace Inc.",
+   "close": 217.41,
+   "stop": 200.02,
+   "sma20": 214.57,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "FER",
+   "name": "Ferrovial N.V.",
+   "close": 60.25,
+   "stop": 55.43,
+   "sma20": 59.38,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "BSBR",
+   "name": "Banco Santander Brasil SA",
+   "close": 4.97,
+   "stop": 4.57,
+   "sma20": 4.78,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "BBDO",
+   "name": "Banco Bradesco Sa",
+   "close": 2.6,
+   "stop": 2.39,
+   "sma20": 2.32,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "NRG",
+   "name": "NRG Energy, Inc.",
+   "close": 93.83,
+   "stop": 86.32,
+   "sma20": 93.06,
+   "quality": false,
+   "currency": "USD"
+  },
+  {
+   "ticker": "LTM",
+   "name": "LATAM Airlines Group S.A.",
+   "close": 49.41,
+   "stop": 45.46,
+   "sma20": 46.88,
+   "quality": true,
+   "currency": "USD"
+  },
+  {
+   "ticker": "TLK",
+   "name": "PT Telekomunikasi Indonesia, Tb",
+   "close": 11.32,
+   "stop": 10.41,
+   "sma20": 11.22,
+   "quality": true,
+   "currency": "USD"
+  }
+ ],
+ "lists": {
+  "watch": 51,
+  "holdings": 2,
+  "longterm": 6,
+  "pins": 6,
+  "missing": []
+ },
+ "judgement": 99,
+ "top5": [
+  "FER",
+  "WMT.TO",
+  "BSBR",
+  "CTC-A.TO",
+  "TLK"
+ ],
+ "top5_prev": [
+  "RDY",
+  "CHP-UN.TO",
+  "AZO",
+  "AHR",
+  "ORLY"
+ ],
+ "earnings_hist": 536,
+ "problems": {},
+ "updated": "2026-11-28T03:34+00:00",
+ "date": "2026-11-27",
+ "seconds": 349
+}
